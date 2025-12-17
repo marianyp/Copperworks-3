@@ -13,5 +13,6 @@ public class CopperworksClient implements ClientModInitializer {
 
     private void registerBlockRenderLayers() {
         BlockRenderLayerMap.putBlock(CWBlocks.WOODEN_RAIL, BlockRenderLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(CWBlocks.COPPER_RAIL, BlockRenderLayer.CUTOUT);
     }
 }

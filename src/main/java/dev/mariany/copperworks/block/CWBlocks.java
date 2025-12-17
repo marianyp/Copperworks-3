@@ -25,6 +25,12 @@ public class CWBlocks {
                     .sounds(BlockSoundGroup.LADDER)
     );
 
+    public static final Block COPPER_RAIL = register(
+            "copper_rail",
+            RailBlock::new,
+            AbstractBlock.Settings.copy(Blocks.RAIL)
+    );
+
     private static Block register(String name, AbstractBlock.Settings settings) {
         return register(name, Block::new, settings);
     }
@@ -48,10 +54,12 @@ public class CWBlocks {
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {
             entries.addBefore(Items.RAIL, WOODEN_RAIL);
+            entries.addAfter(WOODEN_RAIL, COPPER_RAIL);
         });
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.REDSTONE).register(entries -> {
             entries.addBefore(Items.RAIL, WOODEN_RAIL);
+            entries.addAfter(WOODEN_RAIL, COPPER_RAIL);
         });
     }
 }

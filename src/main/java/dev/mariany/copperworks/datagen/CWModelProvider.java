@@ -14,6 +14,7 @@ public class CWModelProvider extends FabricModelProvider {
     @Override
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
         blockStateModelGenerator.registerTurnableRail(CWBlocks.WOODEN_RAIL);
+        blockStateModelGenerator.registerTurnableRail(CWBlocks.COPPER_RAIL);
     }
 
     @Override

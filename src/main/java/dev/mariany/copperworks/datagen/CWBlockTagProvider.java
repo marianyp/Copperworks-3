@@ -12,7 +12,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class CWBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     private static final List<Block> AXE_MINEABLE = List.of(CWBlocks.WOODEN_RAIL);
-    private static final List<Block> RAILS = List.of(CWBlocks.WOODEN_RAIL);
+    private static final List<Block> RAILS = List.of(CWBlocks.WOODEN_RAIL, CWBlocks.COPPER_RAIL);
 
     public CWBlockTagProvider(
             FabricDataOutput output,

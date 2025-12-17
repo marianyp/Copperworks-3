@@ -20,11 +20,13 @@ import java.util.Map;
 
 public class MinecartEventHandler {
     private static final Map<Block, FastRailProperties> FAST_RAILS = Map.of(
-            CWBlocks.WOODEN_RAIL,
-            new FastRailProperties(0.4F, 0.3F)
+            CWBlocks.WOODEN_RAIL, new FastRailProperties(0.3F, 0.3F),
+            CWBlocks.COPPER_RAIL, new FastRailProperties(0.4F, 0.1F)
     );
 
-    private static final Map<Block, Float> FRAGILE_RAILS = Map.of(CWBlocks.WOODEN_RAIL, 0.03F);
+    private static final Map<Block, Float> FRAGILE_RAILS = Map.of(
+            CWBlocks.WOODEN_RAIL, 0.03F
+    );
 
     public static void onMinecartTravel(AbstractMinecartEntity abstractMinecart) {
         if (!abstractMinecart.getWorld().isClient()) {
