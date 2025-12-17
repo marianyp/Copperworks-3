@@ -1,0 +1,11 @@
+{
+  "block.wooden_rail.break": {
+    "subtitle": "subtitles.block.generic.break",
+    "sounds": [
+      "minecraft:dig/wood1",
+      "minecraft:dig/wood2",
+      "minecraft:dig/wood3",
+      "minecraft:dig/wood4"
+    ]
+  }
+}

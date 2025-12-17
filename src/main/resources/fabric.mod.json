@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${mod_version}",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
+  "authors": [
+    "${mod_authors}"
+  ],
+  "contact": {
+    "homepage": "${mod_page_url}",
+    "sources": "${mod_git_url}"
+  },
+  "license": "${mod_license}",
+  "icon": "assets/copperworks/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.mariany.copperworks.Copperworks"
+    ],
+    "client": [
+      "dev.mariany.copperworks.client.CopperworksClient"
+    ],
+    "fabric-datagen": [
+      "dev.mariany.copperworks.CopperworksDataGenerator"
+    ]
+  },
+  "mixins": [
+    "copperworks.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.3",
+    "minecraft": ">=1.21.6",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}

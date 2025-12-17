@@ -1,0 +1,8 @@
+// 1.21.8	-999999999-01-01T00:00:00	Copperworks/Model Definitions
+600c6e2162c1a9d14b4fb4c060a290fc7b8b8e1b assets/copperworks/blockstates/wooden_rail.json
+bf5b7eb72c785af4a96b5580f25debfaef3e7e6b assets/copperworks/items/wooden_rail.json
+34f8ae017c16d01311f9568eb356afeabdc6c0f4 assets/copperworks/models/block/wooden_rail.json
+96b7bd862ff7e029a6533dc20114c8101365ac80 assets/copperworks/models/block/wooden_rail_corner.json
+66d15d04095ecab263f1cedbed997acf248f6f5f assets/copperworks/models/block/wooden_rail_raised_ne.json
+1e517f36f16f85ab91a221879560e744ab49d57d assets/copperworks/models/block/wooden_rail_raised_sw.json
+35f5b5a784ce034cab07175bdbc2c83171f87af2 assets/copperworks/models/item/wooden_rail.json
