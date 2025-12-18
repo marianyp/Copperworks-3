@@ -29,6 +29,17 @@ public class CWRecipeProvider extends FabricRecipeProvider {
             @Override
             public void generate() {
                 this.createWoodenRailRecipe();
+                this.createCopperLeverRecipe();
+            }
+
+            private void createCopperLeverRecipe() {
+                this.createShaped(RecipeCategory.REDSTONE, CWBlocks.COPPER_LEVER)
+                    .pattern("C")
+                    .pattern("R")
+                    .input('R', Items.LIGHTNING_ROD)
+                    .input('C', Items.COBBLED_DEEPSLATE)
+                    .criterion(hasItem(Items.LIGHTNING_ROD), conditionsFromItem(Items.LIGHTNING_ROD))
+                    .offerTo(this.exporter);
             }
 
             private void createWoodenRailRecipe() {

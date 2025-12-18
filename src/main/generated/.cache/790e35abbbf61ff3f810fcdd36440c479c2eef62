@@ -1,6 +1,8 @@
 // 1.21.8	-999999999-01-01T00:00:00	Copperworks/Model Definitions
+db70e00778938c7ef6984970d97f6a53f981a57b assets/copperworks/blockstates/copper_lever.json
 715afb7ed6768bb31c25786f56eb809c447c43b9 assets/copperworks/blockstates/copper_rail.json
 600c6e2162c1a9d14b4fb4c060a290fc7b8b8e1b assets/copperworks/blockstates/wooden_rail.json
+9354a4a5f801be695955dcdb04fc9dca32237e6d assets/copperworks/items/copper_lever.json
 96c92d2acd298780a5230058116533b7c544def1 assets/copperworks/items/copper_rail.json
 19b7a843c1af8495ff54dc217d96ac5dc916ede0 assets/copperworks/items/copper_upgrade_kit.json
 bf5b7eb72c785af4a96b5580f25debfaef3e7e6b assets/copperworks/items/wooden_rail.json
@@ -12,6 +14,7 @@ c663d00d1e9cc9a2d318fc89f561860fedb6c4db assets/copperworks/models/block/copper_
 96b7bd862ff7e029a6533dc20114c8101365ac80 assets/copperworks/models/block/wooden_rail_corner.json
 66d15d04095ecab263f1cedbed997acf248f6f5f assets/copperworks/models/block/wooden_rail_raised_ne.json
 1e517f36f16f85ab91a221879560e744ab49d57d assets/copperworks/models/block/wooden_rail_raised_sw.json
+cb9f85cc5e8b949393f411f37f67765e8d0e1d9b assets/copperworks/models/item/copper_lever.json
 3ef64c425705743a628c9a888f320d4ff564340c assets/copperworks/models/item/copper_rail.json
 2a843609fda76c8927bc75fdbc700eb5ada2ebad assets/copperworks/models/item/copper_upgrade_kit.json
 35f5b5a784ce034cab07175bdbc2c83171f87af2 assets/copperworks/models/item/wooden_rail.json

@@ -31,6 +31,18 @@ public class CWBlocks {
             AbstractBlock.Settings.copy(Blocks.RAIL).sounds(BlockSoundGroup.COPPER)
     );
 
+    public static final Block COPPER_LEVER = register(
+            "copper_lever",
+            TimedLeverBlock::new,
+            AbstractBlock.Settings
+                    .create()
+                    .noCollision()
+                    .strength(2)
+                    .requiresTool()
+                    .pistonBehavior(PistonBehavior.DESTROY)
+                    .sounds(BlockSoundGroup.COPPER)
+    );
+
     private static Block register(String name, AbstractBlock.Settings settings) {
         return register(name, Block::new, settings);
     }
@@ -60,6 +72,8 @@ public class CWBlocks {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.REDSTONE).register(entries -> {
             entries.addBefore(Items.RAIL, WOODEN_RAIL);
             entries.addAfter(WOODEN_RAIL, COPPER_RAIL);
+
+            entries.addAfter(Items.LEVER, COPPER_LEVER);
         });
     }
 }

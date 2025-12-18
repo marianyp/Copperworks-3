@@ -19,5 +19,6 @@ public class CWBlockLootTableProvider extends FabricBlockLootTableProvider {
     public void generate() {
         addDrop(CWBlocks.WOODEN_RAIL);
         addDrop(CWBlocks.COPPER_RAIL);
+        addDrop(CWBlocks.COPPER_LEVER);
     }
 }

@@ -3,6 +3,7 @@ package dev.mariany.copperworks.item;
 import dev.mariany.copperworks.Copperworks;
 import dev.mariany.copperworks.advancement.criterion.CWCriterion;
 import dev.mariany.copperworks.block.CWBlocks;
+import dev.mariany.copperworks.sound.CWSoundEvents;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.entity.EquipmentSlot;
@@ -15,7 +16,6 @@ import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Property;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
@@ -87,7 +87,7 @@ public class CopperUpgradeItem extends Item {
                     blockPos.getX(),
                     blockPos.getY(),
                     blockPos.getZ(),
-                    SoundEvents.BLOCK_COPPER_PLACE,
+                    CWSoundEvents.ITEM_COPPER_UPGRADE_KIT_USE,
                     SoundCategory.NEUTRAL,
                     0.33F,
                     MathHelper.nextBetween(world.random, 0.7F, 1F),
