@@ -4,10 +4,12 @@ import dev.mariany.copperworks.advancement.criterion.CWCriterion;
 import dev.mariany.copperworks.block.CWBlocks;
 import dev.mariany.copperworks.event.entity.EntityEvents;
 import dev.mariany.copperworks.event.entity.MinecartEventHandler;
+import dev.mariany.copperworks.event.server.ServerTickEventsHandler;
 import dev.mariany.copperworks.item.CWItems;
 import dev.mariany.copperworks.loot.LootTableModifiers;
 import dev.mariany.copperworks.sound.CWSoundEvents;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,5 +32,6 @@ public class Copperworks implements ModInitializer {
         LootTableModifiers.modifyLootTables();
 
         EntityEvents.BEFORE_MINECART_TRAVEL.register(MinecartEventHandler::onMinecartTravel);
+        ServerTickEvents.END_WORLD_TICK.register(ServerTickEventsHandler::onWorldTick);
     }
 }

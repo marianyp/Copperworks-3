@@ -43,6 +43,21 @@ public class CWBlocks {
                     .sounds(BlockSoundGroup.COPPER)
     );
 
+    public static final Block STICKY_COPPER = register("sticky_copper", genericCopperSettings());
+
+    public static final Block STICKY_COPPER_HONEY = register(
+            "sticky_copper_honey",
+            AbstractBlock.Settings.copy(STICKY_COPPER)
+    );
+
+    private static AbstractBlock.Settings genericCopperSettings() {
+        return AbstractBlock.Settings.create()
+                                     .mapColor(MapColor.ORANGE)
+                                     .requiresTool()
+                                     .strength(3F, 6F)
+                                     .sounds(BlockSoundGroup.COPPER);
+    }
+
     private static Block register(String name, AbstractBlock.Settings settings) {
         return register(name, Block::new, settings);
     }
@@ -64,16 +79,21 @@ public class CWBlocks {
     public static void bootstrap() {
         Copperworks.LOGGER.info("Registering Blocks for {}", Copperworks.MOD_ID);
 
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {
-            entries.addBefore(Items.RAIL, WOODEN_RAIL);
-            entries.addAfter(WOODEN_RAIL, COPPER_RAIL);
-        });
-
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.REDSTONE).register(entries -> {
             entries.addBefore(Items.RAIL, WOODEN_RAIL);
             entries.addAfter(WOODEN_RAIL, COPPER_RAIL);
 
             entries.addAfter(Items.LEVER, COPPER_LEVER);
+        });
+
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(entries -> {
+            entries.addAfter(Items.WAXED_OXIDIZED_COPPER_BULB, STICKY_COPPER);
+            entries.addAfter(STICKY_COPPER, STICKY_COPPER_HONEY);
+        });
+
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {
+            entries.addBefore(Items.RAIL, WOODEN_RAIL);
+            entries.addAfter(WOODEN_RAIL, COPPER_RAIL);
         });
     }
 }

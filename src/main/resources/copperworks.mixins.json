@@ -3,7 +3,9 @@
   "package": "dev.mariany.copperworks.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "AbstractMinecartEntityMixin"
+    "AbstractMinecartEntityMixin",
+    "EntityMixin",
+    "LivingEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

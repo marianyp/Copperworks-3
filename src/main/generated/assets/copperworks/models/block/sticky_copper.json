@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_top",
+  "textures": {
+    "side": "copperworks:block/sticky_copper_base",
+    "top": "copperworks:block/sticky_copper_top"
+  }
+}

@@ -1,19 +1,15 @@
 package dev.mariany.copperworks.datagen;
 
 import dev.mariany.copperworks.block.CWBlocks;
+import dev.mariany.copperworks.tag.CWTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.minecraft.block.Block;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class CWBlockTagProvider extends FabricTagProvider.BlockTagProvider {
-    private static final List<Block> AXE_MINEABLE = List.of(CWBlocks.WOODEN_RAIL);
-    private static final List<Block> RAILS = List.of(CWBlocks.WOODEN_RAIL, CWBlocks.COPPER_RAIL);
-
     public CWBlockTagProvider(
             FabricDataOutput output,
             CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture
@@ -23,12 +19,28 @@ public class CWBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
     @Override
     protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
-        for (Block block : AXE_MINEABLE) {
-            valueLookupBuilder(BlockTags.AXE_MINEABLE).add(block);
-        }
+        valueLookupBuilder(BlockTags.PICKAXE_MINEABLE).add(
+                CWBlocks.COPPER_LEVER,
+                CWBlocks.STICKY_COPPER,
+                CWBlocks.STICKY_COPPER_HONEY
+        );
 
-        for (Block block : RAILS) {
-            valueLookupBuilder(BlockTags.RAILS).add(block);
-        }
+        valueLookupBuilder(BlockTags.AXE_MINEABLE).add(CWBlocks.WOODEN_RAIL);
+
+        valueLookupBuilder(BlockTags.NEEDS_STONE_TOOL).add(
+                CWBlocks.COPPER_LEVER,
+                CWBlocks.STICKY_COPPER,
+                CWBlocks.STICKY_COPPER_HONEY
+        );
+
+        valueLookupBuilder(BlockTags.RAILS).add(
+                CWBlocks.WOODEN_RAIL,
+                CWBlocks.COPPER_RAIL
+        );
+
+        valueLookupBuilder(CWTags.Blocks.STICKY).add(
+                CWBlocks.STICKY_COPPER,
+                CWBlocks.STICKY_COPPER_HONEY
+        );
     }
 }

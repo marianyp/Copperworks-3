@@ -1,5 +1,6 @@
 package dev.mariany.copperworks.datagen;
 
+import dev.mariany.copperworks.Copperworks;
 import dev.mariany.copperworks.block.CWBlocks;
 import dev.mariany.copperworks.item.CWItems;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
@@ -9,6 +10,7 @@ import net.minecraft.block.enums.BlockFace;
 import net.minecraft.client.data.*;
 import net.minecraft.client.render.model.json.WeightedVariant;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 
 public class CWModelProvider extends FabricModelProvider {
@@ -25,10 +27,27 @@ public class CWModelProvider extends FabricModelProvider {
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
         blockStateModelGenerator.registerTurnableRail(CWBlocks.WOODEN_RAIL);
         blockStateModelGenerator.registerTurnableRail(CWBlocks.COPPER_RAIL);
-        this.registerLever(blockStateModelGenerator, CWBlocks.COPPER_LEVER);
+        this.registerLever(blockStateModelGenerator);
+        this.registerStickyBlock(blockStateModelGenerator, CWBlocks.STICKY_COPPER);
+        this.registerStickyBlock(blockStateModelGenerator, CWBlocks.STICKY_COPPER_HONEY);
     }
 
-    private void registerLever(BlockStateModelGenerator blockStateModelGenerator, Block lever) {
+    private void registerStickyBlock(BlockStateModelGenerator blockStateModelGenerator, Block block) {
+        Identifier base = Copperworks.id("block/sticky_copper_base");
+
+        blockStateModelGenerator.registerSingleton(
+                block,
+                TexturedModel.CUBE_TOP.andThen(textures -> {
+                    textures.put(TextureKey.SIDE, base);
+                    textures.put(TextureKey.BOTTOM, base);
+                    textures.put(TextureKey.PARTICLE, base);
+                })
+        );
+    }
+
+    private void registerLever(BlockStateModelGenerator blockStateModelGenerator) {
+        Block lever = CWBlocks.COPPER_LEVER;
+
         WeightedVariant weightedVariant = BlockStateModelGenerator.createWeightedVariant(
                 ModelIds.getBlockModelId(lever)
         );
