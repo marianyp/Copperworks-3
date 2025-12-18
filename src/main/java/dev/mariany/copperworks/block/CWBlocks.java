@@ -28,7 +28,7 @@ public class CWBlocks {
     public static final Block COPPER_RAIL = register(
             "copper_rail",
             RailBlock::new,
-            AbstractBlock.Settings.copy(Blocks.RAIL)
+            AbstractBlock.Settings.copy(Blocks.RAIL).sounds(BlockSoundGroup.COPPER)
     );
 
     private static Block register(String name, AbstractBlock.Settings settings) {

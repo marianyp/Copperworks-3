@@ -7,5 +7,13 @@
       "minecraft:dig/wood3",
       "minecraft:dig/wood4"
     ]
+  },
+  "item.copper_upgrade_kit.use": {
+    "subtitle": "subtitles.item.generic.break",
+    "sounds": [
+      "minecraft:block/smithing_table/smithing_table1",
+      "minecraft:block/smithing_table/smithing_table2",
+      "minecraft:block/smithing_table/smithing_table3"
+    ]
   }
 }

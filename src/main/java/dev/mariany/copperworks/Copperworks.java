@@ -1,8 +1,11 @@
 package dev.mariany.copperworks;
 
+import dev.mariany.copperworks.advancement.criterion.CWCriterion;
 import dev.mariany.copperworks.block.CWBlocks;
 import dev.mariany.copperworks.event.entity.EntityEvents;
 import dev.mariany.copperworks.event.entity.MinecartEventHandler;
+import dev.mariany.copperworks.item.CWItems;
+import dev.mariany.copperworks.loot.LootTableModifiers;
 import dev.mariany.copperworks.sound.CWSoundEvents;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
@@ -20,12 +23,12 @@ public class Copperworks implements ModInitializer {
     @Override
     public void onInitialize() {
         CWSoundEvents.bootstrap();
+        CWCriterion.bootstrap();
+        CWItems.bootstrap();
         CWBlocks.bootstrap();
 
-        registerEvents();
-    }
+        LootTableModifiers.modifyLootTables();
 
-    private void registerEvents() {
         EntityEvents.BEFORE_MINECART_TRAVEL.register(MinecartEventHandler::onMinecartTravel);
     }
 }
