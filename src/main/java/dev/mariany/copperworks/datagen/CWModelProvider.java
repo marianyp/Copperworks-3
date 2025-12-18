@@ -20,6 +20,8 @@ public class CWModelProvider extends FabricModelProvider {
 
     @Override
     public void generateItemModels(ItemModelGenerator itemModelGenerator) {
+        itemModelGenerator.register(CWItems.COPPER_PLATE, Models.GENERATED);
+        itemModelGenerator.register(CWItems.IRON_PLATE, Models.GENERATED);
         itemModelGenerator.register(CWItems.COPPER_UPGRADE_KIT, Models.GENERATED);
     }
 

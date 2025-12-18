@@ -14,6 +14,10 @@ import net.minecraft.util.Rarity;
 import java.util.function.Function;
 
 public class CWItems {
+    public static final Item COPPER_PLATE = register("copper_plate");
+
+    public static final Item IRON_PLATE = register("iron_plate");
+
     public static final Item COPPER_UPGRADE_KIT = register(
             "copper_upgrade_kit",
             CopperUpgradeItem::new,
@@ -45,6 +49,11 @@ public class CWItems {
 
     public static void bootstrap() {
         Copperworks.LOGGER.info("Registering Items for {}", Copperworks.MOD_ID);
+
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries -> {
+            entries.addAfter(Items.IRON_INGOT, IRON_PLATE);
+            entries.addAfter(Items.COPPER_INGOT, COPPER_PLATE);
+        });
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {
             entries.addBefore(Items.NAME_TAG, COPPER_UPGRADE_KIT);
