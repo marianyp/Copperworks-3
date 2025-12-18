@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "sticky_copper",
+  "key": {
+    "C": "minecraft:copper_ingot",
+    "I": "minecraft:honey_bottle",
+    "P": "copperworks:copper_plate"
+  },
+  "pattern": [
+    "PPP",
+    "CIC",
+    "PPP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "copperworks:sticky_copper_honey"
+  }
+}

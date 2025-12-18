@@ -4,6 +4,7 @@ import dev.mariany.copperworks.block.CWBlocks;
 import dev.mariany.copperworks.item.CWItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
+import net.minecraft.block.Block;
 import net.minecraft.data.recipe.RecipeExporter;
 import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.item.Item;
@@ -34,6 +35,21 @@ public class CWRecipeProvider extends FabricRecipeProvider {
                 this.createPlateRecipe(CWItems.IRON_PLATE, Items.IRON_INGOT);
                 this.createWoodenRailRecipe();
                 this.createCopperLeverRecipe();
+                this.createStickyCopperRecipe(Items.SLIME_BALL, CWBlocks.STICKY_COPPER);
+                this.createStickyCopperRecipe(Items.HONEY_BOTTLE, CWBlocks.STICKY_COPPER_HONEY);
+            }
+
+            private void createStickyCopperRecipe(Item input, Block output) {
+                this.createShaped(RecipeCategory.MISC, output)
+                    .input('P', CWItems.COPPER_PLATE)
+                    .input('C', Items.COPPER_INGOT)
+                    .input('I', input)
+                    .pattern("PPP")
+                    .pattern("CIC")
+                    .pattern("PPP")
+                    .criterion(hasItem(CWItems.COPPER_PLATE), conditionsFromItem(CWItems.COPPER_PLATE))
+                    .group("sticky_copper")
+                    .offerTo(exporter);
             }
 
             private void createCopperLeverRecipe() {
