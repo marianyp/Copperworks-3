@@ -1,6 +1,7 @@
 package dev.mariany.copperworks.item;
 
 import dev.mariany.copperworks.Copperworks;
+import dev.mariany.copperworks.item.upgrade.copper.CopperUpgradeItem;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;

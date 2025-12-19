@@ -5,12 +5,16 @@
   "mixins": [
     "AbstractMinecartEntityMixin",
     "EntityMixin",
-    "LivingEntityMixin"
+    "LivingEntityMixin",
+    "ServerPlayerInteractionManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "overwrites": {
     "requireAnnotations": true
-  }
+  },
+  "client": [
+    "ClientPlayerInteractionManagerMixin"
+  ]
 }

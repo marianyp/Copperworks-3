@@ -6,10 +6,13 @@ import dev.mariany.copperworks.event.entity.EntityEvents;
 import dev.mariany.copperworks.event.entity.MinecartEventHandler;
 import dev.mariany.copperworks.event.server.ServerTickEventsHandler;
 import dev.mariany.copperworks.item.CWItems;
+import dev.mariany.copperworks.item.upgrade.copper.CopperUpgrade;
 import dev.mariany.copperworks.loot.LootTableModifiers;
+import dev.mariany.copperworks.registry.CWRegistryKeys;
 import dev.mariany.copperworks.sound.CWSoundEvents;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +27,8 @@ public class Copperworks implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        DynamicRegistries.registerSynced(CWRegistryKeys.COPPER_UPGRADE, CopperUpgrade.CODEC);
+
         CWSoundEvents.bootstrap();
         CWCriterion.bootstrap();
         CWItems.bootstrap();
