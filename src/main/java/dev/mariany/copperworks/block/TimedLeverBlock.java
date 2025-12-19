@@ -1,6 +1,5 @@
 package dev.mariany.copperworks.block;
 
-import dev.mariany.copperworks.sound.CWSoundEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeverBlock;
@@ -9,6 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -25,8 +25,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.BiConsumer;
 
 public class TimedLeverBlock extends LeverBlock {
-    public TimedLeverBlock(Settings settings) {
+    protected final SoundEvent soundEvent;
+
+    public TimedLeverBlock(SoundEvent soundEvent, Settings settings) {
         super(settings);
+
+        this.soundEvent = soundEvent;
 
         this.setDefaultState(
                 this.stateManager.getDefaultState()
@@ -87,14 +91,14 @@ public class TimedLeverBlock extends LeverBlock {
         world.updateNeighborsAlways(pos.offset(direction), this, wireOrientation);
     }
 
-    protected static void playClickSound(
+    protected void playClickSound(
             @Nullable PlayerEntity player,
             WorldAccess world,
             BlockPos pos,
             boolean powered
     ) {
-        float volume = powered ? 0.6F : 0.5F;
-        world.playSound(player, pos, CWSoundEvents.BLOCK_COPPER_LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, volume);
+        float pitch = powered ? 0.6F : 0.5F;
+        world.playSound(player, pos, this.soundEvent, SoundCategory.BLOCKS, 1, pitch);
     }
 
     @Override

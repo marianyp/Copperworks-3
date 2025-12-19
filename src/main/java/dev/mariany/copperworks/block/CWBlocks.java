@@ -2,6 +2,7 @@ package dev.mariany.copperworks.block;
 
 import dev.mariany.copperworks.Copperworks;
 import dev.mariany.copperworks.item.AlternativeScaffoldingBlockItem;
+import dev.mariany.copperworks.sound.CWSoundEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.*;
 import net.minecraft.block.piston.PistonBehavior;
@@ -33,7 +34,7 @@ public class CWBlocks {
 
     public static final Block COPPER_LEVER = register(
             "copper_lever",
-            TimedLeverBlock::new,
+            settings -> new TimedLeverBlock(CWSoundEvents.BLOCK_COPPER_LEVER_CLICK, settings),
             AbstractBlock.Settings
                     .create()
                     .noCollision()
