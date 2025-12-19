@@ -17,6 +17,7 @@ public interface CopperUpgrades {
     static void boostrap(Registerable<CopperUpgrade> registry) {
         register(registry, CWBlocks.WOODEN_RAIL, CWBlocks.COPPER_RAIL, Properties.RAIL_SHAPE, Properties.WATERLOGGED);
         register(registry, Blocks.LEVER, CWBlocks.COPPER_LEVER, Properties.FACING, Properties.BLOCK_FACE);
+        register(registry, Blocks.SCAFFOLDING, CWBlocks.COPPER_SCAFFOLDING);
     }
 
     private static void register(

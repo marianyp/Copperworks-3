@@ -4,9 +4,9 @@
   "block.copperworks.copper_lever": "Copper Lever",
   "block.copperworks.sticky_copper": "Sticky Copper",
   "block.copperworks.sticky_copper_honey": "Sticky Copper",
+  "block.copperworks.copper_scaffolding": "Copper Scaffolding",
   "item.copperworks.copper_upgrade_kit": "Copper Upgrade Kit",
   "item.copperworks.copper_plate": "Copper Plate",
   "item.copperworks.iron_plate": "Iron Plate",
-  "item.copperworks.copper_upgrade_kit.applies_to": "Wooden Rails, Levers, and Scaffolding",
-  "subtitles.item.copperworks.copper_upgrade_kit.use": "Copper Upgrade Kit used"
+  "item.copperworks.copper_upgrade_kit.applies_to": "Wooden Rails, Levers, and Scaffolding"
 }

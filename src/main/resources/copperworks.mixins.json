@@ -4,6 +4,8 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "AbstractMinecartEntityMixin",
+    "BlockItemMixin",
+    "BlockMixin",
     "EntityMixin",
     "LivingEntityMixin",
     "ServerPlayerInteractionManagerMixin"

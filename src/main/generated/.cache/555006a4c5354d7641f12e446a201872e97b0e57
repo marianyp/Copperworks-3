@@ -1,6 +1,6 @@
 // 1.21.8	-999999999-01-01T00:00:00	Copperworks/Tags for minecraft:block
 acfb35dc512c1b2e7bbc16016fbc8ee62d9ebb91 data/copperworks/tags/block/sticky.json
 35e634887d3e279af5e5b4301e39aed1e23d0589 data/minecraft/tags/block/mineable/axe.json
-9a4b21e0414a622302d105f4c7c57ff44d4aa70d data/minecraft/tags/block/mineable/pickaxe.json
-9a4b21e0414a622302d105f4c7c57ff44d4aa70d data/minecraft/tags/block/needs_stone_tool.json
+6ea88214cb30990301b83c6bacedb9a99b282e92 data/minecraft/tags/block/mineable/pickaxe.json
+6ea88214cb30990301b83c6bacedb9a99b282e92 data/minecraft/tags/block/needs_stone_tool.json
 c5bc897289c41ba5ed0fbf8b706ef47e0f93f38b data/minecraft/tags/block/rails.json

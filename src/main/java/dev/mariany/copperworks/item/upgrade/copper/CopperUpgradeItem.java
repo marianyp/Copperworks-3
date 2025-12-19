@@ -3,7 +3,6 @@ package dev.mariany.copperworks.item.upgrade.copper;
 import dev.mariany.copperworks.Copperworks;
 import dev.mariany.copperworks.advancement.criterion.CWCriterion;
 import dev.mariany.copperworks.registry.CWRegistryKeys;
-import dev.mariany.copperworks.sound.CWSoundEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.type.TooltipDisplayComponent;
@@ -19,13 +18,12 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.Property;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldEvents;
 import net.minecraft.world.event.GameEvent;
 
 import java.util.Collection;
@@ -104,17 +102,13 @@ public class CopperUpgradeItem extends Item {
                 world.setBlockState(blockPos, updatedBlockState);
                 world.emitGameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Emitter.of(player, updatedBlockState));
 
-                world.playSound(
-                        player,
-                        blockPos.getX(),
-                        blockPos.getY(),
-                        blockPos.getZ(),
-                        CWSoundEvents.ITEM_COPPER_UPGRADE_KIT_USE,
-                        SoundCategory.NEUTRAL,
-                        1F,
-                        MathHelper.nextBetween(world.random, 0.7F, 1F),
-                        world.random.nextLong()
-                );
+                if (world.isClient()) {
+                    world.syncWorldEvent(
+                            WorldEvents.BLOCK_BROKEN,
+                            blockPos,
+                            Block.getRawIdFromState(updatedBlockState)
+                    );
+                }
 
                 if (player instanceof ServerPlayerEntity serverPlayer) {
                     CWCriterion.USE_COPPER_UPGRADE_KIT.trigger(serverPlayer);

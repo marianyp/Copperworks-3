@@ -8,15 +8,6 @@
       "minecraft:dig/wood4"
     ]
   },
-  "item.copper_upgrade_kit.use": {
-    "subtitle": "subtitles.item.copperworks.copper_upgrade_kit.use",
-    "sounds": [
-      "minecraft:block/copper/break1",
-      "minecraft:block/copper/break2",
-      "minecraft:block/copper/break3",
-      "minecraft:block/copper/break4"
-    ]
-  },
   "block.copper_lever.click": {
     "subtitle": "subtitles.block.lever.click",
     "sounds": [

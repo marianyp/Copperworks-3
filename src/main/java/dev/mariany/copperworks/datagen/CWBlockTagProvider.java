@@ -22,7 +22,8 @@ public class CWBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         valueLookupBuilder(BlockTags.PICKAXE_MINEABLE).add(
                 CWBlocks.COPPER_LEVER,
                 CWBlocks.STICKY_COPPER,
-                CWBlocks.STICKY_COPPER_HONEY
+                CWBlocks.STICKY_COPPER_HONEY,
+                CWBlocks.COPPER_SCAFFOLDING
         );
 
         valueLookupBuilder(BlockTags.AXE_MINEABLE).add(CWBlocks.WOODEN_RAIL);
@@ -30,7 +31,8 @@ public class CWBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         valueLookupBuilder(BlockTags.NEEDS_STONE_TOOL).add(
                 CWBlocks.COPPER_LEVER,
                 CWBlocks.STICKY_COPPER,
-                CWBlocks.STICKY_COPPER_HONEY
+                CWBlocks.STICKY_COPPER_HONEY,
+                CWBlocks.COPPER_SCAFFOLDING
         );
 
         valueLookupBuilder(BlockTags.RAILS).add(

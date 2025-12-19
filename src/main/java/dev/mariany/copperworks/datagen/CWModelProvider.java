@@ -22,6 +22,7 @@ public class CWModelProvider extends FabricModelProvider {
     public void generateItemModels(ItemModelGenerator itemModelGenerator) {
         itemModelGenerator.register(CWItems.COPPER_PLATE, Models.GENERATED);
         itemModelGenerator.register(CWItems.IRON_PLATE, Models.GENERATED);
+
         itemModelGenerator.register(CWItems.COPPER_UPGRADE_KIT, Models.GENERATED);
     }
 
@@ -29,9 +30,27 @@ public class CWModelProvider extends FabricModelProvider {
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
         blockStateModelGenerator.registerTurnableRail(CWBlocks.WOODEN_RAIL);
         blockStateModelGenerator.registerTurnableRail(CWBlocks.COPPER_RAIL);
+
         this.registerLever(blockStateModelGenerator);
+
         this.registerStickyBlock(blockStateModelGenerator, CWBlocks.STICKY_COPPER);
         this.registerStickyBlock(blockStateModelGenerator, CWBlocks.STICKY_COPPER_HONEY);
+        this.registerCopperScaffolding(blockStateModelGenerator);
+
+    }
+
+    private void registerCopperScaffolding(BlockStateModelGenerator blockStateModelGenerator) {
+        Block frame = CWBlocks.COPPER_SCAFFOLDING;
+
+        blockStateModelGenerator.registerItemModel(frame.asItem());
+
+        blockStateModelGenerator.blockStateCollector.accept(
+                VariantsBlockModelDefinitionCreator.of(
+                        frame,
+                        BlockStateModelGenerator.createWeightedVariant(ModelIds.getBlockModelId(frame))
+                )
+        );
+
     }
 
     private void registerStickyBlock(BlockStateModelGenerator blockStateModelGenerator, Block block) {
