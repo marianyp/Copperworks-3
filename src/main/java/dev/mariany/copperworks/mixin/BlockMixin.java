@@ -2,7 +2,6 @@ package dev.mariany.copperworks.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
 import dev.mariany.copperworks.block.SelfInserting;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -31,11 +30,10 @@ public class BlockMixin {
             BlockEntity blockEntity,
             Entity entity,
             ItemStack tool,
-            Operation<Void> original,
-            @Local(index = 2, argsOnly = true) PlayerEntity player
+            Operation<Void> original
     ) {
-        if (state.getBlock() instanceof SelfInserting) {
-            SelfInserting.insert(world, player, pos, state);
+        if (state.getBlock() instanceof SelfInserting && entity instanceof PlayerEntity player) {
+            SelfInserting.insert(world, player, pos, state, tool);
         } else {
             original.call(state, world, pos, blockEntity, entity, tool);
         }

@@ -53,6 +53,12 @@ public class TimedLeverBlock extends LeverBlock {
         }
     }
 
+    protected void scheduleTick(World world, BlockPos pos) {
+        if (!world.isClient() && !world.getBlockTickScheduler().isQueued(pos, this)) {
+            world.scheduleBlockTick(pos, this, this.getPressTicks());
+        }
+    }
+
     @Override
     protected void onStateReplaced(BlockState state, ServerWorld world, BlockPos pos, boolean moved) {
         if (!moved && state.get(POWERED)) {
@@ -73,7 +79,7 @@ public class TimedLeverBlock extends LeverBlock {
     public void powerOn(BlockState state, World world, BlockPos pos, @Nullable PlayerEntity player) {
         world.setBlockState(pos, state.with(POWERED, true), Block.NOTIFY_ALL);
         this.updateNeighbors(state, world, pos);
-        world.scheduleBlockTick(pos, this, this.getPressTicks());
+        this.scheduleTick(world, pos);
         playClickSound(player, world, pos, true);
         world.emitGameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);
     }
@@ -110,7 +116,7 @@ public class TimedLeverBlock extends LeverBlock {
             BiConsumer<ItemStack, BlockPos> stackMerger
     ) {
         if (explosion.canTriggerBlocks() && !state.get(POWERED)) {
-            world.scheduleBlockTick(pos, this, this.getPressTicks());
+            this.scheduleTick(world, pos);
         }
 
         super.onExploded(state, world, pos, explosion, stackMerger);
