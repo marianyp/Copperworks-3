@@ -1,0 +1,7 @@
+{
+  "copied_properties": [
+    "facing"
+  ],
+  "merge_inventories": true,
+  "to": "copperworks:copper_barrel"
+}

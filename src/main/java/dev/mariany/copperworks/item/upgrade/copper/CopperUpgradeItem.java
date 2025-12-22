@@ -2,6 +2,7 @@ package dev.mariany.copperworks.item.upgrade.copper;
 
 import dev.mariany.copperworks.Copperworks;
 import dev.mariany.copperworks.advancement.criterion.CWCriterion;
+import dev.mariany.copperworks.inventory.InventoryHelper;
 import dev.mariany.copperworks.registry.CWRegistryKeys;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -20,12 +21,14 @@ import net.minecraft.state.property.Property;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
 import net.minecraft.world.event.GameEvent;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -41,6 +44,29 @@ public class CopperUpgradeItem extends Item {
 
     public CopperUpgradeItem(Settings settings) {
         super(settings);
+    }
+
+    public static boolean shouldOverrideInteraction(PlayerEntity player, Hand hand, BlockHitResult hitResult) {
+        World world = player.getWorld();
+        DynamicRegistryManager registryManager = world.getRegistryManager();
+
+        if (player.getStackInHand(hand).getItem() instanceof CopperUpgradeItem) {
+            BlockState state = world.getBlockState(hitResult.getBlockPos());
+
+            Optional<Registry<CopperUpgrade>> optionalRegistry = registryManager.getOptional(
+                    CWRegistryKeys.COPPER_UPGRADE
+            );
+
+            return state.getRegistryEntry()
+                        .getKey()
+                        .map(key -> optionalRegistry
+                                .map(registry -> registry.getEntry(key.getValue()).isPresent())
+                                .orElse(false)
+                        )
+                        .orElse(false);
+        }
+
+        return false;
     }
 
     @Override
@@ -102,8 +128,8 @@ public class CopperUpgradeItem extends Item {
         PlayerEntity player = context.getPlayer();
         Hand hand = context.getHand();
         ItemStack itemStack = context.getStack();
-        BlockPos blockPos = context.getBlockPos();
-        BlockState blockState = world.getBlockState(blockPos);
+        BlockPos pos = context.getBlockPos();
+        BlockState blockState = world.getBlockState(pos);
 
         Optional<RegistryKey<Block>> optionalBlockKey = blockState.getRegistryEntry().getKey();
 
@@ -133,13 +159,22 @@ public class CopperUpgradeItem extends Item {
                         copperUpgrade.copiedProperties()
                 );
 
-                world.setBlockState(blockPos, updatedBlockState);
-                world.emitGameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Emitter.of(player, updatedBlockState));
+                boolean mergeInventories = copperUpgrade.mergeInventories() && !world.isClient();
+
+                List<ItemStack> stacks = InventoryHelper.copy(world, pos, mergeInventories);
+
+                world.setBlockState(pos, updatedBlockState);
+                world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Emitter.of(player, updatedBlockState));
+
+                if (mergeInventories) {
+                    List<ItemStack> overflow = InventoryHelper.addAll(world, pos, stacks);
+                    InventoryHelper.scatterItems(world, pos, overflow);
+                }
 
                 if (world.isClient()) {
                     world.syncWorldEvent(
                             WorldEvents.BLOCK_BROKEN,
-                            blockPos,
+                            pos,
                             Block.getRawIdFromState(updatedBlockState)
                     );
                 }

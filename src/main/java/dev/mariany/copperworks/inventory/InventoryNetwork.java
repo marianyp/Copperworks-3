@@ -13,7 +13,6 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextCodecs;
-import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
@@ -23,22 +22,22 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class StorageNetwork implements Inventory {
-    public static final Codec<StorageNetwork> CODEC = RecordCodecBuilder.create(
+public class InventoryNetwork implements Inventory {
+    public static final Codec<InventoryNetwork> CODEC = RecordCodecBuilder.create(
             instance -> instance
                     .group(
                             BlockPos.CODEC.optionalFieldOf("controller_position")
-                                          .forGetter(StorageNetwork::getControllerPos),
+                                          .forGetter(InventoryNetwork::getControllerPos),
                             TextCodecs.CODEC.optionalFieldOf("custom_name")
-                                            .forGetter(StorageNetwork::getCustomName),
+                                            .forGetter(InventoryNetwork::getCustomName),
                             StackWithSlot.CODEC.listOf()
                                                .fieldOf("held_stacks")
-                                               .forGetter(StorageNetwork::getHeldStacks),
+                                               .forGetter(InventoryNetwork::getHeldStacks),
                             BlockPos.CODEC.listOf()
                                           .fieldOf("connections")
-                                          .forGetter(StorageNetwork::getConnections),
+                                          .forGetter(InventoryNetwork::getConnections),
                             Codec.INT.fieldOf("slots_per_connection")
-                                     .forGetter(StorageNetwork::getSlotsPerConnection)
+                                     .forGetter(InventoryNetwork::getSlotsPerConnection)
                     )
                     .apply(
                             instance,
@@ -49,7 +48,7 @@ public class StorageNetwork implements Inventory {
                                     connections,
                                     slotsPerConnection
                             ) ->
-                                    new StorageNetwork(
+                                    new InventoryNetwork(
                                             Optional.empty(),
                                             pos,
                                             customName,
@@ -60,9 +59,9 @@ public class StorageNetwork implements Inventory {
                     )
     );
 
-    public static final PacketCodec<RegistryByteBuf, StorageNetwork> PACKET_CODEC = PacketCodec.of(
-            StorageNetwork::write,
-            StorageNetwork::read
+    public static final PacketCodec<RegistryByteBuf, InventoryNetwork> PACKET_CODEC = PacketCodec.of(
+            InventoryNetwork::write,
+            InventoryNetwork::read
     );
 
     public static final PacketCodec<RegistryByteBuf, StackWithSlot> STACK_WITH_SLOT_PACKET_CODEC =
@@ -96,7 +95,7 @@ public class StorageNetwork implements Inventory {
     @Nullable
     protected Text customName;
 
-    public StorageNetwork(@Nullable World world, BlockPos pos, int slotsPerConnection) {
+    public InventoryNetwork(@Nullable World world, BlockPos pos, int slotsPerConnection) {
         this(
                 Optional.ofNullable(world),
                 Optional.of(pos),
@@ -109,7 +108,7 @@ public class StorageNetwork implements Inventory {
         this.connections.add(this.controllerPos);
     }
 
-    public StorageNetwork(
+    public InventoryNetwork(
             Optional<World> world,
             Optional<BlockPos> pos,
             Optional<Text> customName,
@@ -132,7 +131,7 @@ public class StorageNetwork implements Inventory {
                              .collect(Collectors.toMap(StackWithSlot::slot, StackWithSlot::stack));
     }
 
-    public static void write(StorageNetwork network, RegistryByteBuf buf) {
+    public static void write(InventoryNetwork network, RegistryByteBuf buf) {
         BlockPos.PACKET_CODEC.collect(PacketCodecs::optional).encode(
                 buf,
                 Optional.ofNullable(network.controllerPos)
@@ -147,14 +146,14 @@ public class StorageNetwork implements Inventory {
         buf.writeInt(network.slotsPerConnection);
     }
 
-    public static StorageNetwork read(RegistryByteBuf buf) {
+    public static InventoryNetwork read(RegistryByteBuf buf) {
         Optional<BlockPos> pos = BlockPos.PACKET_CODEC.collect(PacketCodecs::optional).decode(buf);
         Optional<Text> optionalCustomName = TextCodecs.OPTIONAL_PACKET_CODEC.decode(buf);
         List<StackWithSlot> heldStacks = STACK_WITH_SLOT_PACKET_CODEC.collect(PacketCodecs.toList()).decode(buf);
         List<BlockPos> connections = BlockPos.PACKET_CODEC.collect(PacketCodecs.toList()).decode(buf);
         int slotsPerConnection = buf.readInt();
 
-        return new StorageNetwork(
+        return new InventoryNetwork(
                 Optional.empty(),
                 pos,
                 optionalCustomName,
@@ -218,7 +217,7 @@ public class StorageNetwork implements Inventory {
         return this.connections.stream().toList();
     }
 
-    public void connect(StorageNetwork otherNetwork, boolean mergeItems) {
+    public void connect(InventoryNetwork otherNetwork, boolean mergeItems) {
         if (otherNetwork != this) {
             this.connections.addAll(otherNetwork.getConnections());
 
@@ -230,7 +229,11 @@ public class StorageNetwork implements Inventory {
 
     public void disconnect(BlockPos pos) {
         this.connections.remove(pos);
-        this.scatterOverflowingItems(pos, this.adjustSlots());
+
+        if (this.world != null) {
+            InventoryHelper.scatterItems(this.world, pos, this.adjustSlots());
+        }
+
         this.reassignController();
         this.markDirty();
     }
@@ -256,7 +259,7 @@ public class StorageNetwork implements Inventory {
             int newSlot;
 
             while (true) {
-                newSlot = StorageNetworkHelper.shiftLeft(this, slot);
+                newSlot = InventoryHelper.shiftLeft(this, slot);
 
                 if (newSlot == slot) {
                     boolean outsideBounds = newSlot >= networkSize;
@@ -282,18 +285,6 @@ public class StorageNetwork implements Inventory {
         }
 
         return overflow;
-    }
-
-    private void scatterOverflowingItems(BlockPos pos, List<ItemStack> stacks) {
-        if (this.world != null) {
-            stacks.forEach(stack -> ItemScatterer.spawn(
-                    this.world,
-                    pos.getX(),
-                    pos.getY(),
-                    pos.getZ(),
-                    stack
-            ));
-        }
     }
 
     private void reassignController() {
@@ -322,13 +313,11 @@ public class StorageNetwork implements Inventory {
 
     @Override
     public void markDirty() {
-        if (this.world != null) {
-            for (BlockPos pos : this.connections) {
-                BlockEntity blockEntity = this.world.getBlockEntity(pos);
+        if (this.world != null && this.controllerPos != null) {
+            BlockEntity blockEntity = this.world.getBlockEntity(this.controllerPos);
 
-                if (blockEntity != null) {
-                    blockEntity.markDirty();
-                }
+            if (blockEntity != null) {
+                blockEntity.markDirty();
             }
         }
     }

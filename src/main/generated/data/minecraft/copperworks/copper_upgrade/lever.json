@@ -3,5 +3,6 @@
     "face",
     "facing"
   ],
+  "merge_inventories": false,
   "to": "copperworks:copper_lever"
 }

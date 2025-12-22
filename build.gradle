@@ -13,6 +13,10 @@ base {
 repositories {
 }
 
+loom {
+	accessWidenerPath = file("src/main/resources/copperworks.accesswidener")
+}
+
 fabricApi {
 	configureDataGeneration {
 		client = true

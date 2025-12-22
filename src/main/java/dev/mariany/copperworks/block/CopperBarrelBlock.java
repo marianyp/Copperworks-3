@@ -3,11 +3,12 @@ package dev.mariany.copperworks.block;
 import com.mojang.serialization.MapCodec;
 import dev.mariany.copperworks.block.entity.CWBlockEntities;
 import dev.mariany.copperworks.block.entity.CopperBarrelBlockEntity;
+import dev.mariany.copperworks.inventory.InventoryNetwork;
 import dev.mariany.copperworks.inventory.NetworkState;
-import dev.mariany.copperworks.inventory.StorageNetwork;
-import dev.mariany.copperworks.packet.clientbound.StorageNetworkUpdate;
+import dev.mariany.copperworks.packet.clientbound.InventoryNetworkUpdate;
 import dev.mariany.copperworks.stat.CWStats;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
@@ -15,10 +16,16 @@ import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.mob.PiglinBrain;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.EnumProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.BlockMirror;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -32,14 +39,36 @@ import java.util.Set;
 
 public class CopperBarrelBlock extends BlockWithEntity {
     public static final MapCodec<CopperBarrelBlock> CODEC = createCodec(CopperBarrelBlock::new);
+    public static final EnumProperty<Direction> FACING = Properties.FACING;
 
     public CopperBarrelBlock(Settings settings) {
         super(settings);
+        this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
     }
 
     @Override
     protected MapCodec<? extends BlockWithEntity> getCodec() {
         return CODEC;
+    }
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
+    }
+
+    @Override
+    protected BlockState rotate(BlockState state, BlockRotation rotation) {
+        return state.with(FACING, rotation.rotate(state.get(FACING)));
+    }
+
+    @Override
+    protected BlockState mirror(BlockState state, BlockMirror mirror) {
+        return state.rotate(mirror.getRotation(state.get(FACING)));
+    }
+
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        return this.getDefaultState().with(FACING, ctx.getPlayerLookDirection().getOpposite());
     }
 
     @Override
@@ -66,14 +95,14 @@ public class CopperBarrelBlock extends BlockWithEntity {
 
             if (world instanceof ServerWorld serverWorld) {
                 GlobalPos globalPos = GlobalPos.create(world.getRegistryKey(), pos);
-                StorageNetwork network = copperBarrelBlockEntity.getNetwork();
+                InventoryNetwork network = copperBarrelBlockEntity.getNetwork();
 
                 if (player instanceof NetworkState networkState) {
                     networkState.copperworks2$setNetwork(copperBarrelBlockEntity.getNetwork());
                 }
 
                 if (player instanceof ServerPlayerEntity serverPlayer) {
-                    ServerPlayNetworking.send(serverPlayer, new StorageNetworkUpdate(globalPos, network));
+                    ServerPlayNetworking.send(serverPlayer, new InventoryNetworkUpdate(globalPos, network));
                 }
 
                 PiglinBrain.onGuardedBlockInteracted(serverWorld, player, true);
@@ -93,7 +122,7 @@ public class CopperBarrelBlock extends BlockWithEntity {
                 BlockEntity neighboringBlockEntity = world.getBlockEntity(offsetPos);
 
                 if (neighboringBlockEntity instanceof CopperBarrelBlockEntity otherCopperBarrelBlockEntity) {
-                    StorageNetwork network = otherCopperBarrelBlockEntity.getNetwork();
+                    InventoryNetwork network = otherCopperBarrelBlockEntity.getNetwork();
 
                     network.getControllerPos().ifPresent(controllerPos -> {
                         copperBarrelBlockEntity.connect(

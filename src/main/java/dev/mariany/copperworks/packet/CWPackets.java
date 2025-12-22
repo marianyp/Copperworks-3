@@ -1,7 +1,7 @@
 package dev.mariany.copperworks.packet;
 
-import dev.mariany.copperworks.packet.clientbound.StorageNetworkUpdate;
-import dev.mariany.copperworks.packet.serverbound.StorageNetworkHandshake;
+import dev.mariany.copperworks.packet.clientbound.InventoryNetworkUpdate;
+import dev.mariany.copperworks.packet.serverbound.InventoryNetworkHandshake;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.network.RegistryByteBuf;
 
@@ -12,10 +12,10 @@ public class CWPackets {
     }
 
     private static void clientbound(PayloadTypeRegistry<RegistryByteBuf> registry) {
-        registry.register(StorageNetworkUpdate.ID, StorageNetworkUpdate.CODEC);
+        registry.register(InventoryNetworkUpdate.ID, InventoryNetworkUpdate.CODEC);
     }
 
     private static void serverbound(PayloadTypeRegistry<RegistryByteBuf> registry) {
-        registry.register(StorageNetworkHandshake.ID, StorageNetworkHandshake.CODEC);
+        registry.register(InventoryNetworkHandshake.ID, InventoryNetworkHandshake.CODEC);
     }
 }

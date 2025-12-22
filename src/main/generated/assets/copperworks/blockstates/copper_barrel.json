@@ -1,7 +1,30 @@
 {
   "variants": {
-    "": {
+    "facing=down": {
+      "model": "copperworks:block/copper_barrel",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "copperworks:block/copper_barrel",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north": {
+      "model": "copperworks:block/copper_barrel",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "copperworks:block/copper_barrel",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up": {
       "model": "copperworks:block/copper_barrel"
+    },
+    "facing=west": {
+      "model": "copperworks:block/copper_barrel",
+      "x": 90,
+      "y": 270
     }
   }
 }

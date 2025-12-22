@@ -18,6 +18,7 @@ public interface CopperUpgrades {
         register(registry, CWBlocks.WOODEN_RAIL, CWBlocks.COPPER_RAIL, Properties.RAIL_SHAPE, Properties.WATERLOGGED);
         register(registry, Blocks.LEVER, CWBlocks.COPPER_LEVER, Properties.FACING, Properties.BLOCK_FACE);
         register(registry, Blocks.SCAFFOLDING, CWBlocks.COPPER_SCAFFOLDING);
+        register(registry, Blocks.BARREL, CWBlocks.COPPER_BARREL, true, Properties.FACING);
     }
 
     private static void register(
@@ -26,7 +27,17 @@ public interface CopperUpgrades {
             Block to,
             Property<?>... properties
     ) {
-        from.getRegistryEntry()
+        register(registry, from, to, false, properties);
+    }
+
+    private static void register(
+            Registerable<CopperUpgrade> registry,
+            Block from,
+            Block to,
+            boolean mergeInventories,
+            Property<?>... properties
+    ) {
+        from.getDefaultState().getRegistryEntry()
             .getKey()
             .ifPresent(registryKey -> {
                 RegistryKey<CopperUpgrade> key = RegistryKey.of(
@@ -38,7 +49,7 @@ public interface CopperUpgrades {
                                                   .map(Property::getName)
                                                   .collect(Collectors.toSet());
 
-                registry.register(key, new CopperUpgrade(to, propertyNames));
+                registry.register(key, new CopperUpgrade(to, propertyNames, mergeInventories));
             });
     }
 }

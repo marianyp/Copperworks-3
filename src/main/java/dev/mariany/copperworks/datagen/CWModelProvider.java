@@ -30,13 +30,27 @@ public class CWModelProvider extends FabricModelProvider {
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
         blockStateModelGenerator.registerTurnableRail(CWBlocks.WOODEN_RAIL);
         blockStateModelGenerator.registerTurnableRail(CWBlocks.COPPER_RAIL);
-        blockStateModelGenerator.registerSingleton(CWBlocks.COPPER_BARREL, TexturedModel.CUBE_BOTTOM_TOP);
 
         this.registerLever(blockStateModelGenerator);
-
         this.registerStickyBlock(blockStateModelGenerator, CWBlocks.STICKY_COPPER);
         this.registerStickyBlock(blockStateModelGenerator, CWBlocks.STICKY_COPPER_HONEY);
         this.registerCopperScaffolding(blockStateModelGenerator);
+        this.registerCopperBarrel(blockStateModelGenerator);
+    }
+
+    private void registerCopperBarrel(BlockStateModelGenerator blockStateModelGenerator) {
+        Block barrel = CWBlocks.COPPER_BARREL;
+
+        WeightedVariant weightedVariant = BlockStateModelGenerator.createWeightedVariant(
+                TexturedModel.CUBE_BOTTOM_TOP.upload(barrel, blockStateModelGenerator.modelCollector)
+        );
+
+        blockStateModelGenerator.blockStateCollector
+                .accept(
+                        VariantsBlockModelDefinitionCreator
+                                .of(barrel, weightedVariant)
+                                .coordinate(BlockStateModelGenerator.UP_DEFAULT_ROTATION_OPERATIONS)
+                );
     }
 
     private void registerCopperScaffolding(BlockStateModelGenerator blockStateModelGenerator) {

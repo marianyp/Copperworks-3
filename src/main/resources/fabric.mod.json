@@ -28,6 +28,7 @@
   "mixins": [
     "copperworks.mixins.json"
   ],
+  "accessWidener": "copperworks.accesswidener",
   "depends": {
     "fabricloader": ">=0.18.3",
     "minecraft": ">=1.21.6",

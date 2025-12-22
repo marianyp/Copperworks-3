@@ -1,10 +1,84 @@
 package dev.mariany.copperworks.inventory;
 
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ItemScatterer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public interface StorageNetworkHelper {
-    static int shiftLeft(StorageNetwork network, int slot) {
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+public interface InventoryHelper {
+    static List<ItemStack> copy(World world, BlockPos pos, boolean unset) {
+        List<ItemStack> stacks = new ArrayList<>();
+
+        if (world.getBlockEntity(pos) instanceof Inventory inventory) {
+            for (int slot = 0; slot < inventory.size(); slot++) {
+                ItemStack stack = inventory.getStack(slot);
+                stacks.add(stack.copy());
+
+                if (unset && !stack.isEmpty()) {
+                    inventory.setStack(slot, ItemStack.EMPTY);
+                }
+            }
+        }
+
+        return stacks;
+    }
+
+    static List<ItemStack> addAll(World world, BlockPos pos, List<ItemStack> stacks) {
+        List<ItemStack> overflow = new ArrayList<>();
+
+        if (world.getBlockEntity(pos) instanceof Inventory inventory) {
+            for (int slot = 0; slot < stacks.size(); slot++) {
+                Set<Integer> exploredSlots = new HashSet<>();
+                ItemStack stack = stacks.get(slot);
+                int maxSlots = inventory.size();
+                int currentSlot = slot;
+
+                while (currentSlot >= 0) {
+                    if (exploredSlots.size() >= maxSlots) {
+                        overflow.add(stack);
+                        break;
+                    }
+
+                    ItemStack slotStack = inventory.getStack(currentSlot);
+
+                    if (slotStack.isEmpty()) {
+                        inventory.setStack(currentSlot, stack);
+                        break;
+                    } else if (canCombine(stack, slotStack)) {
+                        moveCountInto(slotStack, stack);
+                    }
+
+                    exploredSlots.add(currentSlot);
+
+                    // Increment and wrap
+                    currentSlot = (currentSlot + 1) % (maxSlots + 1);
+                }
+            }
+
+            inventory.markDirty();
+        }
+
+        return overflow;
+    }
+
+    static void scatterItems(World world, BlockPos pos, List<ItemStack> stacks) {
+        stacks.forEach(stack -> ItemScatterer.spawn(
+                world,
+                pos.getX(),
+                pos.getY(),
+                pos.getZ(),
+                stack
+        ));
+    }
+
+    static int shiftLeft(InventoryNetwork network, int slot) {
         if (slot <= 0) {
             return slot;
         }
@@ -41,13 +115,13 @@ public interface StorageNetworkHelper {
     }
 
     @Nullable
-    private static ItemStack getNonEmptyStack(StorageNetwork network, int slot) {
+    private static ItemStack getNonEmptyStack(InventoryNetwork network, int slot) {
         ItemStack stack = network.getStack(slot);
         return stack.isEmpty() ? null : stack;
     }
 
     private static boolean tryMoveIntoSlot(
-            StorageNetwork network,
+            InventoryNetwork network,
             int targetSlot,
             int sourceSlot,
             ItemStack sourceStack
@@ -63,7 +137,7 @@ public interface StorageNetworkHelper {
     }
 
     private static boolean tryMergeIntoSlot(
-            StorageNetwork network,
+            InventoryNetwork network,
             int targetSlot,
             int sourceSlot,
             ItemStack sourceStack
@@ -100,7 +174,7 @@ public interface StorageNetworkHelper {
         return moved;
     }
 
-    private static void syncSourceSlot(StorageNetwork network, int sourceSlot, ItemStack sourceStack) {
+    private static void syncSourceSlot(InventoryNetwork network, int sourceSlot, ItemStack sourceStack) {
         if (sourceStack.isEmpty()) {
             network.heldStacks.remove(sourceSlot);
         } else {

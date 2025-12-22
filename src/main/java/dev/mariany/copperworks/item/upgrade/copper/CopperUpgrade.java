@@ -8,9 +8,9 @@ import net.minecraft.registry.entry.RegistryEntry;
 
 import java.util.*;
 
-public record CopperUpgrade(Block to, Set<String> copiedProperties) {
-    public CopperUpgrade(Block to, Collection<String> copiedProperties) {
-        this(to, new HashSet<>(copiedProperties));
+public record CopperUpgrade(Block to, Set<String> copiedProperties, boolean mergeInventories) {
+    public CopperUpgrade(Block to, Collection<String> copiedProperties, boolean mergeInventories) {
+        this(to, new HashSet<>(copiedProperties), mergeInventories);
     }
 
     public static final Codec<CopperUpgrade> CODEC = RecordCodecBuilder.create(
@@ -27,7 +27,11 @@ public record CopperUpgrade(Block to, Set<String> copiedProperties) {
                                                 .fieldOf("copied_properties")
                                                 .orElse(new ArrayList<>())
                                                 .xmap(Set::copyOf, List::copyOf)
-                                                .forGetter(CopperUpgrade::copiedProperties)
+                                                .forGetter(CopperUpgrade::copiedProperties),
+                                        Codec.BOOL
+                                                .fieldOf("merge_inventories")
+                                                .orElse(false)
+                                                .forGetter(CopperUpgrade::mergeInventories)
                                 )
                                 .apply(instance, CopperUpgrade::new)
     );

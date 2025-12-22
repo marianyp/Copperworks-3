@@ -1,7 +1,7 @@
 package dev.mariany.copperworks.screen;
 
+import dev.mariany.copperworks.inventory.InventoryNetwork;
 import dev.mariany.copperworks.inventory.NetworkState;
-import dev.mariany.copperworks.inventory.StorageNetwork;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -44,7 +44,7 @@ public class CopperBarrelScreenHandler extends ScreenHandler {
         );
     }
 
-    public Optional<StorageNetwork> getNetwork() {
+    public Optional<InventoryNetwork> getNetwork() {
         if (this.player instanceof NetworkState networkState) {
             return networkState.copperworks2$getNetwork();
         }
@@ -53,7 +53,7 @@ public class CopperBarrelScreenHandler extends ScreenHandler {
     }
 
     public int getRows() {
-        int slots = this.getNetwork().map(StorageNetwork::size).orElse(0);
+        int slots = this.getNetwork().map(InventoryNetwork::size).orElse(0);
         return Math.min(MathHelper.ceil((float) slots / this.columns), this.maxRows);
     }
 

@@ -7,6 +7,7 @@ import dev.mariany.copperworks.item.upgrade.copper.CopperUpgradeItem;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -22,9 +23,10 @@ public class ClientPlayerInteractionManagerMixin {
     public boolean wrapInteractBlock(
             ClientPlayerEntity player,
             Operation<Boolean> original,
-            @Local(index = 2, argsOnly = true) Hand hand
+            @Local(index = 2, argsOnly = true) Hand hand,
+            @Local(index = 3, argsOnly = true) BlockHitResult hitResult
     ) {
-        if (player.getStackInHand(hand).getItem() instanceof CopperUpgradeItem) {
+        if (CopperUpgradeItem.shouldOverrideInteraction(player, hand, hitResult)) {
             return true;
         }
 

@@ -2,7 +2,7 @@ package dev.mariany.copperworks.block.entity;
 
 import com.mojang.logging.LogUtils;
 import dev.mariany.copperworks.Copperworks;
-import dev.mariany.copperworks.inventory.StorageNetwork;
+import dev.mariany.copperworks.inventory.InventoryNetwork;
 import dev.mariany.copperworks.screen.CopperBarrelScreenHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -11,16 +11,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.storage.NbtWriteView;
 import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
 import net.minecraft.text.Text;
-import net.minecraft.util.ErrorReporter;
 import net.minecraft.util.Nameable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -34,7 +29,7 @@ public class CopperBarrelBlockEntity extends BlockEntity implements Inventory, N
 
     private final String NETWORK_NAME_KEY = Copperworks.id("network").toString();
 
-    protected StorageNetwork network;
+    protected InventoryNetwork network;
 
     public CopperBarrelBlockEntity(BlockPos blockPos, BlockState blockState) {
         this(CWBlockEntities.COPPER_BARREL, blockPos, blockState);
@@ -42,14 +37,14 @@ public class CopperBarrelBlockEntity extends BlockEntity implements Inventory, N
 
     protected CopperBarrelBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState blockState) {
         super(blockEntityType, pos, blockState);
-        this.network = new StorageNetwork(this.world, pos, 24);
+        this.network = new InventoryNetwork(this.world, pos, 24);
     }
 
-    public StorageNetwork getNetwork() {
+    public InventoryNetwork getNetwork() {
         return this.network;
     }
 
-    public void setNetwork(StorageNetwork network) {
+    public void setNetwork(InventoryNetwork network) {
         this.network = network;
         this.markDirty();
     }
@@ -68,7 +63,6 @@ public class CopperBarrelBlockEntity extends BlockEntity implements Inventory, N
         for (BlockPos connectionPosition : connectionPositions) {
             if (world.getBlockEntity(connectionPosition) instanceof CopperBarrelBlockEntity copperBarrelBlockEntity) {
                 copperBarrelBlockEntity.setNetwork(otherCopperBarrelBlockEntity.network);
-                ;
             }
         }
     }
@@ -152,33 +146,12 @@ public class CopperBarrelBlockEntity extends BlockEntity implements Inventory, N
         this.network.clear();
     }
 
-    public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
-    }
-
-    @Override
-    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registries) {
-        if (this.isController()) {
-            NbtCompound nbtCompound;
-
-            try (ErrorReporter.Logging logging = new ErrorReporter.Logging(this.getReporterContext(), LOGGER)) {
-                NbtWriteView nbtWriteView = NbtWriteView.create(logging, registries);
-                nbtWriteView.put(NETWORK_NAME_KEY, StorageNetwork.CODEC, this.network);
-                nbtCompound = nbtWriteView.getNbt();
-            }
-
-            return nbtCompound;
-        }
-
-        return super.toInitialChunkDataNbt(registries);
-    }
-
     @Override
     protected void readData(ReadView view) {
         super.readData(view);
 
         if (this.isController()) {
-            view.read(NETWORK_NAME_KEY, StorageNetwork.CODEC)
+            view.read(NETWORK_NAME_KEY, InventoryNetwork.CODEC)
                 .ifPresent(network -> {
                     this.network = network;
                     this.network.setWorld(this.world);
@@ -191,7 +164,7 @@ public class CopperBarrelBlockEntity extends BlockEntity implements Inventory, N
         super.writeData(view);
 
         if (this.isController()) {
-            view.put(NETWORK_NAME_KEY, StorageNetwork.CODEC, this.network);
+            view.put(NETWORK_NAME_KEY, InventoryNetwork.CODEC, this.network);
         }
     }
 }

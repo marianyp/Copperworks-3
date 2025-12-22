@@ -3,5 +3,6 @@
     "waterlogged",
     "shape"
   ],
+  "merge_inventories": false,
   "to": "copperworks:copper_rail"
 }
