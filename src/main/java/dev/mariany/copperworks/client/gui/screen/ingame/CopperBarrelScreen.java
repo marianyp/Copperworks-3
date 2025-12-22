@@ -24,6 +24,12 @@ public class CopperBarrelScreen extends HandledScreen<CopperBarrelScreenHandler>
 
     private static final int SLOT_BOX_SIZE = 18;
 
+    private static final int SCROLLBAR_WIDTH = 12;
+    private static final int SCROLLBAR_HEIGHT = 15;
+
+    private float scrollPosition;
+    private boolean scrolling;
+
     public CopperBarrelScreen(
             CopperBarrelScreenHandler handler,
             PlayerInventory inventory,

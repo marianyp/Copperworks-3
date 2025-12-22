@@ -13,12 +13,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.*;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Property;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -40,12 +39,6 @@ public class CopperUpgradeItem extends Item {
                 )
                 .formatted(Formatting.GRAY);
 
-    private static final Text COPPER_UPGRADE_APPLIES_TO_TEXT = Text
-            .translatable(
-                    Util.createTranslationKey("item", Copperworks.id("copper_upgrade_kit.applies_to"))
-            )
-            .formatted(Formatting.BLUE);
-
     public CopperUpgradeItem(Settings settings) {
         super(settings);
     }
@@ -59,7 +52,48 @@ public class CopperUpgradeItem extends Item {
             TooltipType type
     ) {
         textConsumer.accept(APPLIES_TO_TEXT);
-        textConsumer.accept(ScreenTexts.space().append(COPPER_UPGRADE_APPLIES_TO_TEXT));
+
+        RegistryWrapper.WrapperLookup wrapperLookup = context.getRegistryLookup();
+
+        if (wrapperLookup != null) {
+            wrapperLookup
+                    .getOptional(CWRegistryKeys.COPPER_UPGRADE)
+                    .ifPresent(upgradeRegistry -> upgradeRegistry
+                            .streamEntries()
+                            .forEach(upgradeReference -> {
+                                Optional<RegistryKey<CopperUpgrade>> optionalCopperUpgradeRegistryKey =
+                                        upgradeReference.getKey();
+
+                                optionalCopperUpgradeRegistryKey
+                                        .flatMap(upgradeRegistryKey -> wrapperLookup
+                                                .getOptional(RegistryKeys.BLOCK)
+                                                .flatMap(blockRegistry -> blockRegistry
+                                                        .getOptional(
+                                                                RegistryKey.of(
+                                                                        RegistryKeys.BLOCK,
+                                                                        upgradeRegistryKey.getValue()
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                        .ifPresent(blockReference -> {
+                                            String translationKey = Util.createTranslationKey(
+                                                    "item",
+                                                    Copperworks.id("copper_upgrade_kit.applies_to")
+                                            );
+
+                                            MutableText mutableText =
+                                                    Text.translatable(
+                                                                translationKey,
+                                                                blockReference.value().getName()
+                                                        )
+                                                        .formatted(Formatting.BLUE);
+
+                                            textConsumer.accept(ScreenTexts.space().append(mutableText));
+                                        });
+                            })
+                    );
+        }
     }
 
     @Override

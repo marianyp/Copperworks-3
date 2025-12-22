@@ -11,5 +11,5 @@
   "item.copperworks.copper_upgrade_kit": "Copper Upgrade Kit",
   "item.copperworks.copper_plate": "Copper Plate",
   "item.copperworks.iron_plate": "Iron Plate",
-  "item.copperworks.copper_upgrade_kit.applies_to": "Wooden Rails, Levers, and Scaffolding"
+  "item.copperworks.copper_upgrade_kit.applies_to": "- %s"
 }
