@@ -21,5 +21,6 @@ public class CWBlockLootTableProvider extends FabricBlockLootTableProvider {
         addDrop(CWBlocks.COPPER_RAIL);
         addDrop(CWBlocks.COPPER_LEVER);
         addDrop(CWBlocks.COPPER_SCAFFOLDING);
+        addDrop(CWBlocks.COPPER_BARREL, this::nameableContainerDrops);
     }
 }

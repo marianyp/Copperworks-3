@@ -2,14 +2,19 @@ package dev.mariany.copperworks;
 
 import dev.mariany.copperworks.advancement.criterion.CWCriterion;
 import dev.mariany.copperworks.block.CWBlocks;
+import dev.mariany.copperworks.block.entity.CWBlockEntities;
 import dev.mariany.copperworks.event.entity.EntityEvents;
 import dev.mariany.copperworks.event.entity.MinecartEventHandler;
 import dev.mariany.copperworks.event.server.ServerTickEventsHandler;
 import dev.mariany.copperworks.item.CWItems;
 import dev.mariany.copperworks.item.upgrade.copper.CopperUpgrade;
 import dev.mariany.copperworks.loot.LootTableModifiers;
+import dev.mariany.copperworks.packet.CWPackets;
+import dev.mariany.copperworks.packet.serverbound.ServerboundPackets;
 import dev.mariany.copperworks.registry.CWRegistryKeys;
+import dev.mariany.copperworks.screen.CWScreenHandlers;
 import dev.mariany.copperworks.sound.CWSoundEvents;
+import dev.mariany.copperworks.stat.CWStats;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
@@ -29,10 +34,16 @@ public class Copperworks implements ModInitializer {
     public void onInitialize() {
         DynamicRegistries.registerSynced(CWRegistryKeys.COPPER_UPGRADE, CopperUpgrade.CODEC);
 
+        CWPackets.bootstrap();
+        ServerboundPackets.bootstrap();
+
         CWSoundEvents.bootstrap();
         CWCriterion.bootstrap();
+        CWStats.bootstrap();
+        CWScreenHandlers.bootstrap();
         CWItems.bootstrap();
         CWBlocks.bootstrap();
+        CWBlockEntities.bootstrap();
 
         LootTableModifiers.modifyLootTables();
 

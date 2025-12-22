@@ -60,6 +60,12 @@ public class CWBlocks {
                     .allowsSpawning(Blocks::never)
     );
 
+    public static final Block COPPER_BARREL = register(
+            "copper_barrel",
+            CopperBarrelBlock::new,
+            genericCopperSettings()
+    );
+
     private static AbstractBlock.Settings genericCopperSettings() {
         return AbstractBlock.Settings.create()
                                      .mapColor(MapColor.ORANGE)
@@ -100,11 +106,15 @@ public class CWBlocks {
             entries.addAfter(WOODEN_RAIL, COPPER_RAIL);
 
             entries.addAfter(Items.LEVER, COPPER_LEVER);
+
+            entries.addAfter(Items.BARREL, COPPER_BARREL);
         });
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(entries -> {
             entries.addAfter(Items.WAXED_OXIDIZED_COPPER_BULB, STICKY_COPPER);
             entries.addAfter(STICKY_COPPER, STICKY_COPPER_HONEY);
+
+            entries.addAfter(Items.BARREL, COPPER_BARREL);
         });
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {
