@@ -8,9 +8,9 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 
 public class CWScreenHandlers {
-    public static final ScreenHandlerType<CopperBarrelScreenHandler> COPPER_BARREL = register(
-            "copper_barrel",
-            CopperBarrelScreenHandler::new
+    public static final ScreenHandlerType<InventoryNetworkScreenHandler> INVENTORY_NETWORK = register(
+            "inventory_network",
+            InventoryNetworkScreenHandler::new
     );
 
     private static <T extends ScreenHandler> ScreenHandlerType<T> register(

@@ -12,14 +12,14 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.GlobalPos;
 
-public record InventoryNetworkHandshake(GlobalPos connectionPos) implements CustomPayload {
-    public static final CustomPayload.Id<InventoryNetworkHandshake> ID = new CustomPayload.Id<>(
+public record InventoryNetworkHandshakePacket(GlobalPos connectionPos) implements CustomPayload {
+    public static final CustomPayload.Id<InventoryNetworkHandshakePacket> ID = new CustomPayload.Id<>(
             Copperworks.id("inventory_network_handshake")
     );
 
-    public static final PacketCodec<ByteBuf, InventoryNetworkHandshake> CODEC = PacketCodec.tuple(
-            GlobalPos.PACKET_CODEC, InventoryNetworkHandshake::connectionPos,
-            InventoryNetworkHandshake::new
+    public static final PacketCodec<ByteBuf, InventoryNetworkHandshakePacket> CODEC = PacketCodec.tuple(
+            GlobalPos.PACKET_CODEC, InventoryNetworkHandshakePacket::connectionPos,
+            InventoryNetworkHandshakePacket::new
     );
 
     @Override
@@ -27,7 +27,7 @@ public record InventoryNetworkHandshake(GlobalPos connectionPos) implements Cust
         return ID;
     }
 
-    public static void apply(InventoryNetworkHandshake payload, ServerPlayNetworking.Context context) {
+    public static void apply(InventoryNetworkHandshakePacket payload, ServerPlayNetworking.Context context) {
         GlobalPos globalPos = payload.connectionPos();
         ServerPlayerEntity player = context.player();
         MinecraftServer server = player.getServer();

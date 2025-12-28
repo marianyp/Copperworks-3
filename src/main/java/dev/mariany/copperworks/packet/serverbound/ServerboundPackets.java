@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 public class ServerboundPackets {
     public static void bootstrap() {
-        ServerPlayNetworking.registerGlobalReceiver(InventoryNetworkHandshake.ID, InventoryNetworkHandshake::apply);
+        ServerPlayNetworking.registerGlobalReceiver(InventoryNetworkHandshakePacket.ID, InventoryNetworkHandshakePacket::apply);
+        ServerPlayNetworking.registerGlobalReceiver(InventoryScrollPacket.ID, InventoryScrollPacket::apply);
     }
 }

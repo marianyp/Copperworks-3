@@ -168,6 +168,7 @@ public interface InventoryHelper {
         }
 
         int moved = Math.min(space, source.getCount());
+
         target.setCount(target.getCount() + moved);
         source.setCount(source.getCount() - moved);
 

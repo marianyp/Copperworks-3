@@ -1,7 +1,7 @@
 package dev.mariany.copperworks.mixin;
 
 import dev.mariany.copperworks.inventory.InventoryNetwork;
-import dev.mariany.copperworks.inventory.NetworkState;
+import dev.mariany.copperworks.inventory.InventoryNetworkState;
 import net.minecraft.entity.player.PlayerEntity;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Unique;
 import java.util.Optional;
 
 @Mixin(PlayerEntity.class)
-public class PlayerEntityMixin implements NetworkState {
+public class PlayerEntityMixin implements InventoryNetworkState {
     @Unique
     @Nullable
     private InventoryNetwork network;

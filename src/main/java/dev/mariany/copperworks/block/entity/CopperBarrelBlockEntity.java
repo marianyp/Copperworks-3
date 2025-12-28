@@ -1,98 +1,122 @@
 package dev.mariany.copperworks.block.entity;
 
-import com.mojang.logging.LogUtils;
-import dev.mariany.copperworks.Copperworks;
 import dev.mariany.copperworks.inventory.InventoryNetwork;
-import dev.mariany.copperworks.screen.CopperBarrelScreenHandler;
+import dev.mariany.copperworks.inventory.InventoryNetworkContainer;
+import dev.mariany.copperworks.inventory.InventoryNetworkState;
+import dev.mariany.copperworks.packet.clientbound.InventoryNetworkUpdatePacket;
+import dev.mariany.copperworks.screen.InventoryNetworkScreenHandler;
+import dev.mariany.copperworks.stat.CWStats;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.component.ComponentMap;
+import net.minecraft.component.ComponentsAccess;
+import net.minecraft.entity.mob.PiglinBrain;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
 import net.minecraft.text.Text;
 import net.minecraft.util.Nameable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.GlobalPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-public class CopperBarrelBlockEntity extends BlockEntity implements Inventory, NamedScreenHandlerFactory, Nameable {
-    private static final Logger LOGGER = LogUtils.getLogger();
-
-    private final String NETWORK_NAME_KEY = Copperworks.id("network").toString();
-
+public class CopperBarrelBlockEntity extends BlockEntity
+        implements InventoryNetworkContainer, NamedScreenHandlerFactory, Nameable {
     protected InventoryNetwork network;
+    protected final int slotsPerConnection;
 
     public CopperBarrelBlockEntity(BlockPos blockPos, BlockState blockState) {
         this(CWBlockEntities.COPPER_BARREL, blockPos, blockState);
     }
 
     protected CopperBarrelBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState blockState) {
+        this(blockEntityType, pos, blockState, 24);
+    }
+
+    protected CopperBarrelBlockEntity(
+            BlockEntityType<?> blockEntityType,
+            BlockPos pos,
+            BlockState blockState,
+            int slotsPerConnection
+    ) {
         super(blockEntityType, pos, blockState);
-        this.network = new InventoryNetwork(this.world, pos, 24);
-    }
-
-    public InventoryNetwork getNetwork() {
-        return this.network;
-    }
-
-    public void setNetwork(InventoryNetwork network) {
-        this.network = network;
-        this.markDirty();
-    }
-
-    public boolean isController() {
-        return this.network.getControllerPos()
-                           .map(controllerPos -> controllerPos.equals(this.pos))
-                           .orElse(false);
-    }
-
-    public void connect(World world, CopperBarrelBlockEntity otherCopperBarrelBlockEntity, boolean mergeItems) {
-        List<BlockPos> connectionPositions = this.network.getConnections();
-
-        otherCopperBarrelBlockEntity.network.connect(this.network, mergeItems);
-
-        for (BlockPos connectionPosition : connectionPositions) {
-            if (world.getBlockEntity(connectionPosition) instanceof CopperBarrelBlockEntity copperBarrelBlockEntity) {
-                copperBarrelBlockEntity.setNetwork(otherCopperBarrelBlockEntity.network);
-            }
-        }
+        this.slotsPerConnection = slotsPerConnection;
+        this.network = this.createNetwork();
     }
 
     public static void tick(World world, BlockPos pos, BlockState state, BlockEntity blockEntity) {
-        if (blockEntity instanceof CopperBarrelBlockEntity copperBarrelBlockEntity) {
-            if (!copperBarrelBlockEntity.network.isInitialized() && copperBarrelBlockEntity.isController()) {
-                copperBarrelBlockEntity.network.initialize(connectionBlockEntity -> {
-                    if (connectionBlockEntity instanceof CopperBarrelBlockEntity connectionCopperBarrelBlockEntity) {
-                        connectionCopperBarrelBlockEntity.setNetwork(copperBarrelBlockEntity.network);
-                    }
+        InventoryNetworkContainer.tick(blockEntity);
+    }
+
+    public void interact(CopperBarrelBlockEntity copperBarrelBlockEntity, PlayerEntity player, BlockPos pos) {
+        player.incrementStat(CWStats.OPEN_COPPER_BARREL);
+
+        if (player.getWorld() instanceof ServerWorld serverWorld) {
+            GlobalPos globalPos = GlobalPos.create(serverWorld.getRegistryKey(), pos);
+            InventoryNetwork network = copperBarrelBlockEntity.getNetwork();
+
+            if (player instanceof InventoryNetworkState networkState) {
+                networkState.copperworks2$setNetwork(copperBarrelBlockEntity.getNetwork());
+            }
+
+            if (player instanceof ServerPlayerEntity serverPlayer) {
+                ServerPlayNetworking.send(serverPlayer, new InventoryNetworkUpdatePacket(globalPos, network));
+            }
+
+            PiglinBrain.onGuardedBlockInteracted(serverWorld, player, true);
+        }
+    }
+
+    public void onBlockAdded(World world, BlockPos pos, CopperBarrelBlockEntity copperBarrelBlockEntity) {
+        Set<BlockPos> discoveredControllers = new HashSet<>();
+
+        for (Direction direction : Direction.values()) {
+            BlockPos offsetPos = pos.offset(direction);
+            BlockEntity neighboringBlockEntity = world.getBlockEntity(offsetPos);
+
+            if (neighboringBlockEntity instanceof CopperBarrelBlockEntity otherCopperBarrelBlockEntity) {
+                InventoryNetwork network = otherCopperBarrelBlockEntity.getNetwork();
+
+                network.getControllerPos().ifPresent(controllerPos -> {
+                    copperBarrelBlockEntity.connect(
+                            world,
+                            otherCopperBarrelBlockEntity,
+                            !discoveredControllers.contains(controllerPos)
+                    );
+
+                    discoveredControllers.add(controllerPos);
                 });
             }
         }
     }
 
     @Override
-    public void setWorld(World world) {
-        super.setWorld(world);
-        this.network.setWorld(world);
+    public void markRemoved() {
+        super.markRemoved();
+        InventoryNetworkContainer.onRemoved(this, this.pos);
     }
 
     @Override
     public void onBlockReplaced(BlockPos pos, BlockState oldState) {
-        this.network.disconnect(pos);
+        // Prevents default item scatter behavior
     }
 
     @Override
-    public boolean canPlayerUse(PlayerEntity player) {
-        return this.network.canPlayerUse(player);
+    @Nullable
+    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
+        return new InventoryNetworkScreenHandler(syncId, playerInventory);
     }
 
     @Override
@@ -106,65 +130,53 @@ public class CopperBarrelBlockEntity extends BlockEntity implements Inventory, N
     }
 
     @Override
-    @Nullable
-    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        return new CopperBarrelScreenHandler(syncId, playerInventory);
+    public InventoryNetwork createNetwork() {
+        return new InventoryNetwork(this.world, pos, this.slotsPerConnection);
     }
 
     @Override
-    public int size() {
-        return this.network.size();
+    public InventoryNetwork getNetwork() {
+        return this.network;
     }
 
     @Override
-    public boolean isEmpty() {
-        return this.network.isEmpty();
+    public void setNetwork(InventoryNetwork network) {
+        this.network = network;
+        this.markDirty();
     }
 
     @Override
-    public ItemStack getStack(int slot) {
-        return this.network.getStack(slot);
+    public void setWorld(World world) {
+        super.setWorld(world);
+        this.network.setWorld(world);
     }
 
     @Override
-    public ItemStack removeStack(int slot, int amount) {
-        return this.network.removeStack(slot, amount);
+    protected void readComponents(ComponentsAccess components) {
+        super.readComponents(components);
+        InventoryNetworkContainer.readComponents(components, this);
     }
 
     @Override
-    public ItemStack removeStack(int slot) {
-        return this.network.removeStack(slot);
+    protected void addComponents(ComponentMap.Builder builder) {
+        super.addComponents(builder);
+        InventoryNetworkContainer.addComponents(builder, this);
     }
 
     @Override
-    public void setStack(int slot, ItemStack stack) {
-        this.network.setStack(slot, stack);
-    }
-
-    @Override
-    public void clear() {
-        this.network.clear();
+    public void removeFromCopiedStackData(WriteView view) {
+        InventoryNetworkContainer.removeFromCopiedStackData(view);
     }
 
     @Override
     protected void readData(ReadView view) {
         super.readData(view);
-
-        if (this.isController()) {
-            view.read(NETWORK_NAME_KEY, InventoryNetwork.CODEC)
-                .ifPresent(network -> {
-                    this.network = network;
-                    this.network.setWorld(this.world);
-                });
-        }
+        InventoryNetworkContainer.readData(view, this, this.world, this.pos);
     }
 
     @Override
     protected void writeData(WriteView view) {
         super.writeData(view);
-
-        if (this.isController()) {
-            view.put(NETWORK_NAME_KEY, InventoryNetwork.CODEC, this.network);
-        }
+        InventoryNetworkContainer.writeData(view, this, this.pos);
     }
 }

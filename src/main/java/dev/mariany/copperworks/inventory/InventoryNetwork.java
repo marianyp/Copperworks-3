@@ -13,16 +13,25 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextCodecs;
+import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class InventoryNetwork implements Inventory {
+    private static final Codec<StackWithSlot> STACK_WITH_SLOT_CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                                        Codecs.NON_NEGATIVE_INT.fieldOf("Slot").orElse(0).forGetter(StackWithSlot::slot),
+                                        ItemStack.MAP_CODEC.forGetter(StackWithSlot::stack)
+                                )
+                                .apply(instance, StackWithSlot::new)
+    );
+
     public static final Codec<InventoryNetwork> CODEC = RecordCodecBuilder.create(
             instance -> instance
                     .group(
@@ -30,9 +39,9 @@ public class InventoryNetwork implements Inventory {
                                           .forGetter(InventoryNetwork::getControllerPos),
                             TextCodecs.CODEC.optionalFieldOf("custom_name")
                                             .forGetter(InventoryNetwork::getCustomName),
-                            StackWithSlot.CODEC.listOf()
-                                               .fieldOf("held_stacks")
-                                               .forGetter(InventoryNetwork::getHeldStacks),
+                            STACK_WITH_SLOT_CODEC.listOf()
+                                                 .fieldOf("held_stacks")
+                                                 .forGetter(InventoryNetwork::getHeldStacks),
                             BlockPos.CODEC.listOf()
                                           .fieldOf("connections")
                                           .forGetter(InventoryNetwork::getConnections),
@@ -82,10 +91,10 @@ public class InventoryNetwork implements Inventory {
     private boolean initialized;
 
     @Nullable
-    protected World world;
+    private World world;
 
     @Nullable
-    protected BlockPos controllerPos;
+    private BlockPos controllerPos;
 
     protected final Map<Integer, ItemStack> heldStacks;
     protected final Set<BlockPos> connections;
@@ -167,15 +176,34 @@ public class InventoryNetwork implements Inventory {
         return this.initialized;
     }
 
-    public void initialize(Consumer<BlockEntity> connectionHandler) {
+    public void initialize() {
         if (this.world != null) {
             for (BlockPos connectionPos : this.connections) {
-                BlockEntity blockEntity = this.world.getBlockEntity(connectionPos);
-                connectionHandler.accept(blockEntity);
+                if (this.world.getBlockEntity(connectionPos) instanceof InventoryNetworkContainer networkContainer) {
+                    networkContainer.setNetwork(this);
+                }
             }
         }
 
         this.initialized = true;
+    }
+
+    public boolean isValid() {
+        if (this.world != null && this.controllerPos != null) {
+            BlockEntity blockEntity = this.world.getBlockEntity(controllerPos);
+
+            if (blockEntity instanceof InventoryNetworkContainer inventoryNetworkContainer) {
+                return inventoryNetworkContainer.getNetwork().equals(this);
+            }
+
+            return false;
+        }
+
+        return false;
+    }
+
+    public Optional<World> getWorld() {
+        return Optional.ofNullable(this.world);
     }
 
     public void setWorld(@Nullable World world) {
@@ -218,27 +246,37 @@ public class InventoryNetwork implements Inventory {
     }
 
     public void connect(InventoryNetwork otherNetwork, boolean mergeItems) {
-        if (otherNetwork != this) {
-            this.connections.addAll(otherNetwork.getConnections());
+        if (otherNetwork.equals(this)) {
+            return;
+        }
 
-            if (mergeItems) {
-                this.heldStacks.putAll(otherNetwork.heldStacks);
+        if (otherNetwork.customName != null) {
+            this.customName = otherNetwork.customName;
+        }
+
+        this.connections.addAll(otherNetwork.getConnections());
+
+        if (mergeItems) {
+            int slot = this.size() - otherNetwork.size();
+
+            for (ItemStack stack : otherNetwork) {
+                if (!stack.isEmpty()) {
+                    this.heldStacks.put(slot, stack);
+                }
+
+                slot++;
             }
         }
     }
 
-    public void disconnect(BlockPos pos) {
+    public void disconnect(BlockPos pos, Set<BlockPos> discoveredPositions, Set<InventoryNetwork> newNetworks) {
         this.connections.remove(pos);
-
-        if (this.world != null) {
-            InventoryHelper.scatterItems(this.world, pos, this.adjustSlots());
-        }
-
         this.reassignController();
+        this.disconnectNeighbors(pos, discoveredPositions, newNetworks);
         this.markDirty();
     }
 
-    private List<ItemStack> adjustSlots() {
+    protected List<ItemStack> adjustSlots() {
         int networkSize = this.size();
 
         List<ItemStack> overflow = new ArrayList<>();
@@ -280,7 +318,8 @@ public class InventoryNetwork implements Inventory {
             }
 
             if (!placed) {
-                overflow.add(stack);
+                overflow.add(stack.copy());
+                this.heldStacks.remove(slot);
             }
         }
 
@@ -299,6 +338,28 @@ public class InventoryNetwork implements Inventory {
             }
 
             this.controllerPos = this.connections.stream().findFirst().orElse(null);
+        }
+    }
+
+    private void disconnectNeighbors(
+            BlockPos origin,
+            Set<BlockPos> discoveredPositions,
+            Set<InventoryNetwork> newNetworks
+    ) {
+        if (this.world != null) {
+            for (Direction direction : Direction.values()) {
+                BlockPos pos = origin.offset(direction);
+                BlockEntity blockEntity = this.world.getBlockEntity(pos);
+
+                if (blockEntity instanceof InventoryNetworkContainer offsetNetworkContainer) {
+                    InventoryNetworkContainer.validateConnection(
+                            offsetNetworkContainer,
+                            pos,
+                            discoveredPositions,
+                            newNetworks
+                    );
+                }
+            }
         }
     }
 
@@ -376,5 +437,25 @@ public class InventoryNetwork implements Inventory {
     public void clear() {
         this.heldStacks.clear();
         this.markDirty();
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof InventoryNetwork inventoryNetwork) {
+            if (this.controllerPos != null && inventoryNetwork.controllerPos != null) {
+                return this.controllerPos.equals(inventoryNetwork.controllerPos);
+            }
+        }
+
+        return super.equals(object);
+    }
+
+    @Override
+    public int hashCode() {
+        if (this.controllerPos != null) {
+            return this.controllerPos.hashCode();
+        }
+
+        return super.hashCode();
     }
 }

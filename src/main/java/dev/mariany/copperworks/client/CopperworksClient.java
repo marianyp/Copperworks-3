@@ -1,7 +1,7 @@
 package dev.mariany.copperworks.client;
 
 import dev.mariany.copperworks.block.CWBlocks;
-import dev.mariany.copperworks.client.gui.screen.ingame.CopperBarrelScreen;
+import dev.mariany.copperworks.client.gui.screen.ingame.InventoryNetworkScreen;
 import dev.mariany.copperworks.packet.clientbound.ClientboundPackets;
 import dev.mariany.copperworks.screen.CWScreenHandlers;
 import net.fabricmc.api.ClientModInitializer;
@@ -27,6 +27,6 @@ public class CopperworksClient implements ClientModInitializer {
     }
 
     private static void registerScreenHandlers() {
-        HandledScreens.register(CWScreenHandlers.COPPER_BARREL, CopperBarrelScreen::new);
+        HandledScreens.register(CWScreenHandlers.INVENTORY_NETWORK, InventoryNetworkScreen::new);
     }
 }
