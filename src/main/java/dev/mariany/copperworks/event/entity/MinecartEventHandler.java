@@ -29,7 +29,7 @@ public class MinecartEventHandler {
     );
 
     public static void onMinecartTravel(AbstractMinecartEntity abstractMinecart) {
-        if (!abstractMinecart.getWorld().isClient()) {
+        if (!abstractMinecart.getEntityWorld().isClient()) {
             BlockPos previousPosition = abstractMinecart.getBlockPos();
 
             handleFastRails(abstractMinecart);
@@ -38,7 +38,7 @@ public class MinecartEventHandler {
     }
 
     private static void handleFastRails(AbstractMinecartEntity abstractMinecart) {
-        World world = abstractMinecart.getWorld();
+        World world = abstractMinecart.getEntityWorld();
         BlockPos railPos = abstractMinecart.getBlockPos();
         BlockState railBlockState = world.getBlockState(railPos);
         Block railBlock = railBlockState.getBlock();
@@ -80,7 +80,7 @@ public class MinecartEventHandler {
     }
 
     private static void handleFragileRails(AbstractMinecartEntity abstractMinecart, BlockPos previousPosition) {
-        World world = abstractMinecart.getWorld();
+        World world = abstractMinecart.getEntityWorld();
         Random random = world.getRandom();
         BlockState railBlockState = world.getBlockState(previousPosition);
         Block railBlock = railBlockState.getBlock();

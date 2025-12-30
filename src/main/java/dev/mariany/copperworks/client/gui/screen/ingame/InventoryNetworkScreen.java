@@ -12,8 +12,11 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.input.CharInput;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -219,7 +222,10 @@ public class InventoryNetworkScreen extends HandledScreen<InventoryNetworkScreen
         ClientPlayNetworking.send(new InventoryScrollPacket(this.handler.syncId, scrollPosition));
     }
 
-    protected boolean isClickInScrollbar(double mouseX, double mouseY) {
+    protected boolean isClickInScrollbar(Click click) {
+        double mouseX = click.x();
+        double mouseY = click.y();
+
         int x = this.x;
         int y = this.y;
 
@@ -245,21 +251,22 @@ public class InventoryNetworkScreen extends HandledScreen<InventoryNetworkScreen
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(Click click, boolean doubled) {
         this.searchBox.setFocused(false);
 
-        if (button == 0) {
-            if (this.isClickInScrollbar(mouseX, mouseY)) {
+        if (click.button() == 0) {
+            if (this.isClickInScrollbar(click)) {
                 this.scrolling = this.isScrollerEnabled();
             }
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(click, doubled);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+    public boolean mouseDragged(Click click, double offsetX, double offsetY) {
         if (this.scrolling) {
+            double mouseY = click.y();
             int trackTopY = this.y + SCROLL_TRACK_TOP_LEFT_Y;
             int trackBottomY = trackTopY + SCROLL_TRACK_HEIGHT + 2;
 
@@ -273,28 +280,28 @@ public class InventoryNetworkScreen extends HandledScreen<InventoryNetworkScreen
             this.handler.updateScrollPosition(scrollPosition);
         }
 
-        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+        return super.mouseDragged(click, offsetX, offsetY);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (button == 0 && this.scrolling) {
+    public boolean mouseReleased(Click click) {
+        if (click.button() == 0 && this.scrolling) {
             this.scrolling = false;
             this.scroll(this.getScrollPosition());
         }
 
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(click);
     }
 
     @Override
-    public boolean charTyped(char character, int modifiers) {
+    public boolean charTyped(CharInput input) {
         if (this.ignoreTypedCharacter) {
             return false;
         }
 
         String previousSearch = this.searchBox.getText();
 
-        if (this.searchBox.charTyped(character, modifiers)) {
+        if (this.searchBox.charTyped(input)) {
             if (!Objects.equals(previousSearch, this.searchBox.getText())) {
                 this.search();
             }
@@ -306,20 +313,21 @@ public class InventoryNetworkScreen extends HandledScreen<InventoryNetworkScreen
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(KeyInput input) {
         this.ignoreTypedCharacter = false;
 
+        int key = input.key();
         boolean focusingInventorySlot = this.isFocusingInventorySlot();
-        boolean pressedNumber = InputUtil.fromKeyCode(keyCode, scanCode).toInt().isPresent();
+        boolean pressedNumber = InputUtil.fromKeyCode(input).toInt().isPresent();
 
-        if (focusingInventorySlot && pressedNumber && this.handleHotbarKeyPressed(keyCode, scanCode)) {
+        if (focusingInventorySlot && pressedNumber && this.handleHotbarKeyPressed(input)) {
             this.ignoreTypedCharacter = true;
             return true;
         }
 
         String previousSearch = this.searchBox.getText();
 
-        if (this.searchBox.keyPressed(keyCode, scanCode, modifiers)) {
+        if (this.searchBox.keyPressed(input)) {
             if (!Objects.equals(previousSearch, this.searchBox.getText())) {
                 this.search();
             }
@@ -327,8 +335,8 @@ public class InventoryNetworkScreen extends HandledScreen<InventoryNetworkScreen
             return true;
         }
 
-        return this.searchBox.isFocused() && this.searchBox.isVisible() && keyCode != GLFW.GLFW_KEY_ESCAPE ||
-                super.keyPressed(keyCode, scanCode, modifiers);
+        return this.searchBox.isFocused() && this.searchBox.isVisible() && key != GLFW.GLFW_KEY_ESCAPE ||
+                super.keyPressed(input);
     }
 
     protected boolean isFocusingInventorySlot() {

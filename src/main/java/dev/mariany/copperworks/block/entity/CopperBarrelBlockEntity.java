@@ -63,7 +63,7 @@ public class CopperBarrelBlockEntity extends BlockEntity
     public void interact(CopperBarrelBlockEntity copperBarrelBlockEntity, PlayerEntity player, BlockPos pos) {
         player.incrementStat(CWStats.OPEN_COPPER_BARREL);
 
-        if (player.getWorld() instanceof ServerWorld serverWorld) {
+        if (player.getEntityWorld() instanceof ServerWorld serverWorld) {
             GlobalPos globalPos = GlobalPos.create(serverWorld.getRegistryKey(), pos);
             InventoryNetwork network = copperBarrelBlockEntity.getNetwork();
 

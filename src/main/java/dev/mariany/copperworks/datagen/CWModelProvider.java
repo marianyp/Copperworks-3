@@ -49,7 +49,7 @@ public class CWModelProvider extends FabricModelProvider {
                 .accept(
                         VariantsBlockModelDefinitionCreator
                                 .of(barrel, weightedVariant)
-                                .coordinate(BlockStateModelGenerator.UP_DEFAULT_ROTATION_OPERATIONS)
+                                .apply(BlockStateModelGenerator.UP_DEFAULT_ROTATION_OPERATIONS)
                 );
     }
 
@@ -105,7 +105,7 @@ public class CWModelProvider extends FabricModelProvider {
                                                 weightedVariantOn
                                         )
                                 )
-                                .coordinate(
+                                .apply(
                                         BlockStateVariantMap
                                                 .operations(
                                                         Properties.BLOCK_FACE,

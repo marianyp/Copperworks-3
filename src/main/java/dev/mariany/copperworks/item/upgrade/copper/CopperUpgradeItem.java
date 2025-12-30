@@ -7,8 +7,6 @@ import dev.mariany.copperworks.registry.CWRegistryKeys;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.type.TooltipDisplayComponent;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -47,7 +45,7 @@ public class CopperUpgradeItem extends Item {
     }
 
     public static boolean shouldOverrideInteraction(PlayerEntity player, Hand hand, BlockHitResult hitResult) {
-        World world = player.getWorld();
+        World world = player.getEntityWorld();
         DynamicRegistryManager registryManager = world.getRegistryManager();
 
         if (player.getStackInHand(hand).getItem() instanceof CopperUpgradeItem) {
@@ -149,8 +147,7 @@ public class CopperUpgradeItem extends Item {
                 Block convertsTo = copperUpgrade.to();
 
                 if (player != null) {
-                    EquipmentSlot slot = LivingEntity.getSlotForHand(hand);
-                    itemStack.damage(1, player, slot);
+                    itemStack.damage(1, player, hand.getEquipmentSlot());
                 }
 
                 BlockState updatedBlockState = copyProperties(

@@ -30,17 +30,14 @@ public record InventoryNetworkHandshakePacket(GlobalPos connectionPos) implement
     public static void apply(InventoryNetworkHandshakePacket payload, ServerPlayNetworking.Context context) {
         GlobalPos globalPos = payload.connectionPos();
         ServerPlayerEntity player = context.player();
-        MinecraftServer server = player.getServer();
+        MinecraftServer server = player.getEntityWorld().getServer();
+        ServerWorld world = server.getWorld(globalPos.dimension());
 
-        if (server != null) {
-            ServerWorld world = server.getWorld(globalPos.dimension());
+        if (world != null) {
+            BlockEntity blockEntity = world.getBlockEntity(globalPos.pos());
 
-            if (world != null) {
-                BlockEntity blockEntity = world.getBlockEntity(globalPos.pos());
-
-                if (blockEntity instanceof NamedScreenHandlerFactory namedScreenHandlerFactory) {
-                    player.openHandledScreen(namedScreenHandlerFactory);
-                }
+            if (blockEntity instanceof NamedScreenHandlerFactory namedScreenHandlerFactory) {
+                player.openHandledScreen(namedScreenHandlerFactory);
             }
         }
     }

@@ -1,6 +1,7 @@
 package dev.mariany.copperworks.client.gui.widget;
 
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 
@@ -10,8 +11,8 @@ public class ClickableTextFieldWidget extends TextFieldWidget {
     }
 
     @Override
-    public void onClick(double mouseX, double mouseY) {
-        super.onClick(mouseX, mouseY);
+    public void onClick(Click click, boolean doubled) {
+        super.onClick(click, doubled);
         this.setFocused(true);
     }
 }
