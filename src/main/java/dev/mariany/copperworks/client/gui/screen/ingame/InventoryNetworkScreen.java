@@ -3,11 +3,12 @@ package dev.mariany.copperworks.client.gui.screen.ingame;
 import dev.mariany.copperworks.Copperworks;
 import dev.mariany.copperworks.client.gui.widget.ClickableTextFieldWidget;
 import dev.mariany.copperworks.packet.serverbound.InventoryScrollPacket;
+import dev.mariany.copperworks.packet.serverbound.QuickMoveAllPacket;
 import dev.mariany.copperworks.packet.serverbound.UpdateSearchEntriesPacket;
 import dev.mariany.copperworks.packet.serverbound.UpdateSearchQueryPacket;
 import dev.mariany.copperworks.screen.InventoryNetworkScreenHandler;
-import dev.mariany.copperworks.screen.slot.SearchSlot;
 import dev.mariany.copperworks.screen.search.SearchEntry;
+import dev.mariany.copperworks.screen.slot.SearchSlot;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -21,6 +22,7 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.InventoryChangedListener;
+import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -359,7 +361,7 @@ public class InventoryNetworkScreen extends HandledScreen<InventoryNetworkScreen
 
             List<SearchEntry> searchEntries = SearchEntry.getEntries(world, network.getHeldStacks());
 
-            ClientPlayNetworking.send(new UpdateSearchEntriesPacket(handler.syncId, searchEntries));
+            ClientPlayNetworking.send(new UpdateSearchEntriesPacket(this.handler.syncId, searchEntries));
 
             this.handler.updateSearchEntries(searchEntries);
         });
@@ -375,5 +377,10 @@ public class InventoryNetworkScreen extends HandledScreen<InventoryNetworkScreen
         super.close();
 
         this.handler.getNetwork().ifPresent(network -> network.removeListener(this));
+    }
+
+    public void handleQuickMoveAll(ItemStack quickMovingStack) {
+        ClientPlayNetworking.send(new QuickMoveAllPacket(this.handler.syncId, quickMovingStack));
+        this.handler.quickMoveAll(quickMovingStack);
     }
 }

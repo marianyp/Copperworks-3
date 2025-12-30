@@ -114,6 +114,8 @@ public class CWBlocks {
             entries.addAfter(Items.WAXED_OXIDIZED_COPPER_BULB, STICKY_COPPER);
             entries.addAfter(STICKY_COPPER, STICKY_COPPER_HONEY);
 
+            entries.addAfter(Items.SCAFFOLDING, COPPER_SCAFFOLDING);
+
             entries.addAfter(Items.BARREL, COPPER_BARREL);
         });
 

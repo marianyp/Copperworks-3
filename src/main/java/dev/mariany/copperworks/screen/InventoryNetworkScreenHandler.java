@@ -12,6 +12,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.InventoryChangedListener;
+import net.minecraft.inventory.StackWithSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
@@ -109,7 +110,7 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
         return this.player.getInventory().size();
     }
 
-    public int getVirtualInventorySize() {
+    public int getVirtualNetworkInventorySize() {
         return this.virtualNetworkInventory.size();
     }
 
@@ -153,7 +154,7 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
     }
 
     public boolean isEmptySearchSlot(int slot) {
-        if(this.virtualNetworkInventory instanceof SearchVirtualNetworkInventory) {
+        if (this.virtualNetworkInventory instanceof SearchVirtualNetworkInventory) {
             return this.virtualNetworkInventory.getStack(slot).isEmpty();
         }
 
@@ -181,6 +182,14 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
         int row = virtualIndex / columns;
 
         return column + (row + scrollOffsetRows) * columns;
+    }
+
+    public boolean isVirtualIndex(float scrollPosition, int index) {
+        int columns = this.getColumns();
+        int scrollOffsetRows = this.getRow(scrollPosition);
+        int visibleSlots = this.getRows() * columns;
+        int firstVisible = scrollOffsetRows * columns;
+        return index >= firstVisible && index < firstVisible + visibleSlots;
     }
 
     protected void clearSlots() {
@@ -249,7 +258,7 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
 
     public boolean handlePickupAll(int clickedSlotIndex, int button, SlotActionType actionType) {
         int networkSize = this.getNetworkSize();
-        int virtualInventorySize = this.getVirtualInventorySize();
+        int virtualNetworkInventorySize = this.getVirtualNetworkInventorySize();
         int playerInventorySize = this.getPlayerInventorySize();
         int slotCount = this.slots.size();
 
@@ -295,7 +304,7 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
                         index >= 0 && index < playerInventorySize && cursorStack.getCount() < cursorStack.getMaxCount();
                         index += direction
                 ) {
-                    int adjustedIndex = index + virtualInventorySize - 1;
+                    int adjustedIndex = index + virtualNetworkInventorySize - 1;
 
                     if (adjustedIndex >= slotCount) {
                         continue;
@@ -346,10 +355,37 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
         return itemStack;
     }
 
+    public void quickMoveAll(ItemStack quickMovingStack) {
+        int virtualNetworkSize = this.getVirtualNetworkInventorySize();
+
+        this.getNetwork().ifPresent(network -> {
+            boolean changed = false;
+
+            for (StackWithSlot stackWithSlot : network.getHeldStacks()) {
+                int slotIndex = stackWithSlot.slot();
+                ItemStack stack = stackWithSlot.stack();
+
+                if (isVirtualIndex(this.getScrollPosition(), slotIndex)) {
+                    continue;
+                }
+
+                if (!stack.isEmpty() && InventoryHelper.canCombine(stack, quickMovingStack, true)) {
+                    if (this.insertItem(stack, virtualNetworkSize, this.slots.size(), true)) {
+                        changed = true;
+                    }
+                }
+            }
+
+            if (changed && !this.isSearching()) {
+                this.getNetwork().ifPresent(InventoryNetwork::markDirty);
+            }
+        });
+    }
+
     @Override
     public ItemStack quickMove(PlayerEntity player, int slotIndex) {
         int networkSize = this.getNetworkSize();
-        int virtualSize = this.getColumns() * this.getRows();
+        int virtualNetworkSize = this.getVirtualNetworkInventorySize();
 
         ItemStack resultStack = ItemStack.EMPTY;
         Slot slot = this.slots.get(slotIndex);
@@ -358,8 +394,8 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
             ItemStack slotStack = slot.getStack();
             resultStack = slotStack.copy();
 
-            if (slotIndex < virtualSize) {
-                if (this.insertItem(slotStack, virtualSize, this.slots.size(), true)) {
+            if (slotIndex < virtualNetworkSize) {
+                if (this.insertItem(slotStack, virtualNetworkSize, this.slots.size(), true)) {
                     if (!this.isSearching()) {
                         this.getNetwork().ifPresent(InventoryNetwork::markDirty);
                     }

@@ -19,6 +19,7 @@
     "requireAnnotations": true
   },
   "client": [
-    "ClientPlayerInteractionManagerMixin"
+    "ClientPlayerInteractionManagerMixin",
+    "HandledScreenMixin"
   ]
 }
