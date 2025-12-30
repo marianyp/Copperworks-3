@@ -31,6 +31,8 @@ public class CWModelProvider extends FabricModelProvider {
         blockStateModelGenerator.registerTurnableRail(CWBlocks.WOODEN_RAIL);
         blockStateModelGenerator.registerTurnableRail(CWBlocks.COPPER_RAIL);
 
+        blockStateModelGenerator.registerSimpleCubeAll(CWBlocks.COPPER_CLOCK);
+
         this.registerLever(blockStateModelGenerator);
         this.registerStickyBlock(blockStateModelGenerator, CWBlocks.STICKY_COPPER);
         this.registerStickyBlock(blockStateModelGenerator, CWBlocks.STICKY_COPPER_HONEY);

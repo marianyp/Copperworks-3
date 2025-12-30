@@ -24,7 +24,8 @@ public class CWBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 CWBlocks.STICKY_COPPER,
                 CWBlocks.STICKY_COPPER_HONEY,
                 CWBlocks.COPPER_SCAFFOLDING,
-                CWBlocks.COPPER_BARREL
+                CWBlocks.COPPER_BARREL,
+                CWBlocks.COPPER_CLOCK
         );
 
         valueLookupBuilder(BlockTags.AXE_MINEABLE).add(CWBlocks.WOODEN_RAIL);
@@ -34,7 +35,8 @@ public class CWBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 CWBlocks.STICKY_COPPER,
                 CWBlocks.STICKY_COPPER_HONEY,
                 CWBlocks.COPPER_SCAFFOLDING,
-                CWBlocks.COPPER_BARREL
+                CWBlocks.COPPER_BARREL,
+                CWBlocks.COPPER_CLOCK
         );
 
         valueLookupBuilder(BlockTags.RAILS).add(

@@ -1,6 +1,7 @@
 package dev.mariany.copperworks.block;
 
 import dev.mariany.copperworks.Copperworks;
+import dev.mariany.copperworks.block.clock.CopperClockBlock;
 import dev.mariany.copperworks.item.AlternativeScaffoldingBlockItem;
 import dev.mariany.copperworks.sound.CWSoundEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
@@ -66,6 +67,12 @@ public class CWBlocks {
             genericCopperSettings()
     );
 
+    public static final Block COPPER_CLOCK = register(
+            "copper_clock",
+            CopperClockBlock::new,
+            genericCopperSettings().pistonBehavior(PistonBehavior.BLOCK).solidBlock(Blocks::never)
+    );
+
     private static AbstractBlock.Settings genericCopperSettings() {
         return AbstractBlock.Settings.create()
                                      .mapColor(MapColor.ORANGE)
@@ -108,6 +115,8 @@ public class CWBlocks {
             entries.addAfter(Items.LEVER, COPPER_LEVER);
 
             entries.addAfter(Items.BARREL, COPPER_BARREL);
+
+            entries.addAfter(Items.TARGET, COPPER_CLOCK);
         });
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(entries -> {

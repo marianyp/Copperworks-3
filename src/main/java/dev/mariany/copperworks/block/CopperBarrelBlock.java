@@ -62,7 +62,7 @@ public class CopperBarrelBlock extends BlockWithEntity {
 
     @Override
     @Nullable
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public CopperBarrelBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new CopperBarrelBlockEntity(pos, state);
     }
 
@@ -83,7 +83,7 @@ public class CopperBarrelBlock extends BlockWithEntity {
     @Override
     protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (world.getBlockEntity(pos) instanceof CopperBarrelBlockEntity copperBarrelBlockEntity) {
-            copperBarrelBlockEntity.interact(copperBarrelBlockEntity, player, pos);
+            CopperBarrelBlockEntity.interact(copperBarrelBlockEntity, player, pos);
         }
 
         return ActionResult.SUCCESS;

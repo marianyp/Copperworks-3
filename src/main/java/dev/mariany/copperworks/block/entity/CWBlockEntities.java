@@ -2,6 +2,7 @@ package dev.mariany.copperworks.block.entity;
 
 import dev.mariany.copperworks.Copperworks;
 import dev.mariany.copperworks.block.CWBlocks;
+import dev.mariany.copperworks.block.entity.clock.CopperClockBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.registry.Registries;
@@ -11,6 +12,11 @@ public class CWBlockEntities {
     public static final BlockEntityType<CopperBarrelBlockEntity> COPPER_BARREL = register(
             "copper_barrel",
             FabricBlockEntityTypeBuilder.create(CopperBarrelBlockEntity::new, CWBlocks.COPPER_BARREL).build()
+    );
+
+    public static final BlockEntityType<CopperClockBlockEntity> COPPER_CLOCK = register(
+            "copper_clock",
+            FabricBlockEntityTypeBuilder.create(CopperClockBlockEntity::new, CWBlocks.COPPER_CLOCK).build()
     );
 
     public static <T extends BlockEntityType<?>> T register(String path, T blockEntityType) {

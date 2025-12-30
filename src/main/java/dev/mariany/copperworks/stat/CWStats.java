@@ -9,6 +9,10 @@ import net.minecraft.util.Identifier;
 
 public class CWStats {
     public static final Identifier OPEN_COPPER_BARREL = register("open_copper_barrel", StatFormatter.DEFAULT);
+    public static final Identifier INTERACT_WITH_COPPER_CLOCK = register(
+            "interact_with_copper_clock",
+            StatFormatter.DEFAULT
+    );
 
     private static Identifier register(String id, StatFormatter formatter) {
         Identifier identifier = Copperworks.id(id);

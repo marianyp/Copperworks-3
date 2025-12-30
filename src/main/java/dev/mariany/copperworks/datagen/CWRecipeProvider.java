@@ -36,16 +36,28 @@ public class CWRecipeProvider extends FabricRecipeProvider {
                 this.createWoodenRailRecipe();
                 this.createStickyCopperRecipe(Items.SLIME_BALL, CWBlocks.STICKY_COPPER);
                 this.createStickyCopperRecipe(Items.HONEY_BOTTLE, CWBlocks.STICKY_COPPER_HONEY);
+                this.createCopperClockRecipe();
+            }
+
+            private void createCopperClockRecipe() {
+                this.createShaped(RecipeCategory.REDSTONE, CWBlocks.COPPER_CLOCK)
+                    .pattern("PPP")
+                    .pattern("PCP")
+                    .pattern("PPP")
+                    .input('P', CWItems.COPPER_PLATE)
+                    .input('C', Items.CLOCK)
+                    .criterion(hasItem(Items.CLOCK), conditionsFromItem(Items.CLOCK))
+                    .offerTo(exporter);
             }
 
             private void createStickyCopperRecipe(Item input, Block output) {
                 this.createShaped(RecipeCategory.MISC, output)
-                    .input('P', CWItems.COPPER_PLATE)
-                    .input('C', Items.COPPER_INGOT)
-                    .input('I', input)
                     .pattern("PPP")
                     .pattern("CIC")
                     .pattern("PPP")
+                    .input('P', CWItems.COPPER_PLATE)
+                    .input('C', Items.COPPER_INGOT)
+                    .input('I', input)
                     .criterion(hasItem(CWItems.COPPER_PLATE), conditionsFromItem(CWItems.COPPER_PLATE))
                     .group("sticky_copper")
                     .offerTo(exporter);

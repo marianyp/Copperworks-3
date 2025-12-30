@@ -1,5 +1,6 @@
-// 1.21.8	-999999999-01-01T00:00:00	Copperworks/Model Definitions
+// 1.21.10	-999999999-01-01T00:00:00	Copperworks/Model Definitions
 6b0962b5b0153a4895afeecefbfc18e6493d6843 assets/copperworks/blockstates/copper_barrel.json
+9678e04dad96ffaaace0910fdfb8ec533a09c7f4 assets/copperworks/blockstates/copper_clock.json
 db70e00778938c7ef6984970d97f6a53f981a57b assets/copperworks/blockstates/copper_lever.json
 715afb7ed6768bb31c25786f56eb809c447c43b9 assets/copperworks/blockstates/copper_rail.json
 261757e79862e1d5505af541d8c8fa41b27c340e assets/copperworks/blockstates/copper_scaffolding.json
@@ -7,6 +8,7 @@ a17939d98d9f99135cce894c118f71ceb25f0606 assets/copperworks/blockstates/sticky_c
 6efe288b0191adac4cffcf30dd22ab1560862d1c assets/copperworks/blockstates/sticky_copper_honey.json
 600c6e2162c1a9d14b4fb4c060a290fc7b8b8e1b assets/copperworks/blockstates/wooden_rail.json
 8e79f6763446041499608865818ccc838c116017 assets/copperworks/items/copper_barrel.json
+d47e51c601dad6586fc695c0de513cb08d256110 assets/copperworks/items/copper_clock.json
 9354a4a5f801be695955dcdb04fc9dca32237e6d assets/copperworks/items/copper_lever.json
 9ad86078608ac34bbe4f7b75b3022a4861d67e32 assets/copperworks/items/copper_plate.json
 96c92d2acd298780a5230058116533b7c544def1 assets/copperworks/items/copper_rail.json
@@ -17,6 +19,7 @@ d864bbe739773aea90a6af7eb4f399e6f6c252ac assets/copperworks/items/iron_plate.jso
 70aca940bebd2398f9b707848bd6e2073a1e2e89 assets/copperworks/items/sticky_copper_honey.json
 bf5b7eb72c785af4a96b5580f25debfaef3e7e6b assets/copperworks/items/wooden_rail.json
 11db09339b65a596b220561655beefb1a09f8e6e assets/copperworks/models/block/copper_barrel.json
+0cbed4461fbdbf80a5ed2317123f735fbc61bdf9 assets/copperworks/models/block/copper_clock.json
 06f3808c7126f319d1c0e14056a13f4a37fcba3c assets/copperworks/models/block/copper_rail.json
 068c98a76b871ac81a6af9e4eedd31891beb312e assets/copperworks/models/block/copper_rail_corner.json
 900c950cc500a61e6957b1c3f41faf8d10b523a7 assets/copperworks/models/block/copper_rail_raised_ne.json

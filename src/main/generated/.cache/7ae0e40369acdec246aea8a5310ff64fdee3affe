@@ -1,9 +1,11 @@
-// 1.21.8	-999999999-01-01T00:00:00	Copperworks/Copperworks Recipes
+// 1.21.10	-999999999-01-01T00:00:00	Copperworks/Copperworks Recipes
 7d5bf932e9b75b40bc5f363571516bb231677fc0 data/copperworks/advancement/recipes/misc/copper_plate.json
 4bacbcac60c51d61ccec0bc6a062969d91e87653 data/copperworks/advancement/recipes/misc/iron_plate.json
 f0d69e30bfc1696f98b5b79a1d2e19c29af1b441 data/copperworks/advancement/recipes/misc/sticky_copper.json
 2ddd4946b594dc63467f4dc772817f237eeecae7 data/copperworks/advancement/recipes/misc/sticky_copper_honey.json
+bc781189654d97f163a9a000ed78a1699f38763b data/copperworks/advancement/recipes/redstone/copper_clock.json
 332dec9826338e771d5ed25b4ce9a0f06dde892d data/copperworks/advancement/recipes/transportation/wooden_rail.json
+cd404407e408405c3f5b0d5f6d9e142dc14dafef data/copperworks/recipe/copper_clock.json
 68e109db6d82b5f03ac5417217ab0a513af058f8 data/copperworks/recipe/copper_plate.json
 688114c4fb7f1bf2a5241d2ce9578bb6b32c0102 data/copperworks/recipe/iron_plate.json
 984be16c2ce07c77eeff298a0b55f36d311636e6 data/copperworks/recipe/sticky_copper.json

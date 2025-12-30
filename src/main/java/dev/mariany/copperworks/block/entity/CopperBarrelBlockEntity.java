@@ -60,7 +60,7 @@ public class CopperBarrelBlockEntity extends BlockEntity
         InventoryNetworkContainer.tick(blockEntity);
     }
 
-    public void interact(CopperBarrelBlockEntity copperBarrelBlockEntity, PlayerEntity player, BlockPos pos) {
+    public static void interact(CopperBarrelBlockEntity copperBarrelBlockEntity, PlayerEntity player, BlockPos pos) {
         player.incrementStat(CWStats.OPEN_COPPER_BARREL);
 
         if (player.getEntityWorld() instanceof ServerWorld serverWorld) {
