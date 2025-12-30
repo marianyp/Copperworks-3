@@ -6,8 +6,8 @@ import net.minecraft.inventory.InventoryChangedListener;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 
-public class VirtualNetworkInventory extends SimpleInventory implements InventoryChangedListener {
-    private final InventoryNetworkScreenHandler handler;
+public abstract class VirtualNetworkInventory extends SimpleInventory implements InventoryChangedListener {
+    protected final InventoryNetworkScreenHandler handler;
 
     public VirtualNetworkInventory(InventoryNetworkScreenHandler handler) {
         super(handler.getColumns() * handler.getRows());
@@ -15,25 +15,48 @@ public class VirtualNetworkInventory extends SimpleInventory implements Inventor
         this.addListener(this);
     }
 
-    public void setStackNoCallbacks(int slot, ItemStack stack) {
+    public void scrollItems(float position) {
+        int columns = this.handler.getColumns();
+        int rows = this.handler.getRows();
+
+        for (int virtualIndex = 0; virtualIndex < columns * rows; virtualIndex++) {
+            this.setStackNoCallbacks(virtualIndex, this.getStack(position, virtualIndex));
+        }
+    }
+
+    protected void setStackNoCallbacks(int slot, ItemStack stack) {
         this.heldStacks.set(slot, stack);
         stack.capCount(this.getMaxCount(stack));
     }
 
-    protected void syncStacks() {
-        this.handler.getNetwork().ifPresent(network -> {
-            for (int index = 0; index < this.size(); index++) {
-                int networkIndex = this.handler.visibleToNetworkIndex(this.handler.getScrollPosition(), index);
+    protected boolean didStackChange(ItemStack previousStack, ItemStack newStack) {
+        boolean sameCount = previousStack.getCount() == newStack.getCount();
+        boolean sameItems = ItemStack.areItemsAndComponentsEqual(previousStack, newStack);
 
-                if (networkIndex >= 0 && networkIndex < network.size()) {
-                    network.setStack(networkIndex, this.getStack(index));
-                }
-            }
-        });
+        return !sameCount || !sameItems;
     }
+
+    abstract protected ItemStack getStack(float position, int virtualIndex);
+
+    abstract protected boolean syncStacks();
+
+    abstract protected boolean shouldUpdateRemovals();
 
     @Override
     public void onInventoryChanged(Inventory sender) {
-        this.syncStacks();
+        if (this.syncStacks()) {
+            this.handler.getNetwork().ifPresent(InventoryNetwork::markDirty);
+        }
+    }
+
+    @Override
+    public ItemStack removeStack(int slot, int amount) {
+        ItemStack result = super.removeStack(slot, amount);
+
+        if(!result.isEmpty() && this.shouldUpdateRemovals()) {
+            this.handler.getNetwork().ifPresent(InventoryNetwork::markDirty);
+        }
+
+        return result;
     }
 }

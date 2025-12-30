@@ -1,28 +1,37 @@
 package dev.mariany.copperworks.client.gui.screen.ingame;
 
 import dev.mariany.copperworks.Copperworks;
+import dev.mariany.copperworks.client.gui.widget.ClickableTextFieldWidget;
 import dev.mariany.copperworks.packet.serverbound.InventoryScrollPacket;
+import dev.mariany.copperworks.packet.serverbound.UpdateSearchEntriesPacket;
+import dev.mariany.copperworks.packet.serverbound.UpdateSearchQueryPacket;
 import dev.mariany.copperworks.screen.InventoryNetworkScreenHandler;
+import dev.mariany.copperworks.screen.slot.SearchSlot;
+import dev.mariany.copperworks.screen.search.SearchEntry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.InventoryChangedListener;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.List;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
-public class InventoryNetworkScreen extends HandledScreen<InventoryNetworkScreenHandler> {
+public class InventoryNetworkScreen extends HandledScreen<InventoryNetworkScreenHandler> implements
+        InventoryChangedListener {
     protected static final Identifier BACKGROUND_TEXTURE = Copperworks.id(
             "textures/gui/container/inventory_network.png"
     );
@@ -31,6 +40,10 @@ public class InventoryNetworkScreen extends HandledScreen<InventoryNetworkScreen
     );
     protected static final Identifier SCROLLER_DISABLED_TEXTURE = Copperworks.id(
             "container/inventory_network/scroller_disabled"
+    );
+
+    protected static final Identifier DISABLED_SLOT_TEXTURE = Copperworks.id(
+            "container/inventory_network/disabled_slot"
     );
 
     protected static final int TEXTURE_WIDTH = 256;
@@ -43,7 +56,7 @@ public class InventoryNetworkScreen extends HandledScreen<InventoryNetworkScreen
     protected static final int SCROLL_TRACK_TOP_LEFT_Y = 31;
     protected static final int SCROLL_TRACK_HEIGHT = 106;
 
-    protected TextFieldWidget searchBox;
+    protected ClickableTextFieldWidget searchBox;
 
     protected boolean scrolling;
     protected boolean ignoreTypedCharacter;
@@ -60,6 +73,8 @@ public class InventoryNetworkScreen extends HandledScreen<InventoryNetworkScreen
         this.backgroundHeight = yOffset + this.getRows() * InventoryNetworkScreenHandler.SLOT_BOX_SIZE;
         this.titleY += InventoryNetworkScreenHandler.INVENTORY_Y_OFFSET;
         this.playerInventoryTitleY = this.backgroundHeight - 94;
+
+        handler.getNetwork().ifPresent(network -> network.addListener(this));
     }
 
     protected int getCenterX() {
@@ -86,7 +101,9 @@ public class InventoryNetworkScreen extends HandledScreen<InventoryNetworkScreen
     protected void init() {
         super.init();
 
-        this.searchBox = new TextFieldWidget(
+        this.updateSearchEntries();
+
+        this.searchBox = new ClickableTextFieldWidget(
                 this.textRenderer,
                 this.x + 83,
                 this.y + 6,
@@ -97,9 +114,7 @@ public class InventoryNetworkScreen extends HandledScreen<InventoryNetworkScreen
 
         this.searchBox.setMaxLength(50);
         this.searchBox.setDrawsBackground(false);
-        this.searchBox.setVisible(true);
         this.searchBox.setEditableColor(-1);
-        this.searchBox.setFocused(true);
 
         this.addSelectableChild(this.searchBox);
     }
@@ -108,6 +123,26 @@ public class InventoryNetworkScreen extends HandledScreen<InventoryNetworkScreen
     public void render(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
         super.render(context, mouseX, mouseY, deltaTicks);
         this.drawMouseoverTooltip(context, mouseX, mouseY);
+    }
+
+    @Override
+    public void drawSlot(DrawContext context, Slot slot) {
+        if (slot instanceof SearchSlot searchSlot && this.handler.isEmptySearchSlot(slot.id)) {
+            this.drawSearchSlot(context, searchSlot);
+        } else {
+            super.drawSlot(context, slot);
+        }
+    }
+
+    private void drawSearchSlot(DrawContext context, SearchSlot slot) {
+        context.drawGuiTexture(
+                RenderPipelines.GUI_TEXTURED,
+                DISABLED_SLOT_TEXTURE,
+                slot.x - 1,
+                slot.y - 1,
+                InventoryNetworkScreenHandler.SLOT_BOX_SIZE,
+                InventoryNetworkScreenHandler.SLOT_BOX_SIZE
+        );
     }
 
     @Override
@@ -211,6 +246,8 @@ public class InventoryNetworkScreen extends HandledScreen<InventoryNetworkScreen
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        this.searchBox.setFocused(false);
+
         if (button == 0) {
             if (this.isClickInScrollbar(mouseX, mouseY)) {
                 this.scrolling = this.isScrollerEnabled();
@@ -257,13 +294,9 @@ public class InventoryNetworkScreen extends HandledScreen<InventoryNetworkScreen
 
         String previousSearch = this.searchBox.getText();
 
-        Copperworks.LOGGER.info(this.searchBox.getText());
-
         if (this.searchBox.charTyped(character, modifiers)) {
-            Copperworks.LOGGER.info(this.searchBox.getText());
-
             if (!Objects.equals(previousSearch, this.searchBox.getText())) {
-//                this.search();
+                this.search();
             }
 
             return true;
@@ -276,7 +309,7 @@ public class InventoryNetworkScreen extends HandledScreen<InventoryNetworkScreen
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         this.ignoreTypedCharacter = false;
 
-        boolean focusingInventorySlot = !this.isInventorySlot(this.focusedSlot) || this.focusedSlot.hasStack();
+        boolean focusingInventorySlot = this.isFocusingInventorySlot();
         boolean pressedNumber = InputUtil.fromKeyCode(keyCode, scanCode).toInt().isPresent();
 
         if (focusingInventorySlot && pressedNumber && this.handleHotbarKeyPressed(keyCode, scanCode)) {
@@ -286,12 +319,9 @@ public class InventoryNetworkScreen extends HandledScreen<InventoryNetworkScreen
 
         String previousSearch = this.searchBox.getText();
 
-//        Copperworks.LOGGER.info("isVisible: {}", this.searchBox.isVisible());
         if (this.searchBox.keyPressed(keyCode, scanCode, modifiers)) {
-            Copperworks.LOGGER.info(this.searchBox.getText());
-
             if (!Objects.equals(previousSearch, this.searchBox.getText())) {
-//                this.search();
+                this.search();
             }
 
             return true;
@@ -301,7 +331,41 @@ public class InventoryNetworkScreen extends HandledScreen<InventoryNetworkScreen
                 super.keyPressed(keyCode, scanCode, modifiers);
     }
 
-    private boolean isInventorySlot(@Nullable Slot slot) {
-        return slot != null && slot.inventory == this.handler.getVirtualInventory();
+    protected boolean isFocusingInventorySlot() {
+        return !this.isInventorySlot(this.focusedSlot) || (this.focusedSlot != null && this.focusedSlot.hasStack());
+    }
+
+    protected boolean isInventorySlot(@Nullable Slot slot) {
+        return slot != null && slot.inventory == this.handler.getVirtualNetworkInventory();
+    }
+
+    protected void search() {
+        String search = this.searchBox.getText();
+        ClientPlayNetworking.send(new UpdateSearchQueryPacket(this.handler.syncId, search));
+        this.handler.updateSearchQuery(search);
+    }
+
+    protected void updateSearchEntries() {
+        this.handler.getNetwork().ifPresent(network -> {
+            World world = this.client == null ? null : this.client.world;
+
+            List<SearchEntry> searchEntries = SearchEntry.getEntries(world, network.getHeldStacks());
+
+            ClientPlayNetworking.send(new UpdateSearchEntriesPacket(handler.syncId, searchEntries));
+
+            this.handler.updateSearchEntries(searchEntries);
+        });
+    }
+
+    @Override
+    public void onInventoryChanged(Inventory sender) {
+        this.updateSearchEntries();
+    }
+
+    @Override
+    public void close() {
+        super.close();
+
+        this.handler.getNetwork().ifPresent(network -> network.removeListener(this));
     }
 }

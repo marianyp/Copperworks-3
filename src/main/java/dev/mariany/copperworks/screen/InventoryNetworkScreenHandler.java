@@ -1,23 +1,30 @@
 package dev.mariany.copperworks.screen;
 
-import dev.mariany.copperworks.inventory.InventoryNetwork;
-import dev.mariany.copperworks.inventory.InventoryNetworkState;
-import dev.mariany.copperworks.inventory.VirtualNetworkInventory;
-import dev.mariany.copperworks.packet.clientbound.InventoryScrollValidationPacket;
+import dev.mariany.copperworks.inventory.*;
+import dev.mariany.copperworks.packet.clientbound.InventoryValidationPacket;
+import dev.mariany.copperworks.screen.scroll.ScrollableInventory;
+import dev.mariany.copperworks.screen.search.SearchEntry;
+import dev.mariany.copperworks.screen.search.SearchableInventory;
+import dev.mariany.copperworks.screen.slot.SearchSlot;
+import dev.mariany.copperworks.screen.slot.SlotSupplier;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.InventoryChangedListener;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
-public class InventoryNetworkScreenHandler extends ScreenHandler implements ScrollableInventory {
+public class InventoryNetworkScreenHandler extends ScreenHandler implements ScrollableInventory, SearchableInventory,
+        InventoryChangedListener {
     public static final int SLOT_BOX_SIZE = 18;
     public static final int SLOT_SIZE = 16;
     public static final int INVENTORY_Y_OFFSET = 13;
@@ -26,12 +33,21 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
     protected final int maxRows;
 
     protected final PlayerEntity player;
-    protected final VirtualNetworkInventory virtualInventory;
+    protected VirtualNetworkInventory virtualNetworkInventory;
 
     protected float scrollPosition;
 
+    protected final List<SearchEntry> searchEntries = new ArrayList<>();
+    protected final List<SearchEntry> searchResults = new ArrayList<>();
+
+    @Nullable
+    protected String searchQuery = null;
+
     @Nullable
     protected Float validatedScrollPosition;
+
+    @Nullable
+    protected String validatedSearchQuery;
 
     public InventoryNetworkScreenHandler(int syncId, PlayerInventory playerInventory) {
         this(syncId, playerInventory, 8, 6);
@@ -43,17 +59,11 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
         this.columns = columns;
         this.maxRows = maxRows;
         this.player = playerInventory.player;
-        this.virtualInventory = new VirtualNetworkInventory(this);
+        this.virtualNetworkInventory = new ScrollVirtualNetworkInventory(this);
 
-        this.updateScrollPosition(0);
+        this.getNetwork().ifPresent(network -> network.addListener(this));
 
-        this.addVirtualSlots();
-
-        this.addPlayerSlots(
-                playerInventory,
-                SLOT_SIZE / 2,
-                INVENTORY_Y_OFFSET + SLOT_BOX_SIZE + this.getRows() * SLOT_BOX_SIZE + 13
-        );
+        this.updateSlots();
     }
 
     public int getColumns() {
@@ -82,11 +92,29 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
     }
 
     public boolean isScrollerEnabled() {
-        return this.getNetworkSize() > this.getColumns() * this.getMaxRows();
+        int maxSlots = this.getColumns() * this.getMaxRows();
+
+        int slots;
+
+        if (this.isSearching()) {
+            slots = this.searchResults.size();
+        } else {
+            slots = this.getNetworkSize();
+        }
+
+        return slots > maxSlots;
     }
 
-    public VirtualNetworkInventory getVirtualInventory() {
-        return this.virtualInventory;
+    public int getPlayerInventorySize() {
+        return this.player.getInventory().size();
+    }
+
+    public int getVirtualInventorySize() {
+        return this.virtualNetworkInventory.size();
+    }
+
+    public VirtualNetworkInventory getVirtualNetworkInventory() {
+        return this.virtualNetworkInventory;
     }
 
     public int getNetworkSize() {
@@ -97,6 +125,17 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
         return this.getNetwork().map(network -> network.getStack(slotIndex)).orElse(ItemStack.EMPTY);
     }
 
+    public void removeNetworkStack(int slotIndex) {
+        this.getNetwork()
+            .map(network -> network.removeStack(slotIndex));
+    }
+
+    public ItemStack removeNetworkStack(int slotIndex, int amount) {
+        return this.getNetwork()
+                   .map(network -> network.removeStack(slotIndex, amount))
+                   .orElse(ItemStack.EMPTY);
+    }
+
     public Optional<InventoryNetwork> getNetwork() {
         if (this.player instanceof InventoryNetworkState networkState) {
             return networkState.copperworks2$getNetwork();
@@ -105,55 +144,81 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
         return Optional.empty();
     }
 
-    public void updateScrollPosition(float scrollPosition) {
-        this.scrollPosition = scrollPosition;
-        this.scrollItems(scrollPosition);
+    public List<SearchEntry> getSearchResults() {
+        return List.copyOf(this.searchResults);
     }
 
-    public float calculateScrollPosition(int row) {
-        return MathHelper.clamp((float) row / this.getOverflowRows(), 0, 1);
+    public boolean isSearching() {
+        return this.searchQuery != null && !this.searchQuery.isBlank();
+    }
+
+    public boolean isEmptySearchSlot(int slot) {
+        if(this.virtualNetworkInventory instanceof SearchVirtualNetworkInventory) {
+            return this.virtualNetworkInventory.getStack(slot).isEmpty();
+        }
+
+        return false;
+    }
+
+    public void updateScrollPosition(float scrollPosition) {
+        this.scrollPosition = scrollPosition;
+        this.virtualNetworkInventory.scrollItems(scrollPosition);
+    }
+
+    public void refreshVirtualNetwork() {
+        this.updateScrollPosition(this.getScrollPosition());
     }
 
     public float calculateScrollPosition(float current, double amount) {
         return MathHelper.clamp(current - (float) (amount / this.getOverflowRows()), 0, 1);
     }
 
-    public int visibleToNetworkIndex(float position, int visibleIndex) {
+    public int virtualToRealIndex(float position, int virtualIndex) {
         int columns = this.getColumns();
         int scrollOffsetRows = this.getRow(position);
 
-        int column = visibleIndex % columns;
-        int row = visibleIndex / columns;
+        int column = virtualIndex % columns;
+        int row = virtualIndex / columns;
 
         return column + (row + scrollOffsetRows) * columns;
     }
 
-    public void scrollItems(float position) {
-        int visibleCount = this.getColumns() * this.getRows();
-
-        for (int visibleIndex = 0; visibleIndex < visibleCount; visibleIndex++) {
-            int slotIndex = this.visibleToNetworkIndex(position, visibleIndex);
-
-            ItemStack stack = (slotIndex >= 0 && slotIndex < this.getNetworkSize())
-                    ? this.getNetworkStack(slotIndex)
-                    : ItemStack.EMPTY;
-
-            this.virtualInventory.setStackNoCallbacks(visibleIndex, stack);
-        }
-
-        this.virtualInventory.markDirty();
+    protected void clearSlots() {
+        this.slots.clear();
+        this.trackedStacks.clear();
+        this.trackedSlots.clear();
     }
 
-    protected void addVirtualSlots() {
+    protected void updateSlots() {
+        this.clearSlots();
+
+        if (this.isSearching()) {
+            this.virtualNetworkInventory = new SearchVirtualNetworkInventory(this);
+        } else {
+            this.virtualNetworkInventory = new ScrollVirtualNetworkInventory(this);
+        }
+
+        SlotSupplier slotSupplier = this.virtualNetworkInventory instanceof SearchVirtualNetworkInventory ?
+                SearchSlot::new :
+                Slot::new;
+
         for (int y = 0; y < this.getRows(); y++) {
             for (int x = 0; x < this.getColumns(); x++) {
                 int index = x + y * this.getColumns();
                 int slotX = (SLOT_SIZE / 2) + x * SLOT_BOX_SIZE;
                 int slotY = INVENTORY_Y_OFFSET + SLOT_BOX_SIZE + y * SLOT_BOX_SIZE;
 
-                this.addSlot(new Slot(this.virtualInventory, index, slotX, slotY));
+                this.addSlot(slotSupplier.apply(this.virtualNetworkInventory, index, slotX, slotY));
             }
         }
+
+        this.updateScrollPosition(0);
+
+        this.addPlayerSlots(
+                this.player.getInventory(),
+                SLOT_SIZE / 2,
+                INVENTORY_Y_OFFSET + SLOT_BOX_SIZE + this.getRows() * SLOT_BOX_SIZE + 13
+        );
     }
 
     @Override
@@ -161,7 +226,11 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
         if (this.player instanceof ServerPlayerEntity serverPlayer) {
             ServerPlayNetworking.send(
                     serverPlayer,
-                    new InventoryScrollValidationPacket(this.syncId, this.scrollPosition)
+                    new InventoryValidationPacket(
+                            this.syncId,
+                            this.scrollPosition,
+                            Optional.ofNullable(this.searchQuery)
+                    )
             );
         }
 
@@ -170,15 +239,117 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
 
     @Override
     public void updateSlotStacks(int revision, List<ItemStack> stacks, ItemStack cursorStack) {
-        if (this.validatedScrollPosition != null && this.validatedScrollPosition == this.scrollPosition) {
+        boolean scrollPositionValid = Objects.equals(this.scrollPosition, this.validatedScrollPosition);
+        boolean searchQueryValid = Objects.equals(this.searchQuery, this.validatedSearchQuery);
+
+        if (scrollPositionValid && searchQueryValid) {
             super.updateSlotStacks(revision, stacks, cursorStack);
         }
     }
 
+    public boolean handlePickupAll(int clickedSlotIndex, int button, SlotActionType actionType) {
+        int networkSize = this.getNetworkSize();
+        int virtualInventorySize = this.getVirtualInventorySize();
+        int playerInventorySize = this.getPlayerInventorySize();
+        int slotCount = this.slots.size();
+
+        if (actionType != SlotActionType.PICKUP_ALL || clickedSlotIndex < 0 || clickedSlotIndex >= slotCount) {
+            return false;
+        }
+
+        Slot clickedSlot = this.slots.get(clickedSlotIndex);
+        ItemStack cursorStack = this.getCursorStack();
+
+        if (!cursorStack.isEmpty() && (!clickedSlot.hasStack() || !clickedSlot.canTakeItems(this.player))) {
+            int direction = button == 0 ? 1 : -1;
+
+            int startIndex = button == 0 ? 0 : networkSize - 1;
+
+            for (int pass = 0; pass < 2; pass++) {
+                for (
+                        int index = startIndex;
+                        index >= 0 && index < networkSize && cursorStack.getCount() < cursorStack.getMaxCount();
+                        index += direction
+                ) {
+                    ItemStack stack = this.getNetworkStack(index);
+
+                    if (!stack.isEmpty() && InventoryHelper.canCombine(stack, cursorStack, true)) {
+                        if (pass != 0 || stack.getCount() != stack.getMaxCount()) {
+                            ItemStack takenStack = this.takeStackRange(
+                                    index,
+                                    stack.getCount(),
+                                    cursorStack.getMaxCount() - cursorStack.getCount()
+                            );
+
+                            cursorStack.increment(takenStack.getCount());
+                        }
+                    }
+                }
+            }
+
+            int playerInventoryStartIndex = button == 0 ? 0 : playerInventorySize - 1;
+
+            for (int pass = 0; pass < 2; pass++) {
+                for (
+                        int index = playerInventoryStartIndex;
+                        index >= 0 && index < playerInventorySize && cursorStack.getCount() < cursorStack.getMaxCount();
+                        index += direction
+                ) {
+                    int adjustedIndex = index + virtualInventorySize - 1;
+
+                    if (adjustedIndex >= slotCount) {
+                        continue;
+                    }
+
+                    Slot currentSlot = this.slots.get(adjustedIndex);
+
+                    if (
+                            currentSlot.hasStack()
+                                    && canInsertItemIntoSlot(currentSlot, cursorStack, true)
+                                    && currentSlot.canTakeItems(this.player)
+                                    && this.canInsertIntoSlot(cursorStack, currentSlot)
+                    ) {
+                        ItemStack slotStack = currentSlot.getStack();
+
+                        if (pass != 0 || slotStack.getCount() != slotStack.getMaxCount()) {
+                            ItemStack takenStack = currentSlot.takeStackRange(
+                                    slotStack.getCount(),
+                                    cursorStack.getMaxCount() - cursorStack.getCount(),
+                                    player
+                            );
+
+                            cursorStack.increment(takenStack.getCount());
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    protected ItemStack takeStackRange(int index, int min, int max) {
+        if (max < this.getNetworkStack(index).getCount()) {
+            return ItemStack.EMPTY;
+        }
+
+        ItemStack itemStack = this.removeNetworkStack(index, Math.min(min, max));
+
+        if (itemStack.isEmpty()) {
+            return ItemStack.EMPTY;
+        }
+
+        if (this.getNetworkStack(index).isEmpty()) {
+            this.removeNetworkStack(index);
+        }
+
+        return itemStack;
+    }
+
     @Override
     public ItemStack quickMove(PlayerEntity player, int slotIndex) {
-        int columns = this.getColumns();
-        int rows = this.getRows();
+        int networkSize = this.getNetworkSize();
+        int virtualSize = this.getColumns() * this.getRows();
 
         ItemStack resultStack = ItemStack.EMPTY;
         Slot slot = this.slots.get(slotIndex);
@@ -187,11 +358,15 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
             ItemStack slotStack = slot.getStack();
             resultStack = slotStack.copy();
 
-            if (slotIndex < rows * columns) {
-                if (!this.insertItem(slotStack, rows * columns, this.slots.size(), true)) {
+            if (slotIndex < virtualSize) {
+                if (this.insertItem(slotStack, virtualSize, this.slots.size(), true)) {
+                    if (!this.isSearching()) {
+                        this.getNetwork().ifPresent(InventoryNetwork::markDirty);
+                    }
+                } else {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(slotStack, 0, rows * columns, false)) {
+            } else if (!this.insertItemToNetwork(slotStack, networkSize)) {
                 return ItemStack.EMPTY;
             }
 
@@ -205,6 +380,59 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
         return resultStack;
     }
 
+    protected boolean insertItemToNetwork(ItemStack stack, int endIndex) {
+        return this.getNetwork().map(network -> {
+            boolean changed = false;
+            int slotIndex = 0;
+
+            if (stack.isStackable()) {
+                while (!stack.isEmpty() && slotIndex < endIndex) {
+                    ItemStack itemStack = network.getStack(slotIndex);
+
+                    if (!itemStack.isEmpty() && ItemStack.areItemsAndComponentsEqual(stack, itemStack)) {
+                        int combinedCount = itemStack.getCount() + stack.getCount();
+                        int slotCapacity = itemStack.getMaxCount();
+
+                        if (combinedCount <= slotCapacity) {
+                            stack.setCount(0);
+                            itemStack.setCount(combinedCount);
+                            changed = true;
+                        } else if (itemStack.getCount() < slotCapacity) {
+                            stack.decrement(slotCapacity - itemStack.getCount());
+                            itemStack.setCount(slotCapacity);
+                            changed = true;
+                        }
+                    }
+
+                    slotIndex++;
+                }
+            }
+
+            if (!stack.isEmpty()) {
+                slotIndex = 0;
+
+                while (slotIndex < endIndex) {
+                    ItemStack targetStack = network.getStack(slotIndex);
+
+                    if (targetStack.isEmpty()) {
+                        int maxInsert = targetStack.getMaxCount();
+                        network.setStackNoCallbacks(slotIndex, stack.split(Math.min(stack.getCount(), maxInsert)));
+                        changed = true;
+                        break;
+                    }
+
+                    slotIndex++;
+                }
+            }
+
+            if (changed) {
+                network.markDirty();
+            }
+
+            return changed;
+        }).orElse(false);
+    }
+
     @Override
     public boolean canUse(PlayerEntity player) {
         return this.getNetwork()
@@ -213,8 +441,16 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
     }
 
     @Override
+    public void onInventoryChanged(Inventory sender) {
+        this.onContentChanged(sender);
+        this.refreshVirtualNetwork();
+    }
+
+    @Override
     public void onClosed(PlayerEntity player) {
         super.onClosed(player);
+
+        this.getNetwork().ifPresent(network -> network.removeListener(this));
 
         if (player instanceof InventoryNetworkState networkState) {
             networkState.copperworks2$setNetwork(null);
@@ -224,11 +460,64 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
     @Override
     public void onScroll(float scrollPosition) {
         this.updateScrollPosition(scrollPosition);
-        this.scrollItems(this.getScrollPosition());
+        this.virtualNetworkInventory.scrollItems(this.getScrollPosition());
     }
 
     @Override
     public void onScrollValidation(float scrollPosition) {
         this.validatedScrollPosition = scrollPosition;
+    }
+
+    @Override
+    public void onSearchQueryValidation(@Nullable String query) {
+        this.validatedSearchQuery = query;
+    }
+
+    @Override
+    public void updateSearchEntries(List<SearchEntry> entries) {
+        this.searchEntries.clear();
+        this.searchEntries.addAll(entries);
+        this.search();
+    }
+
+    @Override
+    public void updateSearchQuery(@Nullable String query) {
+        String previousQuery = this.searchQuery;
+
+        if (query == null) {
+            this.searchQuery = null;
+        } else {
+            String normalized = Formatting.strip(query).trim().toLowerCase(Locale.ROOT);
+            this.searchQuery = normalized.isEmpty() ? null : normalized;
+        }
+
+        this.search(!Objects.equals(previousQuery, this.searchQuery));
+    }
+
+    protected void search() {
+        this.search(false);
+    }
+
+    protected void search(boolean queryChanged) {
+        List<SearchEntry> previousSearchResults = new ArrayList<>(this.searchResults);
+
+        this.searchResults.clear();
+
+        if (this.searchQuery != null) {
+            this.searchResults.addAll(
+                    this.searchEntries.stream()
+                                      .filter(entry -> entry.getTerms()
+                                                            .stream()
+                                                            .anyMatch(term -> term.contains(this.searchQuery))
+                                      )
+                                      .toList()
+            );
+
+            this.searchResults.sort(Comparator.comparing(SearchEntry::getSlot));
+        }
+
+        if (queryChanged || !previousSearchResults.equals(this.searchResults)) {
+            this.updateSlots();
+        }
     }
 }

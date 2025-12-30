@@ -6,6 +6,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.InventoryChangedListener;
 import net.minecraft.inventory.StackWithSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
@@ -89,6 +90,8 @@ public class InventoryNetwork implements Inventory {
             };
 
     private boolean initialized;
+
+    private final Set<InventoryChangedListener> listeners = new HashSet<>();
 
     @Nullable
     private World world;
@@ -188,6 +191,14 @@ public class InventoryNetwork implements Inventory {
         this.initialized = true;
     }
 
+    public void addListener(InventoryChangedListener listener) {
+        this.listeners.add(listener);
+    }
+
+    public void removeListener(InventoryChangedListener listener) {
+        this.listeners.remove(listener);
+    }
+
     public boolean isValid() {
         if (this.world != null && this.controllerPos != null) {
             BlockEntity blockEntity = this.world.getBlockEntity(controllerPos);
@@ -226,7 +237,7 @@ public class InventoryNetwork implements Inventory {
         this.customName = customName;
     }
 
-    protected List<StackWithSlot> getHeldStacks() {
+    public List<StackWithSlot> getHeldStacks() {
         List<StackWithSlot> stacks = new ArrayList<>();
 
         for (Map.Entry<Integer, ItemStack> entry : this.heldStacks.entrySet()) {
@@ -257,14 +268,18 @@ public class InventoryNetwork implements Inventory {
         this.connections.addAll(otherNetwork.getConnections());
 
         if (mergeItems) {
-            int slot = this.size() - otherNetwork.size();
+            if (this.heldStacks.isEmpty()) {
+                this.heldStacks.putAll(otherNetwork.heldStacks);
+            } else {
+                int slot = this.size() - otherNetwork.size();
 
-            for (ItemStack stack : otherNetwork) {
-                if (!stack.isEmpty()) {
-                    this.heldStacks.put(slot, stack);
+                for (ItemStack stack : otherNetwork) {
+                    if (!stack.isEmpty()) {
+                        this.heldStacks.put(slot, stack);
+                    }
+
+                    slot++;
                 }
-
-                slot++;
             }
         }
     }
@@ -381,6 +396,10 @@ public class InventoryNetwork implements Inventory {
                 blockEntity.markDirty();
             }
         }
+
+        for (InventoryChangedListener inventoryChangedListener : this.listeners) {
+            inventoryChangedListener.onInventoryChanged(this);
+        }
     }
 
     @Override
@@ -424,13 +443,16 @@ public class InventoryNetwork implements Inventory {
 
     @Override
     public void setStack(int slot, ItemStack stack) {
+        this.setStackNoCallbacks(slot, stack);
+        this.markDirty();
+    }
+
+    public void setStackNoCallbacks(int slot, ItemStack stack) {
         this.heldStacks.put(slot, stack);
 
         if (!stack.isEmpty()) {
             stack.capCount(this.getMaxCount(stack));
         }
-
-        this.markDirty();
     }
 
     @Override

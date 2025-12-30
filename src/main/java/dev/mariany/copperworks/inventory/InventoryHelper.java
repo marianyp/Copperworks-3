@@ -114,6 +114,22 @@ public interface InventoryHelper {
         return slot;
     }
 
+    static boolean canCombine(ItemStack firstStack, ItemStack secondStack, boolean allowOverflow) {
+        if (canCombine(firstStack, secondStack)) {
+            return secondStack.getCount() + (allowOverflow ? 0 : firstStack.getCount()) <= firstStack.getMaxCount();
+        }
+
+        return false;
+    }
+
+    private static boolean canCombine(ItemStack firstStack, ItemStack secondStack) {
+        if (firstStack.isEmpty() || secondStack.isEmpty()) {
+            return false;
+        }
+
+        return ItemStack.areItemsAndComponentsEqual(firstStack, secondStack);
+    }
+
     @Nullable
     private static ItemStack getNonEmptyStack(InventoryNetwork network, int slot) {
         ItemStack stack = network.getStack(slot);
@@ -181,13 +197,5 @@ public interface InventoryHelper {
         } else {
             network.heldStacks.put(sourceSlot, sourceStack);
         }
-    }
-
-    private static boolean canCombine(ItemStack firstStack, ItemStack secondStack) {
-        if (firstStack.isEmpty() || secondStack.isEmpty()) {
-            return false;
-        }
-
-        return ItemStack.areItemsAndComponentsEqual(firstStack, secondStack);
     }
 }

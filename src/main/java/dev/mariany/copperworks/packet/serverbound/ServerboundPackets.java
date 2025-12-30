@@ -6,5 +6,7 @@ public class ServerboundPackets {
     public static void bootstrap() {
         ServerPlayNetworking.registerGlobalReceiver(InventoryNetworkHandshakePacket.ID, InventoryNetworkHandshakePacket::apply);
         ServerPlayNetworking.registerGlobalReceiver(InventoryScrollPacket.ID, InventoryScrollPacket::apply);
+        ServerPlayNetworking.registerGlobalReceiver(UpdateSearchEntriesPacket.ID, UpdateSearchEntriesPacket::apply);
+        ServerPlayNetworking.registerGlobalReceiver(UpdateSearchQueryPacket.ID, UpdateSearchQueryPacket::apply);
     }
 }

@@ -1,7 +1,7 @@
 package dev.mariany.copperworks.packet.serverbound;
 
 import dev.mariany.copperworks.Copperworks;
-import dev.mariany.copperworks.screen.ScrollableInventory;
+import dev.mariany.copperworks.screen.scroll.ScrollableInventory;
 import io.netty.buffer.ByteBuf;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.codec.PacketCodec;
