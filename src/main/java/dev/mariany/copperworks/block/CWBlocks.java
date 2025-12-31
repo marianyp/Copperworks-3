@@ -124,7 +124,7 @@ public class CWBlocks {
 
             entries.addAfter(Items.TARGET, COPPER_CLOCK);
 
-            entries.addAfter(Items.REDSTONE, COPPER_BATTERY);
+            entries.addAfter(Items.REDSTONE_BLOCK, COPPER_BATTERY);
         });
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(entries -> {
