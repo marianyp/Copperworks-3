@@ -22,11 +22,5 @@
     "sounds": [
       "minecraft:note/hat"
     ]
-  },
-  "block.battery.pulse": {
-    "subtitle": "subtitles.block.battery.pulse",
-    "sounds": [
-      "minecraft:block/copper_bulb/toggle"
-    ]
   }
 }

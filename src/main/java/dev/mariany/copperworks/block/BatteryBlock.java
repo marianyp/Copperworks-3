@@ -2,7 +2,6 @@ package dev.mariany.copperworks.block;
 
 import com.mojang.serialization.MapCodec;
 import dev.mariany.copperworks.block.entity.clock.ClockBlockEntity;
-import dev.mariany.copperworks.sound.CWSoundEvents;
 import dev.mariany.copperworks.tag.CWTags;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -11,7 +10,6 @@ import net.minecraft.block.WallMountedBlock;
 import net.minecraft.block.enums.BlockFace;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
@@ -130,13 +128,6 @@ public class BatteryBlock extends WallMountedBlock {
 
             boolean canInteract = !origin.offset(direction).equals(iterationPosition);
             BlockState state = world.getBlockState(iterationPosition);
-            Block block = state.getBlock();
-
-            if (block instanceof BatteryBlock && canInteract) {
-                this.emitPulse(world, iterationPosition);
-                this.sendPulse(world, iterationPosition, origin, direction);
-                return;
-            }
 
             if (state.isIn(CWTags.Blocks.EXTENDS_BATTERY_PULSE)) {
                 if (state.isIn(CWTags.Blocks.EXTENDS_BATTERY_PULSE_SAME_AXIS)) {
@@ -159,25 +150,30 @@ public class BatteryBlock extends WallMountedBlock {
     }
 
     protected void handleInteraction(World world, BlockPos pos) {
-        handleClockBlockEntity(world, pos);
+        if (!handleBattery(world, pos)) {
+            handleClockBlockEntity(world, pos);
+        }
     }
 
-    protected void handleClockBlockEntity(World world, BlockPos position) {
-        if (world.getBlockEntity(position) instanceof ClockBlockEntity clockBlockEntity) {
-            clockBlockEntity.resetProgress(world, position);
+    protected boolean handleBattery(World world, BlockPos pos) {
+        if (world.getBlockState(pos).getBlock() instanceof BatteryBlock) {
+            this.emitPulse(world, pos);
+            return true;
+        }
+
+        return false;
+    }
+
+    protected void handleClockBlockEntity(World world, BlockPos pos) {
+        if (world.getBlockEntity(pos) instanceof ClockBlockEntity clockBlockEntity) {
+            clockBlockEntity.resetProgress(world, pos);
+            clockBlockEntity.playSound(world, pos);
         }
     }
 
     protected void emitPulse(World world, BlockPos pos) {
         this.setPowered(world, pos, true);
         this.scheduleTick(world, pos);
-
-        world.playSound(
-                null,
-                pos,
-                CWSoundEvents.BLOCK_BATTERY_PULSE,
-                SoundCategory.BLOCKS
-        );
     }
 
     protected void scheduleTick(World world, BlockPos pos) {
