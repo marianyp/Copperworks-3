@@ -9,6 +9,8 @@ import net.minecraft.registry.tag.TagKey;
 public class CWTags {
     public static final class Blocks {
         public static final TagKey<Block> STICKY = createTag("sticky");
+        public static final TagKey<Block> EXTENDS_BATTERY_PULSE = createTag("extends_battery_pulse");
+        public static final TagKey<Block> EXTENDS_BATTERY_PULSE_SAME_AXIS = createTag("extends_battery_pulse_same_axis");
 
         private static TagKey<Block> createTag(String name) {
             return TagKey.of(RegistryKeys.BLOCK, Copperworks.id(name));

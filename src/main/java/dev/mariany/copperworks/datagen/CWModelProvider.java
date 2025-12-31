@@ -38,6 +38,108 @@ public class CWModelProvider extends FabricModelProvider {
         this.registerStickyBlock(blockStateModelGenerator, CWBlocks.STICKY_COPPER_HONEY);
         this.registerCopperScaffolding(blockStateModelGenerator);
         this.registerCopperBarrel(blockStateModelGenerator);
+        this.registerBattery(blockStateModelGenerator);
+    }
+
+    private void registerBattery(BlockStateModelGenerator blockStateModelGenerator) {
+        Block battery = CWBlocks.COPPER_BATTERY;
+
+        WeightedVariant defaultVariant = BlockStateModelGenerator.createWeightedVariant(
+                ModelIds.getBlockModelId(battery)
+        );
+
+        WeightedVariant onVariant = BlockStateModelGenerator.createWeightedVariant(
+                ModelIds.getBlockSubModelId(battery, "_on")
+        );
+
+        blockStateModelGenerator.blockStateCollector
+                .accept(
+                        VariantsBlockModelDefinitionCreator
+                                .of(battery)
+                                .with(
+                                        BlockStateModelGenerator.createBooleanModelMap(
+                                                Properties.POWERED,
+                                                onVariant,
+                                                defaultVariant
+                                        )
+                                )
+                                .apply(
+                                        BlockStateVariantMap
+                                                .operations(Properties.BLOCK_FACE, Properties.HORIZONTAL_FACING)
+                                                .register(
+                                                        BlockFace.CEILING,
+                                                        Direction.NORTH,
+                                                        BlockStateModelGenerator.ROTATE_X_180.then(
+                                                                BlockStateModelGenerator.ROTATE_Y_180
+                                                        )
+                                                )
+                                                .register(
+                                                        BlockFace.CEILING,
+                                                        Direction.EAST,
+                                                        BlockStateModelGenerator.ROTATE_X_180.then(
+                                                                BlockStateModelGenerator.ROTATE_Y_270
+                                                        )
+                                                )
+                                                .register(
+                                                        BlockFace.CEILING,
+                                                        Direction.SOUTH,
+                                                        BlockStateModelGenerator.ROTATE_X_180
+                                                )
+                                                .register(
+                                                        BlockFace.CEILING,
+                                                        Direction.WEST,
+                                                        BlockStateModelGenerator.ROTATE_X_180.then(
+                                                                BlockStateModelGenerator.ROTATE_Y_90
+                                                        )
+                                                )
+                                                .register(
+                                                        BlockFace.FLOOR,
+                                                        Direction.NORTH,
+                                                        BlockStateModelGenerator.NO_OP
+                                                )
+                                                .register(
+                                                        BlockFace.FLOOR,
+                                                        Direction.EAST,
+                                                        BlockStateModelGenerator.ROTATE_Y_90
+                                                )
+                                                .register(
+                                                        BlockFace.FLOOR,
+                                                        Direction.SOUTH,
+                                                        BlockStateModelGenerator.ROTATE_Y_180
+                                                )
+                                                .register(
+                                                        BlockFace.FLOOR,
+                                                        Direction.WEST,
+                                                        BlockStateModelGenerator.ROTATE_Y_270
+                                                )
+                                                .register(
+                                                        BlockFace.WALL,
+                                                        Direction.NORTH,
+                                                        BlockStateModelGenerator.ROTATE_X_90
+                                                )
+                                                .register(
+                                                        BlockFace.WALL,
+                                                        Direction.EAST,
+                                                        BlockStateModelGenerator.ROTATE_X_90.then(
+                                                                BlockStateModelGenerator.ROTATE_Y_90
+                                                        )
+                                                )
+                                                .register(
+                                                        BlockFace.WALL,
+                                                        Direction.SOUTH,
+                                                        BlockStateModelGenerator.ROTATE_X_90.then(
+                                                                BlockStateModelGenerator.ROTATE_Y_180
+                                                        )
+                                                )
+                                                .register(
+                                                        BlockFace.WALL,
+                                                        Direction.WEST,
+                                                        BlockStateModelGenerator.ROTATE_X_90.then(
+                                                                BlockStateModelGenerator.ROTATE_Y_270
+                                                        )
+                                                )
+                                )
+                );
     }
 
     private void registerCopperBarrel(BlockStateModelGenerator blockStateModelGenerator) {

@@ -70,7 +70,13 @@ public class CWBlocks {
     public static final Block COPPER_CLOCK = register(
             "copper_clock",
             CopperClockBlock::new,
-            genericCopperSettings().pistonBehavior(PistonBehavior.BLOCK).solidBlock(Blocks::never)
+            genericCopperSettings().solidBlock(Blocks::never)
+    );
+
+    public static final Block COPPER_BATTERY = register(
+            "copper_battery",
+            BatteryBlock::new,
+            genericCopperSettings().solidBlock(Blocks::never)
     );
 
     private static AbstractBlock.Settings genericCopperSettings() {
@@ -117,6 +123,8 @@ public class CWBlocks {
             entries.addAfter(Items.BARREL, COPPER_BARREL);
 
             entries.addAfter(Items.TARGET, COPPER_CLOCK);
+
+            entries.addAfter(Items.REDSTONE, COPPER_BATTERY);
         });
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(entries -> {

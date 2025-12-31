@@ -39,6 +39,11 @@ public abstract class AbstractClockBlock extends BlockWithEntity {
     }
 
     @Override
+    protected boolean emitsRedstonePower(BlockState state) {
+        return true;
+    }
+
+    @Override
     protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (world.getBlockEntity(pos) instanceof ClockBlockEntity clockBlockEntity) {
             clockBlockEntity.interact(player, pos);

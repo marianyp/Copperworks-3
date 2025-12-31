@@ -1,3 +1,10 @@
 {
-  "block.minecraft.lightning_rod": "Copper Rod"
+  "block.minecraft.exposed_lightning_rod": "Exposed Copper Rod",
+  "block.minecraft.lightning_rod": "Copper Rod",
+  "block.minecraft.oxidized_lightning_rod": "Oxidized Copper Rod",
+  "block.minecraft.waxed_exposed_lightning_rod": "Waxed Exposed Copper Rod",
+  "block.minecraft.waxed_lightning_rod": "Waxed Copper Rod",
+  "block.minecraft.waxed_oxidized_lightning_rod": "Waxed Oxidized Copper Rod",
+  "block.minecraft.waxed_weathered_lightning_rod": "Waxed Weathered Copper Rod",
+  "block.minecraft.weathered_lightning_rod": "Weathered Copper Rod"
 }

@@ -1,10 +1,10 @@
 package dev.mariany.copperworks.block.entity.clock;
 
+import dev.mariany.copperworks.sound.CWSoundEvents;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.storage.ReadView;
@@ -66,17 +66,25 @@ public interface ClockBlockEntity {
                     true
             );
 
-            serverWorld.playSound(
-                    null,
-                    pos.getX(),
-                    pos.getY(),
-                    pos.getZ(),
-                    SoundEvents.BLOCK_NOTE_BLOCK_HAT,
-                    SoundCategory.NEUTRAL,
-                    0.5F,
-                    (float) (1.6 - (Math.min(12, targetProgressSeconds) - 1) * 0.1)
-            );
+            clockBlockEntity.playSound(serverWorld, pos, targetProgressSeconds);
         }
+    }
+
+    default void playSound(World world, BlockPos pos) {
+        this.playSound(world, pos, this.getTarget());
+    }
+
+    default void playSound(World world, BlockPos pos, int targetProgressSeconds) {
+        world.playSound(
+                null,
+                pos.getX(),
+                pos.getY(),
+                pos.getZ(),
+                CWSoundEvents.BLOCK_CLOCK_INTERACT,
+                SoundCategory.NEUTRAL,
+                0.5F,
+                (float) (1.6 - (Math.min(12, targetProgressSeconds) - 1) * 0.1)
+        );
     }
 
     default void interact(PlayerEntity player, BlockPos pos) {

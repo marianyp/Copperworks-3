@@ -1,5 +1,6 @@
 // 1.21.10	-999999999-01-01T00:00:00	Copperworks/Model Definitions
 6b0962b5b0153a4895afeecefbfc18e6493d6843 assets/copperworks/blockstates/copper_barrel.json
+e3c72c4a4832513ef8b02d93a11817d2f9cd5705 assets/copperworks/blockstates/copper_battery.json
 9678e04dad96ffaaace0910fdfb8ec533a09c7f4 assets/copperworks/blockstates/copper_clock.json
 db70e00778938c7ef6984970d97f6a53f981a57b assets/copperworks/blockstates/copper_lever.json
 715afb7ed6768bb31c25786f56eb809c447c43b9 assets/copperworks/blockstates/copper_rail.json
@@ -8,6 +9,7 @@ a17939d98d9f99135cce894c118f71ceb25f0606 assets/copperworks/blockstates/sticky_c
 6efe288b0191adac4cffcf30dd22ab1560862d1c assets/copperworks/blockstates/sticky_copper_honey.json
 600c6e2162c1a9d14b4fb4c060a290fc7b8b8e1b assets/copperworks/blockstates/wooden_rail.json
 8e79f6763446041499608865818ccc838c116017 assets/copperworks/items/copper_barrel.json
+a5adc8ebb628867cf6e06eb5af6aac644b4cfa88 assets/copperworks/items/copper_battery.json
 d47e51c601dad6586fc695c0de513cb08d256110 assets/copperworks/items/copper_clock.json
 9354a4a5f801be695955dcdb04fc9dca32237e6d assets/copperworks/items/copper_lever.json
 9ad86078608ac34bbe4f7b75b3022a4861d67e32 assets/copperworks/items/copper_plate.json

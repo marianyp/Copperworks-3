@@ -48,5 +48,13 @@ public class CWBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 CWBlocks.STICKY_COPPER,
                 CWBlocks.STICKY_COPPER_HONEY
         );
+
+        valueLookupBuilder(CWTags.Blocks.EXTENDS_BATTERY_PULSE).addOptionalTag(
+                CWTags.Blocks.EXTENDS_BATTERY_PULSE_SAME_AXIS
+        );
+
+        valueLookupBuilder(CWTags.Blocks.EXTENDS_BATTERY_PULSE_SAME_AXIS).addOptionalTag(
+                BlockTags.LIGHTNING_RODS
+        );
     }
 }
