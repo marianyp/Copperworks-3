@@ -37,6 +37,20 @@ public class CWRecipeProvider extends FabricRecipeProvider {
                 this.createStickyCopperRecipe(Items.SLIME_BALL, CWBlocks.STICKY_COPPER);
                 this.createStickyCopperRecipe(Items.HONEY_BOTTLE, CWBlocks.STICKY_COPPER_HONEY);
                 this.createCopperClockRecipe();
+                this.createCopperBatteryRecipe();
+            }
+
+            private void createCopperBatteryRecipe() {
+                this.createShaped(RecipeCategory.REDSTONE, CWBlocks.COPPER_BATTERY)
+                    .pattern("CCC")
+                    .pattern("cRc")
+                    .pattern("III")
+                    .input('R', Items.REDSTONE_TORCH)
+                    .input('c', Items.COPPER_INGOT)
+                    .input('C', CWItems.COPPER_PLATE)
+                    .input('I', CWItems.IRON_PLATE)
+                    .criterion(hasItem(Items.REDSTONE_TORCH), conditionsFromItem(Items.REDSTONE_TORCH))
+                    .offerTo(exporter);
             }
 
             private void createCopperClockRecipe() {
