@@ -10,6 +10,7 @@ import net.minecraft.util.Identifier;
 public class CWSoundEvents {
     public static final SoundEvent BLOCK_WOODEN_RAIL_BREAK = register("block.wooden_rail.break");
     public static final SoundEvent BLOCK_COPPER_LEVER_CLICK = register("block.copper_lever.click");
+    public static final SoundEvent BLOCK_COPPER_BARREL_OPEN = register("block.copper_barrel.open");
     public static final SoundEvent BLOCK_CLOCK_INTERACT = register("block.clock.interact");
     public static final SoundEvent BLOCK_RELAY_INSERT = register("block.relay.insert");
     public static final SoundEvent BLOCK_BOUND_RELAY_DISCONNECT = register("block.bound_relay.disconnect");

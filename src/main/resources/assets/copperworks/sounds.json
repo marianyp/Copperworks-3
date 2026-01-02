@@ -17,6 +17,14 @@
       "minecraft:block/copper/break4"
     ]
   },
+  "block.copper_barrel.open": {
+    "subtitle": "subtitles.block.copper_barrel.open",
+    "sounds": [
+      "copperworks:block/copper_barrel/open1",
+      "copperworks:block/copper_barrel/open2",
+      "copperworks:block/copper_barrel/open3"
+    ]
+  },
   "block.clock.interact": {
     "subtitle": "subtitles.block.clock.interact",
     "sounds": [
