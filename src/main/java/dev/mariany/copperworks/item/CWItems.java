@@ -1,7 +1,8 @@
 package dev.mariany.copperworks.item;
 
 import dev.mariany.copperworks.Copperworks;
-import dev.mariany.copperworks.item.upgrade.copper.CopperUpgradeItem;
+import dev.mariany.copperworks.item.custom.radio.RadioItem;
+import dev.mariany.copperworks.item.custom.copperupgrade.CopperUpgradeItem;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
@@ -19,11 +20,15 @@ public class CWItems {
 
     public static final Item IRON_PLATE = register("iron_plate");
 
+    public static final Item AMETHYST_PIECE = register("amethyst_piece");
+
     public static final Item COPPER_UPGRADE_KIT = register(
             "copper_upgrade_kit",
             CopperUpgradeItem::new,
             new Item.Settings().rarity(Rarity.UNCOMMON).maxDamage(64).repairable(Items.COPPER_INGOT)
     );
+
+    public static final Item RADIO = register("radio", RadioItem::new, new Item.Settings().maxCount(1));
 
     private static Item register(String name) {
         return register(name, Item::new, new Item.Settings());
@@ -58,6 +63,7 @@ public class CWItems {
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {
             entries.addBefore(Items.NAME_TAG, COPPER_UPGRADE_KIT);
+            entries.addBefore(Items.COMPASS, RADIO);
         });
     }
 }

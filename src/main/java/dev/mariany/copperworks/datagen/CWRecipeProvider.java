@@ -41,7 +41,7 @@ public class CWRecipeProvider extends FabricRecipeProvider {
             }
 
             private void createCopperBatteryRecipe() {
-                this.createShaped(RecipeCategory.REDSTONE, CWBlocks.COPPER_BATTERY)
+                this.createShaped(RecipeCategory.REDSTONE, CWBlocks.BATTERY)
                     .pattern("CCC")
                     .pattern("cRc")
                     .pattern("III")

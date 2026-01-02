@@ -1,0 +1,7 @@
+{
+  "parent": "copperworks:block/battery",
+  "textures": {
+    "side": "copperworks:block/battery_side_on",
+    "particle": "copperworks:block/battery_side_on"
+  }
+}

@@ -2,12 +2,13 @@ package dev.mariany.copperworks;
 
 import dev.mariany.copperworks.advancement.criterion.CWCriterion;
 import dev.mariany.copperworks.block.CWBlocks;
-import dev.mariany.copperworks.block.entity.CWBlockEntities;
+import dev.mariany.copperworks.block.CWBlockEntities;
+import dev.mariany.copperworks.component.CWComponents;
 import dev.mariany.copperworks.event.entity.EntityEvents;
 import dev.mariany.copperworks.event.entity.MinecartEventHandler;
 import dev.mariany.copperworks.event.server.ServerTickEventsHandler;
 import dev.mariany.copperworks.item.CWItems;
-import dev.mariany.copperworks.item.upgrade.copper.CopperUpgrade;
+import dev.mariany.copperworks.item.custom.copperupgrade.CopperUpgrade;
 import dev.mariany.copperworks.loot.LootTableModifiers;
 import dev.mariany.copperworks.packet.CWPackets;
 import dev.mariany.copperworks.packet.serverbound.ServerboundPackets;
@@ -41,6 +42,7 @@ public class Copperworks implements ModInitializer {
         CWCriterion.bootstrap();
         CWStats.bootstrap();
         CWScreenHandlers.bootstrap();
+        CWComponents.bootstrap();
         CWItems.bootstrap();
         CWBlocks.bootstrap();
         CWBlockEntities.bootstrap();

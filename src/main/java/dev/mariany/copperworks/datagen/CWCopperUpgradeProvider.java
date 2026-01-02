@@ -1,6 +1,6 @@
 package dev.mariany.copperworks.datagen;
 
-import dev.mariany.copperworks.item.upgrade.copper.CopperUpgrade;
+import dev.mariany.copperworks.item.custom.copperupgrade.CopperUpgrade;
 import dev.mariany.copperworks.registry.CWRegistryKeys;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;

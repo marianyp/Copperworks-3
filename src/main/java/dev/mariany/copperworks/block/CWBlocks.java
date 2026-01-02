@@ -1,8 +1,15 @@
 package dev.mariany.copperworks.block;
 
 import dev.mariany.copperworks.Copperworks;
-import dev.mariany.copperworks.block.clock.CopperClockBlock;
-import dev.mariany.copperworks.item.AlternativeScaffoldingBlockItem;
+import dev.mariany.copperworks.block.custom.AlternativeScaffoldingBlock;
+import dev.mariany.copperworks.block.custom.BatteryBlock;
+import dev.mariany.copperworks.block.custom.TimedLeverBlock;
+import dev.mariany.copperworks.block.custom.barrel.CopperBarrelBlock;
+import dev.mariany.copperworks.block.custom.clock.CopperClockBlock;
+import dev.mariany.copperworks.block.custom.relay.BoundRelayBlock;
+import dev.mariany.copperworks.block.custom.relay.RadioBoundRelayBlock;
+import dev.mariany.copperworks.block.custom.relay.RelayBlock;
+import dev.mariany.copperworks.item.custom.AlternativeScaffoldingBlockItem;
 import dev.mariany.copperworks.sound.CWSoundEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.*;
@@ -73,10 +80,28 @@ public class CWBlocks {
             genericCopperSettings().solidBlock(Blocks::never)
     );
 
-    public static final Block COPPER_BATTERY = register(
-            "copper_battery",
+    public static final Block BATTERY = register(
+            "battery",
             BatteryBlock::new,
             genericCopperSettings().solidBlock(Blocks::never)
+    );
+
+    public static final Block RELAY = register(
+            "relay",
+            RelayBlock::new,
+            genericCopperSettings().solidBlock(Blocks::never)
+    );
+
+    public static final Block BOUND_RELAY = register(
+            "bound_relay",
+            BoundRelayBlock::new,
+            AbstractBlock.Settings.copy(RELAY)
+    );
+
+    public static final Block RADIO_BOUND_RELAY = register(
+            "radio_bound_relay",
+            RadioBoundRelayBlock::new,
+            AbstractBlock.Settings.copy(RELAY).pistonBehavior(PistonBehavior.BLOCK)
     );
 
     private static AbstractBlock.Settings genericCopperSettings() {
@@ -124,7 +149,9 @@ public class CWBlocks {
 
             entries.addAfter(Items.TARGET, COPPER_CLOCK);
 
-            entries.addAfter(Items.REDSTONE_BLOCK, COPPER_BATTERY);
+            entries.addAfter(Items.REDSTONE_BLOCK, RELAY);
+
+            entries.addAfter(RELAY, BATTERY);
         });
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(entries -> {

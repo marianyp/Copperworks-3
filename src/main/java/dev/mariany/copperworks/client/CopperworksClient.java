@@ -2,6 +2,7 @@ package dev.mariany.copperworks.client;
 
 import dev.mariany.copperworks.block.CWBlocks;
 import dev.mariany.copperworks.client.gui.screen.ingame.InventoryNetworkScreen;
+import dev.mariany.copperworks.client.render.item.property.bool.CWBooleanProperties;
 import dev.mariany.copperworks.packet.clientbound.ClientboundPackets;
 import dev.mariany.copperworks.screen.CWScreenHandlers;
 import net.fabricmc.api.ClientModInitializer;
@@ -17,8 +18,13 @@ public class CopperworksClient implements ClientModInitializer {
     public void onInitializeClient() {
         ClientboundPackets.bootstrap();
 
+        registerItemProperties();
         registerBlockRenderLayers();
         registerScreenHandlers();
+    }
+
+    private static void registerItemProperties() {
+        CWBooleanProperties.bootstrap();
     }
 
     private static void registerBlockRenderLayers() {

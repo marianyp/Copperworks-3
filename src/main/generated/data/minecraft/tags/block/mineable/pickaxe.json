@@ -5,6 +5,9 @@
     "copperworks:sticky_copper_honey",
     "copperworks:copper_scaffolding",
     "copperworks:copper_barrel",
-    "copperworks:copper_clock"
+    "copperworks:copper_clock",
+    "copperworks:relay",
+    "copperworks:bound_relay",
+    "copperworks:radio_bound_relay"
   ]
 }

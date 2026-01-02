@@ -2,7 +2,7 @@ package dev.mariany.copperworks.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import dev.mariany.copperworks.item.AlternativeScaffoldingBlockItem;
+import dev.mariany.copperworks.item.custom.AlternativeScaffoldingBlockItem;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.sound.SoundCategory;

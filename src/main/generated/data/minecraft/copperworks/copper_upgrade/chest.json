@@ -1,0 +1,9 @@
+{
+  "copied_properties": [
+    "waterlogged",
+    "facing",
+    "type"
+  ],
+  "merge_inventories": true,
+  "to": "minecraft:copper_chest"
+}

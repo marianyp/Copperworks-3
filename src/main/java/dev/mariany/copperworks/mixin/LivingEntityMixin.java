@@ -2,6 +2,7 @@ package dev.mariany.copperworks.mixin;
 
 import dev.mariany.copperworks.block.StickyLogic;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -13,7 +14,7 @@ public class LivingEntityMixin {
     protected void injectIsImmobile(CallbackInfoReturnable<Boolean> cir) {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
 
-        if (StickyLogic.isStuck(livingEntity)) {
+        if (livingEntity instanceof PlayerEntity &&  StickyLogic.isStuck(livingEntity)) {
             cir.setReturnValue(true);
         }
     }

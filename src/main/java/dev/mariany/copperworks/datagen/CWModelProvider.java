@@ -2,13 +2,16 @@ package dev.mariany.copperworks.datagen;
 
 import dev.mariany.copperworks.Copperworks;
 import dev.mariany.copperworks.block.CWBlocks;
+import dev.mariany.copperworks.client.render.item.property.bool.BoundProperty;
 import dev.mariany.copperworks.item.CWItems;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.block.Block;
 import net.minecraft.block.enums.BlockFace;
 import net.minecraft.client.data.*;
+import net.minecraft.client.render.item.model.ItemModel;
 import net.minecraft.client.render.model.json.WeightedVariant;
+import net.minecraft.item.Item;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
@@ -24,6 +27,10 @@ public class CWModelProvider extends FabricModelProvider {
         itemModelGenerator.register(CWItems.IRON_PLATE, Models.GENERATED);
 
         itemModelGenerator.register(CWItems.COPPER_UPGRADE_KIT, Models.GENERATED);
+
+        itemModelGenerator.register(CWItems.AMETHYST_PIECE, Models.GENERATED);
+
+        this.registerRadio(itemModelGenerator);
     }
 
     @Override
@@ -33,6 +40,10 @@ public class CWModelProvider extends FabricModelProvider {
 
         blockStateModelGenerator.registerSimpleCubeAll(CWBlocks.COPPER_CLOCK);
 
+        blockStateModelGenerator.registerSimpleCubeAll(CWBlocks.RELAY);
+        blockStateModelGenerator.registerSimpleCubeAll(CWBlocks.BOUND_RELAY);
+        blockStateModelGenerator.registerSimpleCubeAll(CWBlocks.RADIO_BOUND_RELAY);
+
         this.registerLever(blockStateModelGenerator);
         this.registerStickyBlock(blockStateModelGenerator, CWBlocks.STICKY_COPPER);
         this.registerStickyBlock(blockStateModelGenerator, CWBlocks.STICKY_COPPER_HONEY);
@@ -41,8 +52,17 @@ public class CWModelProvider extends FabricModelProvider {
         this.registerBattery(blockStateModelGenerator);
     }
 
+    public void registerRadio(ItemModelGenerator itemModelGenerator) {
+        Item radio = CWItems.RADIO;
+        ItemModel.Unbaked defaultModel = ItemModels.basic(itemModelGenerator.upload(radio, Models.GENERATED));
+        ItemModel.Unbaked boundModel = ItemModels.basic(
+                itemModelGenerator.registerSubModel(radio, "_bound", Models.GENERATED)
+        );
+        itemModelGenerator.registerCondition(radio, new BoundProperty(), boundModel, defaultModel);
+    }
+
     private void registerBattery(BlockStateModelGenerator blockStateModelGenerator) {
-        Block battery = CWBlocks.COPPER_BATTERY;
+        Block battery = CWBlocks.BATTERY;
 
         WeightedVariant defaultVariant = BlockStateModelGenerator.createWeightedVariant(
                 ModelIds.getBlockModelId(battery)

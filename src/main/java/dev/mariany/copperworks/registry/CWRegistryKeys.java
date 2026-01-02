@@ -1,7 +1,7 @@
 package dev.mariany.copperworks.registry;
 
 import dev.mariany.copperworks.Copperworks;
-import dev.mariany.copperworks.item.upgrade.copper.CopperUpgrade;
+import dev.mariany.copperworks.item.custom.copperupgrade.CopperUpgrade;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 

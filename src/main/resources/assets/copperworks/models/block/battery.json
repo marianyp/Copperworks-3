@@ -1,0 +1,9 @@
+{
+	"parent": "minecraft:block/cube_bottom_top",
+	"textures": {
+		"bottom": "copperworks:block/battery_bottom",
+		"side": "copperworks:block/battery_side",
+		"top": "copperworks:block/battery_top",
+		"particle": "copperworks:block/battery_side"
+	}
+}
