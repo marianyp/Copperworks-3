@@ -2,6 +2,7 @@ package dev.mariany.copperworks.inventory;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.mariany.copperworks.block.custom.InventoryNetworkBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
@@ -182,8 +183,10 @@ public class InventoryNetwork implements Inventory {
     public void initialize() {
         if (this.world != null) {
             for (BlockPos connectionPos : this.connections) {
-                if (this.world.getBlockEntity(connectionPos) instanceof InventoryNetworkContainer networkContainer) {
-                    networkContainer.setNetwork(this);
+                BlockEntity blockEntity = this.world.getBlockEntity(connectionPos);
+
+                if (blockEntity instanceof InventoryNetworkBlockEntity inventoryNetworkBlockEntity) {
+                    inventoryNetworkBlockEntity.setNetwork(this);
                 }
             }
         }
@@ -203,8 +206,8 @@ public class InventoryNetwork implements Inventory {
         if (this.world != null && this.controllerPos != null) {
             BlockEntity blockEntity = this.world.getBlockEntity(controllerPos);
 
-            if (blockEntity instanceof InventoryNetworkContainer inventoryNetworkContainer) {
-                return inventoryNetworkContainer.getNetwork().equals(this);
+            if (blockEntity instanceof InventoryNetworkBlockEntity inventoryNetworkBlockEntity) {
+                return inventoryNetworkBlockEntity.getNetwork().equals(this);
             }
 
             return false;
@@ -291,7 +294,7 @@ public class InventoryNetwork implements Inventory {
         this.markDirty();
     }
 
-    protected List<ItemStack> adjustSlots() {
+    public List<ItemStack> adjustSlots() {
         int networkSize = this.size();
 
         List<ItemStack> overflow = new ArrayList<>();
@@ -366,13 +369,8 @@ public class InventoryNetwork implements Inventory {
                 BlockPos pos = origin.offset(direction);
                 BlockEntity blockEntity = this.world.getBlockEntity(pos);
 
-                if (blockEntity instanceof InventoryNetworkContainer offsetNetworkContainer) {
-                    InventoryNetworkContainer.validateConnection(
-                            offsetNetworkContainer,
-                            pos,
-                            discoveredPositions,
-                            newNetworks
-                    );
+                if (blockEntity instanceof InventoryNetworkBlockEntity inventoryNetworkBlockEntity) {
+                    inventoryNetworkBlockEntity.validateConnection(pos, discoveredPositions, newNetworks);
                 }
             }
         }
