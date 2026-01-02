@@ -5,7 +5,7 @@ import dev.mariany.copperworks.block.custom.InventoryNetworkBlockEntity;
 import dev.mariany.copperworks.sound.CWSoundEvents;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.ContainerUser;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
@@ -29,22 +29,38 @@ public class CopperBarrelBlockEntity extends InventoryNetworkBlockEntity {
     }
 
     @Override
-    public void interact(PlayerEntity player, BlockPos pos) {
-        super.interact(player, pos);
-        playSound(player, pos);
+    public void onOpen(ContainerUser user) {
+        if (!this.isRemoved() && !user.asLivingEntity().isSpectator()) {
+            playSound(user, this.pos, true);
+        }
     }
 
-    protected static void playSound(PlayerEntity player, BlockPos pos) {
-        World world = player.getEntityWorld();
+    @Override
+    public void onClose(ContainerUser user) {
+        if (!this.isRemoved() && !user.asLivingEntity().isSpectator()) {
+            playSound(user, this.pos, false);
+        }
+    }
+
+    protected static void playSound(ContainerUser user, BlockPos pos, boolean opened) {
+        playSound(user.asLivingEntity().getEntityWorld(), pos, opened);
+    }
+
+    protected static void playSound(World world, BlockPos pos, boolean open) {
         Random random = world.getRandom();
 
+        float minPitch = open ? 0.9F : 0.6F;
+        float maxPitch = open ? 1 : 0.7F;
+
+        float volume = open ? 0.8F : 0.4F;
+
         world.playSound(
-                player,
+                null,
                 pos,
                 CWSoundEvents.BLOCK_COPPER_BARREL_OPEN,
                 SoundCategory.BLOCKS,
-                1,
-                MathHelper.nextBetween(random, 0.9F, 1)
+                volume,
+                MathHelper.nextBetween(random, minPitch, maxPitch)
         );
     }
 }

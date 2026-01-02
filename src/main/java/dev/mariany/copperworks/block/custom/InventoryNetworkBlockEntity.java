@@ -216,7 +216,7 @@ public abstract class InventoryNetworkBlockEntity extends BlockEntity
     @Override
     @Nullable
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        return new InventoryNetworkScreenHandler(syncId, playerInventory);
+        return new InventoryNetworkScreenHandler(syncId, this, playerInventory);
     }
 
     @Override
@@ -232,13 +232,13 @@ public abstract class InventoryNetworkBlockEntity extends BlockEntity
 
     @Override
     public void markRemoved() {
-        super.markRemoved();
         this.onRemoved();
+        super.markRemoved();
     }
 
     protected void onRemoved() {
         this.network.getWorld().ifPresent(world -> {
-            if (world instanceof ServerWorld serverWorld && !serverWorld.getServer().isStopped()) {
+            if (!world.isClient() && !this.isRemoved()) {
                 this.disconnect();
             }
         });

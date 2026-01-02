@@ -1,5 +1,6 @@
 package dev.mariany.copperworks.screen;
 
+import dev.mariany.copperworks.block.custom.InventoryNetworkBlockEntity;
 import dev.mariany.copperworks.inventory.*;
 import dev.mariany.copperworks.packet.clientbound.InventoryValidationPacket;
 import dev.mariany.copperworks.screen.scroll.ScrollableInventory;
@@ -34,6 +35,10 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
     protected final int maxRows;
 
     protected final PlayerEntity player;
+
+    @Nullable
+    protected final InventoryNetworkBlockEntity inventoryNetworkBlockEntity;
+
     protected VirtualNetworkInventory virtualNetworkInventory;
 
     protected float scrollPosition;
@@ -51,18 +56,37 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
     protected String validatedSearchQuery;
 
     public InventoryNetworkScreenHandler(int syncId, PlayerInventory playerInventory) {
-        this(syncId, playerInventory, 8, 6);
+        this(syncId, null, playerInventory);
     }
 
-    public InventoryNetworkScreenHandler(int syncId, PlayerInventory playerInventory, int columns, int maxRows) {
+    public InventoryNetworkScreenHandler(
+            int syncId,
+            @Nullable InventoryNetworkBlockEntity inventoryNetworkBlockEntity,
+            PlayerInventory playerInventory
+    ) {
+        this(syncId, playerInventory, inventoryNetworkBlockEntity, 8, 6);
+    }
+
+    public InventoryNetworkScreenHandler(
+            int syncId,
+            PlayerInventory playerInventory,
+            @Nullable InventoryNetworkBlockEntity inventoryNetworkBlockEntity,
+            int columns,
+            int maxRows
+    ) {
         super(CWScreenHandlers.INVENTORY_NETWORK, syncId);
 
         this.columns = columns;
         this.maxRows = maxRows;
         this.player = playerInventory.player;
         this.virtualNetworkInventory = new ScrollVirtualNetworkInventory(this);
+        this.inventoryNetworkBlockEntity = inventoryNetworkBlockEntity;
 
         this.getNetwork().ifPresent(network -> network.addListener(this));
+
+        if (inventoryNetworkBlockEntity != null) {
+            inventoryNetworkBlockEntity.onOpen(this.player);
+        }
 
         this.updateSlots();
     }
@@ -490,6 +514,10 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
 
         if (player instanceof InventoryNetworkState networkState) {
             networkState.copperworks2$setNetwork(null);
+        }
+
+        if (this.inventoryNetworkBlockEntity != null) {
+            this.inventoryNetworkBlockEntity.onClose(this.player);
         }
     }
 
