@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "group": "radio",
+  "ingredients": [
+    "copperworks:radio"
+  ],
+  "result": {
+    "count": 1,
+    "id": "copperworks:radio"
+  }
+}

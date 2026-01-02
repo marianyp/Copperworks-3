@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "C": "minecraft:copper_ingot",
+    "D": "minecraft:cobbled_deepslate"
+  },
+  "pattern": [
+    "C",
+    "D"
+  ],
+  "result": {
+    "count": 1,
+    "id": "copperworks:copper_lever"
+  }
+}

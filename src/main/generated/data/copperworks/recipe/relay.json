@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "C": "copperworks:copper_plate",
+    "D": "minecraft:diamond",
+    "R": "minecraft:redstone"
+  },
+  "pattern": [
+    "CDC",
+    "DRD",
+    "CDC"
+  ],
+  "result": {
+    "count": 2,
+    "id": "copperworks:relay"
+  }
+}

@@ -1,10 +1,10 @@
 // 1.21.10	-999999999-01-01T00:00:00	Copperworks/Block Loot Tables
-cc858084de845c625764081c238899eecdf9edac data/copperworks/loot_table/blocks/bound_relay.json
+be1449040f53bbf6a3e4ff8e4c1c970c6d43b90c data/copperworks/loot_table/blocks/bound_relay.json
 1b457087a72fd3a2000b2adeaf181de5467bccc2 data/copperworks/loot_table/blocks/copper_barrel.json
 7b0b95e8a500d06de94ede7ca519c999c9ae826b data/copperworks/loot_table/blocks/copper_clock.json
 63802977bdbe55321fbe234dcd53a38c798f2372 data/copperworks/loot_table/blocks/copper_lever.json
 3faa6442371695ccef2977abf0e7129c89371eaa data/copperworks/loot_table/blocks/copper_rail.json
 c51c26cb7b8c59f824eafa7046b95748fa69a357 data/copperworks/loot_table/blocks/copper_scaffolding.json
-40beee5dbed9a591ac9bcff1e87d73c4d3238962 data/copperworks/loot_table/blocks/radio_bound_relay.json
+be1449040f53bbf6a3e4ff8e4c1c970c6d43b90c data/copperworks/loot_table/blocks/radio_bound_relay.json
 be1449040f53bbf6a3e4ff8e4c1c970c6d43b90c data/copperworks/loot_table/blocks/relay.json
 8cc385da410c61ef51cef6e50fb457a8814fbc9e data/copperworks/loot_table/blocks/wooden_rail.json

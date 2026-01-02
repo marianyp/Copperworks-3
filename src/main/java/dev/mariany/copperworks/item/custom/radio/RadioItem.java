@@ -24,6 +24,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.GlobalPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 public class RadioItem extends Item {
     public RadioItem(Settings settings) {
@@ -48,73 +49,71 @@ public class RadioItem extends Item {
 
     @Override
     public ActionResult use(World world, PlayerEntity player, Hand hand) {
-        if(player.isSneaking()) {
-            player.getStackInHand(hand).remove(CWComponents.RELAY_POSITION);
-            return ActionResult.SUCCESS;
-        }
-
         if (player instanceof ServerPlayerEntity serverPlayer) {
             RadioState radioState = useRadio(serverPlayer, hand);
 
-            if (!radioState.isBusy()) {
-                playSound(serverPlayer, radioState);
+            if (radioState != null) {
+                if (!radioState.isBusy()) {
+                    playSound(serverPlayer, radioState);
 
-                if (!radioState.isAvailable()) {
-                    notifyUnavailable(serverPlayer);
+                    if (!radioState.isAvailable()) {
+                        notifyUnavailable(serverPlayer);
+                    }
                 }
-            }
 
-            if (radioState.isAvailable()) {
-                return ActionResult.SUCCESS_SERVER;
+                if (radioState.isAvailable()) {
+                    return ActionResult.SUCCESS_SERVER;
+                }
             }
         }
 
         return ActionResult.PASS;
     }
 
+    @Nullable
     protected static RadioState useRadio(ServerPlayerEntity player, Hand hand) {
         ServerWorld serverWorld = player.getEntityWorld();
         MinecraftServer server = serverWorld.getServer();
         ItemStack stack = player.getStackInHand(hand);
 
         GlobalPos globalPos = stack.get(CWComponents.RELAY_POSITION);
-        RadioState radioState = RadioState.UNAVAILABLE;
 
-        if (globalPos != null) {
-            BlockPos otherPos = globalPos.pos();
-            RegistryKey<World> otherDimension = globalPos.dimension();
-            ServerWorld otherWorld = server.getWorld(otherDimension);
-
-            if (otherWorld != null) {
-                BlockState state = otherWorld.getBlockState(otherPos);
-
-                if (state.getBlock() instanceof RadioBoundRelayBlock radioBoundRelayBlock) {
-                    ChunkPos otherChunkPos = new ChunkPos(otherPos);
-
-                    if (otherWorld.isTickingFutureReady(otherChunkPos.toLong())) {
-                        if (state.get(RadioBoundRelayBlock.POWERED, false)) {
-                            radioState = RadioState.BUSY;
-                        } else {
-                            radioState = RadioState.AVAILABLE;
-
-                            otherWorld.setBlockState(
-                                    otherPos,
-                                    state.withIfExists(RadioBoundRelayBlock.POWERED, true)
-                            );
-
-                            otherWorld.scheduleBlockTick(
-                                    otherPos,
-                                    radioBoundRelayBlock,
-                                    radioBoundRelayBlock.getPulseDuration()
-                            );
-                        }
-                    }
-                }
-            }
-
+        if (globalPos == null) {
+            return null;
         }
 
-        return radioState;
+        BlockPos otherPos = globalPos.pos();
+        RegistryKey<World> otherDimension = globalPos.dimension();
+        ServerWorld otherWorld = server.getWorld(otherDimension);
+
+        if (otherWorld == null) {
+            return RadioState.UNAVAILABLE;
+        }
+
+        BlockState state = otherWorld.getBlockState(otherPos);
+
+        if (state.getBlock() instanceof RadioBoundRelayBlock radioBoundRelayBlock) {
+            ChunkPos otherChunkPos = new ChunkPos(otherPos);
+
+            if (otherWorld.isTickingFutureReady(otherChunkPos.toLong())) {
+                if (state.get(RadioBoundRelayBlock.POWERED, false)) {
+                    return RadioState.BUSY;
+                }
+
+                otherWorld.setBlockState(
+                        otherPos,
+                        state.withIfExists(RadioBoundRelayBlock.POWERED, true)
+                );
+
+                otherWorld.scheduleBlockTick(
+                        otherPos,
+                        radioBoundRelayBlock,
+                        radioBoundRelayBlock.getPulseDuration()
+                );
+            }
+        }
+
+        return RadioState.AVAILABLE;
     }
 
     protected static void notifyUnavailable(PlayerEntity player) {

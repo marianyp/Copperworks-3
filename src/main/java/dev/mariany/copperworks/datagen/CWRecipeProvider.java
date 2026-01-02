@@ -1,15 +1,19 @@
 package dev.mariany.copperworks.datagen;
 
+import dev.mariany.copperworks.Copperworks;
 import dev.mariany.copperworks.block.CWBlocks;
 import dev.mariany.copperworks.item.CWItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.data.recipe.RecipeExporter;
 import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.ItemTags;
 
@@ -38,6 +42,50 @@ public class CWRecipeProvider extends FabricRecipeProvider {
                 this.createStickyCopperRecipe(Items.HONEY_BOTTLE, CWBlocks.STICKY_COPPER_HONEY);
                 this.createCopperClockRecipe();
                 this.createCopperBatteryRecipe();
+                this.createRelayRecipe();
+                this.createRadioRecipe();
+                this.createCopperLeverRecipe();
+            }
+
+            private void createCopperLeverRecipe() {
+                this.createShaped(RecipeCategory.REDSTONE, CWBlocks.COPPER_LEVER)
+                    .pattern("C")
+                    .pattern("D")
+                    .input('C', Items.COPPER_INGOT)
+                    .input('D', Blocks.COBBLED_DEEPSLATE)
+                    .criterion(hasItem(Items.COPPER_INGOT), this.conditionsFromItem(Items.COPPER_INGOT))
+                    .offerTo(this.exporter);
+            }
+
+            private void createRadioRecipe() {
+                String group = "radio";
+
+                this.createShaped(RecipeCategory.REDSTONE, CWItems.RADIO)
+                    .pattern("R")
+                    .pattern("C")
+                    .input('R', Items.REDSTONE_TORCH)
+                    .input('C', Items.COPPER_INGOT)
+                    .criterion(hasItem(Items.REDSTONE_TORCH), this.conditionsFromItem(Items.REDSTONE_TORCH))
+                    .group(group)
+                    .offerTo(this.exporter);
+
+                this.createShapeless(RecipeCategory.REDSTONE, CWItems.RADIO)
+                    .input(CWItems.RADIO)
+                    .criterion(hasItem(Items.REDSTONE_TORCH), this.conditionsFromItem(Items.REDSTONE_TORCH))
+                    .group(group)
+                    .offerTo(this.exporter, RegistryKey.of(RegistryKeys.RECIPE, Copperworks.id("reset_radio")));
+            }
+
+            private void createRelayRecipe() {
+                this.createShaped(RecipeCategory.REDSTONE, CWBlocks.RELAY, 2)
+                    .pattern("CDC")
+                    .pattern("DRD")
+                    .pattern("CDC")
+                    .input('C', CWItems.COPPER_PLATE)
+                    .input('D', Items.DIAMOND)
+                    .input('R', Items.REDSTONE)
+                    .criterion(hasItem(Items.DIAMOND), this.conditionsFromItem(Items.DIAMOND))
+                    .offerTo(this.exporter);
             }
 
             private void createCopperBatteryRecipe() {
@@ -49,8 +97,8 @@ public class CWRecipeProvider extends FabricRecipeProvider {
                     .input('c', Items.COPPER_INGOT)
                     .input('C', CWItems.COPPER_PLATE)
                     .input('I', CWItems.IRON_PLATE)
-                    .criterion(hasItem(Items.REDSTONE_TORCH), conditionsFromItem(Items.REDSTONE_TORCH))
-                    .offerTo(exporter);
+                    .criterion(hasItem(Items.REDSTONE_TORCH), this.conditionsFromItem(Items.REDSTONE_TORCH))
+                    .offerTo(this.exporter);
             }
 
             private void createCopperClockRecipe() {
@@ -60,8 +108,8 @@ public class CWRecipeProvider extends FabricRecipeProvider {
                     .pattern("PPP")
                     .input('P', CWItems.COPPER_PLATE)
                     .input('C', Items.CLOCK)
-                    .criterion(hasItem(Items.CLOCK), conditionsFromItem(Items.CLOCK))
-                    .offerTo(exporter);
+                    .criterion(hasItem(Items.CLOCK), this.conditionsFromItem(Items.CLOCK))
+                    .offerTo(this.exporter);
             }
 
             private void createStickyCopperRecipe(Item input, Block output) {
@@ -72,9 +120,9 @@ public class CWRecipeProvider extends FabricRecipeProvider {
                     .input('P', CWItems.COPPER_PLATE)
                     .input('C', Items.COPPER_INGOT)
                     .input('I', input)
-                    .criterion(hasItem(CWItems.COPPER_PLATE), conditionsFromItem(CWItems.COPPER_PLATE))
+                    .criterion(hasItem(CWItems.COPPER_PLATE), this.conditionsFromItem(CWItems.COPPER_PLATE))
                     .group("sticky_copper")
-                    .offerTo(exporter);
+                    .offerTo(this.exporter);
             }
 
             private void createWoodenRailRecipe() {
@@ -84,7 +132,7 @@ public class CWRecipeProvider extends FabricRecipeProvider {
                     .pattern("P P")
                     .input('P', ItemTags.PLANKS)
                     .input('S', Items.STICK)
-                    .criterion(hasItem(Items.MINECART), conditionsFromItem(Items.MINECART))
+                    .criterion(hasItem(Items.MINECART), this.conditionsFromItem(Items.MINECART))
                     .offerTo(this.exporter);
             }
 
@@ -93,7 +141,7 @@ public class CWRecipeProvider extends FabricRecipeProvider {
                     .pattern("II")
                     .pattern("II")
                     .input('I', ingot)
-                    .criterion(hasItem(ingot), conditionsFromItem(ingot))
+                    .criterion(hasItem(ingot), this.conditionsFromItem(ingot))
                     .offerTo(this.exporter);
             }
         };

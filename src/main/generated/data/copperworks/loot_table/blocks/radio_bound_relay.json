@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "copperworks:radio_bound_relay"
+          "name": "copperworks:relay"
         }
       ],
       "rolls": 1.0

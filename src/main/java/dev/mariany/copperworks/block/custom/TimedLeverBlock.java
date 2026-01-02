@@ -114,10 +114,9 @@ public class TimedLeverBlock extends LeverBlock {
             Explosion explosion,
             BiConsumer<ItemStack, BlockPos> stackMerger
     ) {
-        if (explosion.canTriggerBlocks() && !state.get(POWERED)) {
+        if (explosion.getDestructionType() != Explosion.DestructionType.TRIGGER_BLOCK || !state.get(POWERED)) {
+            super.onExploded(state, world, pos, explosion, stackMerger);
             this.scheduleTick(world, pos);
         }
-
-        super.onExploded(state, world, pos, explosion, stackMerger);
     }
 }
