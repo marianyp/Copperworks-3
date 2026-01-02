@@ -1,17 +1,19 @@
 package dev.mariany.copperworks.block.custom.relay;
 
 import com.mojang.serialization.MapCodec;
+import dev.mariany.copperworks.block.CWBlockEntities;
 import dev.mariany.copperworks.block.CWBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.GlobalPos;
@@ -22,24 +24,24 @@ import net.minecraft.world.WorldView;
 import net.minecraft.world.block.WireOrientation;
 import org.jetbrains.annotations.Nullable;
 
-public class BoundRelayBlock extends BlockWithEntity {
+public class BoundRelayBlock extends AbstractRelayBlock<BoundRelayBlockEntity> {
     public static final MapCodec<BoundRelayBlock> CODEC = createCodec(BoundRelayBlock::new);
 
     public static final IntProperty POWER = Properties.POWER;
 
     public BoundRelayBlock(Settings settings) {
-        super(settings);
+        super(settings, () -> CWBlockEntities.BOUND_RELAY);
         this.setDefaultState(this.stateManager.getDefaultState().with(POWER, 0));
     }
 
     @Override
-    protected MapCodec<? extends BlockWithEntity> getCodec() {
+    protected MapCodec<? extends BoundRelayBlock> getCodec() {
         return CODEC;
     }
 
     @Override
     @Nullable
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BoundRelayBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new BoundRelayBlockEntity(pos, state);
     }
 
@@ -119,5 +121,17 @@ public class BoundRelayBlock extends BlockWithEntity {
             otherWorld.setBlockState(pos, state);
             otherWorld.updateNeighbors(pos, state.getBlock());
         }
+    }
+
+    @Override
+    protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+        if (world.isClient() && player.getMainHandStack().isEmpty() && player.getOffHandStack().isEmpty()) {
+            if (world.getBlockEntity(pos) instanceof BoundRelayBlockEntity boundRelayBlockEntity) {
+                boundRelayBlockEntity.focus(true);
+                return ActionResult.SUCCESS;
+            }
+        }
+
+        return ActionResult.PASS;
     }
 }

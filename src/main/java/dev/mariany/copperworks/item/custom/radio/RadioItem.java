@@ -86,34 +86,34 @@ public class RadioItem extends Item {
         RegistryKey<World> otherDimension = globalPos.dimension();
         ServerWorld otherWorld = server.getWorld(otherDimension);
 
-        if (otherWorld == null) {
-            return RadioState.UNAVAILABLE;
-        }
-
-        BlockState state = otherWorld.getBlockState(otherPos);
-
-        if (state.getBlock() instanceof RadioBoundRelayBlock radioBoundRelayBlock) {
+        if (otherWorld != null) {
             ChunkPos otherChunkPos = new ChunkPos(otherPos);
 
             if (otherWorld.isTickingFutureReady(otherChunkPos.toLong())) {
-                if (state.get(RadioBoundRelayBlock.POWERED, false)) {
-                    return RadioState.BUSY;
+                BlockState state = otherWorld.getBlockState(otherPos);
+
+                if (state.getBlock() instanceof RadioBoundRelayBlock radioBoundRelayBlock) {
+                    if (state.get(RadioBoundRelayBlock.POWERED, false)) {
+                        return RadioState.BUSY;
+                    }
+
+                    otherWorld.setBlockState(
+                            otherPos,
+                            state.withIfExists(RadioBoundRelayBlock.POWERED, true)
+                    );
+
+                    otherWorld.scheduleBlockTick(
+                            otherPos,
+                            radioBoundRelayBlock,
+                            radioBoundRelayBlock.getPulseDuration()
+                    );
+
+                    return RadioState.AVAILABLE;
                 }
-
-                otherWorld.setBlockState(
-                        otherPos,
-                        state.withIfExists(RadioBoundRelayBlock.POWERED, true)
-                );
-
-                otherWorld.scheduleBlockTick(
-                        otherPos,
-                        radioBoundRelayBlock,
-                        radioBoundRelayBlock.getPulseDuration()
-                );
             }
         }
 
-        return RadioState.AVAILABLE;
+        return RadioState.UNAVAILABLE;
     }
 
     protected static void notifyUnavailable(PlayerEntity player) {

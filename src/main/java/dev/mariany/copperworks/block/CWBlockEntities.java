@@ -4,6 +4,7 @@ import dev.mariany.copperworks.Copperworks;
 import dev.mariany.copperworks.block.custom.barrel.CopperBarrelBlockEntity;
 import dev.mariany.copperworks.block.custom.clock.ClockBlockEntity;
 import dev.mariany.copperworks.block.custom.relay.BoundRelayBlockEntity;
+import dev.mariany.copperworks.block.custom.relay.RadioBoundRelayBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.registry.Registries;
@@ -23,6 +24,11 @@ public class CWBlockEntities {
     public static final BlockEntityType<BoundRelayBlockEntity> BOUND_RELAY = register(
             "bound_relay",
             FabricBlockEntityTypeBuilder.create(BoundRelayBlockEntity::new, CWBlocks.BOUND_RELAY).build()
+    );
+
+    public static final BlockEntityType<RadioBoundRelayBlockEntity> RADIO_BOUND_RELAY = register(
+            "radio_bound_relay",
+            FabricBlockEntityTypeBuilder.create(RadioBoundRelayBlockEntity::new, CWBlocks.RADIO_BOUND_RELAY).build()
     );
 
     public static <T extends BlockEntityType<?>> T register(String path, T blockEntityType) {

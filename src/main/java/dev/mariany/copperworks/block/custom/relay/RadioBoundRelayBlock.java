@@ -1,5 +1,7 @@
 package dev.mariany.copperworks.block.custom.relay;
 
+import com.mojang.serialization.MapCodec;
+import dev.mariany.copperworks.block.CWBlockEntities;
 import dev.mariany.copperworks.block.CWBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -13,17 +15,31 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldView;
+import org.jetbrains.annotations.Nullable;
 
-public class RadioBoundRelayBlock extends Block {
+public class RadioBoundRelayBlock extends AbstractRelayBlock<RadioBoundRelayBlockEntity> {
+    public static final MapCodec<RadioBoundRelayBlock> CODEC = createCodec(RadioBoundRelayBlock::new);
+
     public static final BooleanProperty POWERED = Properties.POWERED;
 
     public RadioBoundRelayBlock(Settings settings) {
-        super(settings);
+        super(settings, () -> CWBlockEntities.RADIO_BOUND_RELAY);
         this.setDefaultState(this.getDefaultState().with(POWERED, false));
     }
 
     public int getPulseDuration() {
-        return 20;
+        return 10;
+    }
+
+    @Override
+    protected MapCodec<? extends RadioBoundRelayBlock> getCodec() {
+        return CODEC;
+    }
+
+    @Override
+    @Nullable
+    public RadioBoundRelayBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new RadioBoundRelayBlockEntity(pos, state);
     }
 
     @Override
