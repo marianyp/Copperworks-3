@@ -2,7 +2,7 @@ package dev.mariany.copperworks.block;
 
 import dev.mariany.copperworks.Copperworks;
 import dev.mariany.copperworks.block.custom.barrel.CopperBarrelBlockEntity;
-import dev.mariany.copperworks.block.custom.clock.CopperClockBlockEntity;
+import dev.mariany.copperworks.block.custom.clock.ClockBlockEntity;
 import dev.mariany.copperworks.block.custom.relay.BoundRelayBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.entity.BlockEntityType;
@@ -15,9 +15,9 @@ public class CWBlockEntities {
             FabricBlockEntityTypeBuilder.create(CopperBarrelBlockEntity::new, CWBlocks.COPPER_BARREL).build()
     );
 
-    public static final BlockEntityType<CopperClockBlockEntity> COPPER_CLOCK = register(
+    public static final BlockEntityType<ClockBlockEntity> CLOCK = register(
             "copper_clock",
-            FabricBlockEntityTypeBuilder.create(CopperClockBlockEntity::new, CWBlocks.COPPER_CLOCK).build()
+            FabricBlockEntityTypeBuilder.create(ClockBlockEntity::new, CWBlocks.COPPER_CLOCK).build()
     );
 
     public static final BlockEntityType<BoundRelayBlockEntity> BOUND_RELAY = register(

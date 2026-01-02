@@ -1,50 +1,25 @@
 package dev.mariany.copperworks.block.custom.clock;
 
 import com.mojang.serialization.MapCodec;
-import dev.mariany.copperworks.block.CWBlockEntities;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+import dev.mariany.copperworks.stat.CWStats;
+import net.minecraft.stat.Stat;
+import net.minecraft.stat.Stats;
+import net.minecraft.util.Identifier;
 
 public class CopperClockBlock extends AbstractClockBlock {
     public static final MapCodec<CopperClockBlock> CODEC = createCodec(CopperClockBlock::new);
 
     public CopperClockBlock(Settings settings) {
-        super(settings);
-
-        this.setDefaultState(
-                this.stateManager.getDefaultState()
-                                 .with(ClockBlockEntity.POWERED, false)
-        );
+        super(settings, 10, 2);
     }
 
     @Override
-    protected MapCodec<? extends BlockWithEntity> getCodec() {
+    protected MapCodec<? extends AbstractClockBlock> getCodec() {
         return CODEC;
     }
 
     @Override
-    @Nullable
-    public CopperClockBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new CopperClockBlockEntity(pos, state);
-    }
-
-    @Override
-    @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(
-            World world,
-            BlockState state,
-            BlockEntityType<T> type
-    ) {
-        return !world.isClient() ? validateTicker(
-                type,
-                CWBlockEntities.COPPER_CLOCK,
-                CopperClockBlockEntity::tick
-        ) : null;
+    protected Stat<Identifier> getInteractStat() {
+        return Stats.CUSTOM.getOrCreateStat(CWStats.INTERACT_WITH_COPPER_CLOCK);
     }
 }
