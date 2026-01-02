@@ -18,7 +18,6 @@ import net.minecraft.text.TextCodecs;
 import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -90,15 +89,15 @@ public class InventoryNetwork implements Inventory {
                 }
             };
 
-    private boolean initialized;
+    protected boolean initialized;
 
-    private final Set<InventoryChangedListener> listeners = new HashSet<>();
-
-    @Nullable
-    private World world;
+    protected final Set<InventoryChangedListener> listeners = new HashSet<>();
 
     @Nullable
-    private BlockPos controllerPos;
+    protected World world;
+
+    @Nullable
+    protected BlockPos controllerPos;
 
     protected final Map<Integer, ItemStack> heldStacks;
     protected final Set<BlockPos> connections;
@@ -287,10 +286,14 @@ public class InventoryNetwork implements Inventory {
         }
     }
 
-    public void disconnect(BlockPos pos, Set<BlockPos> discoveredPositions, Set<InventoryNetwork> newNetworks) {
+    public void disconnect(BlockPos pos) {
         this.connections.remove(pos);
         this.reassignController();
-        this.disconnectNeighbors(pos, discoveredPositions, newNetworks);
+    }
+
+    public void disconnect(BlockPos pos, Set<InventoryNetwork> newNetworks) {
+        this.disconnect(pos);
+        this.validateConnections(newNetworks);
         this.markDirty();
     }
 
@@ -359,18 +362,25 @@ public class InventoryNetwork implements Inventory {
         }
     }
 
-    private void disconnectNeighbors(
-            BlockPos origin,
-            Set<BlockPos> discoveredPositions,
-            Set<InventoryNetwork> newNetworks
-    ) {
+    private void validateConnections(Set<InventoryNetwork> newNetworks) {
         if (this.world != null) {
-            for (Direction direction : Direction.values()) {
-                BlockPos pos = origin.offset(direction);
+            List<BlockPos> connectionsCopy = new ArrayList<>(this.connections);
+
+            for (BlockPos pos : connectionsCopy) {
+                if (this.controllerPos != null && this.controllerPos.equals(pos)) {
+                    continue;
+                }
+
                 BlockEntity blockEntity = this.world.getBlockEntity(pos);
 
                 if (blockEntity instanceof InventoryNetworkBlockEntity inventoryNetworkBlockEntity) {
-                    inventoryNetworkBlockEntity.validateConnection(pos, discoveredPositions, newNetworks);
+                    inventoryNetworkBlockEntity.validateConnection();
+
+                    InventoryNetwork validatedNetwork = inventoryNetworkBlockEntity.getNetwork();
+
+                    if (!validatedNetwork.equals(this)) {
+                        newNetworks.add(validatedNetwork);
+                    }
                 }
             }
         }

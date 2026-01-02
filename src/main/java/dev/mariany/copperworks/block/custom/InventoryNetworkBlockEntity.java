@@ -92,37 +92,24 @@ public abstract class InventoryNetworkBlockEntity extends BlockEntity
                            .orElse(false);
     }
 
-    public void validateConnection(BlockPos pos, Set<BlockPos> verifiedPositions, Set<InventoryNetwork> newNetworks) {
+    public void validateConnection() {
         this.network.getWorld().ifPresent(world -> {
-            if (!verifiedPositions.contains(this.pos)) {
-                this.network.getControllerPos().ifPresent(controllerPos -> {
-                    boolean isReachable = isReachable(
-                            this.pos,
-                            controllerPos,
-                            walkPos -> {
-                                BlockEntity blockEntity = world.getBlockEntity(walkPos);
+            Optional<BlockPos> optionalControllerPos = this.network.getControllerPos();
 
-                                return blockEntity instanceof InventoryNetworkBlockEntity walkedNetworkBlockEntity &&
-                                        walkedNetworkBlockEntity.network.equals(this.network);
-                            }
-                    );
+            boolean isReachable = optionalControllerPos.isPresent() && isReachable(
+                    this.pos,
+                    optionalControllerPos.get(),
+                    walkPos -> {
+                        BlockEntity blockEntity = world.getBlockEntity(walkPos);
 
-                    verifiedPositions.add(pos);
-
-                    if (!isReachable) {
-                        newNetworks.add(this.disconnect(pos, verifiedPositions, newNetworks));
-
-                        for (Direction direction : Direction.values()) {
-                            BlockEntity blockEntity = world.getBlockEntity(pos.offset(direction));
-
-                            if (blockEntity instanceof InventoryNetworkBlockEntity offsetInventoryNetworkBlockEntity) {
-                                if (!offsetInventoryNetworkBlockEntity.network.equals(this.network)) {
-                                    this.connect(world, offsetInventoryNetworkBlockEntity, true);
-                                }
-                            }
-                        }
+                        return blockEntity instanceof InventoryNetworkBlockEntity walkedNetworkBlockEntity &&
+                                walkedNetworkBlockEntity.network.equals(this.network);
                     }
-                });
+            );
+
+            if (!isReachable) {
+                this.network.disconnect(this.pos);
+                this.network = this.createNetwork();
             }
         });
     }
@@ -232,13 +219,13 @@ public abstract class InventoryNetworkBlockEntity extends BlockEntity
 
     @Override
     public void markRemoved() {
-        this.onRemoved();
         super.markRemoved();
+        this.onRemoved();
     }
 
     protected void onRemoved() {
         this.network.getWorld().ifPresent(world -> {
-            if (!world.isClient() && !this.isRemoved()) {
+            if (world instanceof ServerWorld serverWorld && serverWorld.getServer().isRunning()) {
                 this.disconnect();
             }
         });
@@ -295,26 +282,65 @@ public abstract class InventoryNetworkBlockEntity extends BlockEntity
         InventoryNetwork originalNetwork = this.network;
         Set<InventoryNetwork> newNetworks = new HashSet<>();
 
-        this.disconnect(this.pos, newNetworks);
-        this.handleDisconnectStacks(this.pos, originalNetwork, newNetworks);
+        this.network = this.createNetwork();
+        originalNetwork.disconnect(this.pos, newNetworks);
+        Set<InventoryNetwork> mergedNetworks = mergeNetworks(newNetworks);
+        this.handleDisconnectStacks(this.pos, originalNetwork, mergedNetworks);
     }
 
-    protected void disconnect(BlockPos pos, Set<InventoryNetwork> newNetworks) {
-        this.disconnect(pos, new HashSet<>(), newNetworks);
+    protected static Set<InventoryNetwork> mergeNetworks(Collection<InventoryNetwork> networks) {
+        Map<BlockPos, InventoryNetwork> networkMap = new HashMap<>((int) Math.ceil(networks.size() / 0.75));
+        Set<InventoryNetwork> controllerless = new HashSet<>();
+
+        for (InventoryNetwork network : networks) {
+            network.getControllerPos().ifPresentOrElse(
+                    pos -> networkMap.put(pos, network),
+                    () -> controllerless.add(network)
+            );
+        }
+
+        Set<BlockPos> visited = new HashSet<>();
+        Set<InventoryNetwork> survivors = new HashSet<>();
+
+        for (BlockPos start : networkMap.keySet()) {
+            if (!visited.add(start)) {
+                continue;
+            }
+
+            InventoryNetwork root = networkMap.get(start);
+            survivors.add(root);
+
+            ArrayDeque<BlockPos> queue = new ArrayDeque<>();
+            queue.add(start);
+
+            while (!queue.isEmpty()) {
+                BlockPos pos = queue.poll();
+
+                for (Direction dir : Direction.values()) {
+                    BlockPos next = pos.offset(dir);
+                    InventoryNetwork other = networkMap.get(next);
+
+                    if (other == null) {
+                        continue;
+                    }
+
+                    if (visited.add(next)) {
+                        queue.add(next);
+
+                        if (other != root) {
+                            root.connect(other, false);
+                        }
+                    }
+                }
+            }
+        }
+
+        survivors.addAll(controllerless);
+
+        return survivors;
     }
 
-    protected InventoryNetwork disconnect(
-            BlockPos pos,
-            Set<BlockPos> verifiedPositions,
-            Set<InventoryNetwork> newNetworks
-    ) {
-        InventoryNetwork newNetwork = this.createNetwork();
-        this.network.disconnect(pos, verifiedPositions, newNetworks);
-        this.network = newNetwork;
-        return newNetwork;
-    }
-
-    private void handleDisconnectStacks(
+    protected void handleDisconnectStacks(
             BlockPos pos,
             InventoryNetwork originalNetwork,
             Set<InventoryNetwork> newNetworks
