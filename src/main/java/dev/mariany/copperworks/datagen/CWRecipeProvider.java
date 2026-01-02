@@ -45,6 +45,17 @@ public class CWRecipeProvider extends FabricRecipeProvider {
                 this.createRelayRecipe();
                 this.createRadioRecipe();
                 this.createCopperLeverRecipe();
+                this.createCopperScaffoldingRecipe();
+            }
+
+            private void createCopperScaffoldingRecipe() {
+                this.createShaped(RecipeCategory.BUILDING_BLOCKS, CWBlocks.COPPER_SCAFFOLDING, 4)
+                    .pattern(" C ")
+                    .pattern("C C")
+                    .pattern(" C ")
+                    .input('C', CWItems.COPPER_PLATE)
+                    .criterion(hasItem(CWItems.COPPER_PLATE), this.conditionsFromItem(CWItems.COPPER_PLATE))
+                    .offerTo(this.exporter);
             }
 
             private void createCopperLeverRecipe() {
