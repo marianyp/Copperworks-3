@@ -1,7 +1,10 @@
 {
   "variants": {
-    "": {
+    "powered=false": {
       "model": "copperworks:block/radio_bound_relay"
+    },
+    "powered=true": {
+      "model": "copperworks:block/radio_bound_relay_on"
     }
   }
 }

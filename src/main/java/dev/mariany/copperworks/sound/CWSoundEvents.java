@@ -15,6 +15,9 @@ public class CWSoundEvents {
     public static final SoundEvent BLOCK_RELAY_INSERT = register("block.relay.insert");
     public static final SoundEvent BLOCK_BOUND_RELAY_DISCONNECT = register("block.bound_relay.disconnect");
     public static final RegistryEntry.Reference<SoundEvent> ITEM_RADIO = registerReference("item.radio");
+    public static final RegistryEntry.Reference<SoundEvent> ITEM_ARMOR_EQUIP_ROCKET_BOOTS = registerReference(
+            "item.armor.equip.rocket_boots"
+    );
 
     private static SoundEvent register(String id) {
         return register(Copperworks.id(id));

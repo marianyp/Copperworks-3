@@ -32,7 +32,7 @@ public class RelayBlockEntityRenderer<T extends AbstractRelayBlockEntity>
 
     @Override
     public int getRenderDistance() {
-        return 96;
+        return 256;
     }
 
     @Override
@@ -112,7 +112,7 @@ public class RelayBlockEntityRenderer<T extends AbstractRelayBlockEntity>
                                                 (float) color.getX(),
                                                 (float) color.getY(),
                                                 (float) color.getZ(),
-                                                progress
+                                                progress * 0.4F
                                         )
                         )
         );

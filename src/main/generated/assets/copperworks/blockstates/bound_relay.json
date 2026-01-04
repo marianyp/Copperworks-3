@@ -1,7 +1,52 @@
 {
   "variants": {
-    "": {
+    "power=0": {
       "model": "copperworks:block/bound_relay"
+    },
+    "power=1": {
+      "model": "copperworks:block/bound_relay_on"
+    },
+    "power=10": {
+      "model": "copperworks:block/bound_relay_on"
+    },
+    "power=11": {
+      "model": "copperworks:block/bound_relay_on"
+    },
+    "power=12": {
+      "model": "copperworks:block/bound_relay_on"
+    },
+    "power=13": {
+      "model": "copperworks:block/bound_relay_on"
+    },
+    "power=14": {
+      "model": "copperworks:block/bound_relay_on"
+    },
+    "power=15": {
+      "model": "copperworks:block/bound_relay_on"
+    },
+    "power=2": {
+      "model": "copperworks:block/bound_relay_on"
+    },
+    "power=3": {
+      "model": "copperworks:block/bound_relay_on"
+    },
+    "power=4": {
+      "model": "copperworks:block/bound_relay_on"
+    },
+    "power=5": {
+      "model": "copperworks:block/bound_relay_on"
+    },
+    "power=6": {
+      "model": "copperworks:block/bound_relay_on"
+    },
+    "power=7": {
+      "model": "copperworks:block/bound_relay_on"
+    },
+    "power=8": {
+      "model": "copperworks:block/bound_relay_on"
+    },
+    "power=9": {
+      "model": "copperworks:block/bound_relay_on"
     }
   }
 }

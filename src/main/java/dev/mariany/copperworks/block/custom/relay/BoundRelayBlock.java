@@ -73,7 +73,7 @@ public class BoundRelayBlock extends AbstractRelayBlock<BoundRelayBlockEntity> {
     @Override
     protected void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
         if (oldState.getBlock() != state.getBlock() && world instanceof ServerWorld serverWorld) {
-            this.update(serverWorld, pos);
+            update(serverWorld, pos);
         }
     }
 
@@ -87,11 +87,11 @@ public class BoundRelayBlock extends AbstractRelayBlock<BoundRelayBlockEntity> {
             boolean notify
     ) {
         if (world instanceof ServerWorld serverWorld) {
-            this.update(serverWorld, pos);
+            update(serverWorld, pos);
         }
     }
 
-    protected void update(ServerWorld world, BlockPos pos) {
+    protected static void update(ServerWorld world, BlockPos pos) {
         if (canRelay(world, pos) && world.getBlockEntity(pos) instanceof BoundRelayBlockEntity boundRelayBlockEntity) {
             boundRelayBlockEntity.getBoundPos().ifPresent(
                     boundPos -> updateRelay(
@@ -117,9 +117,15 @@ public class BoundRelayBlock extends AbstractRelayBlock<BoundRelayBlockEntity> {
         BlockPos pos = globalPos.pos();
 
         if (otherWorld != null) {
-            BlockState state = otherWorld.getBlockState(pos).withIfExists(POWER, power);
-            otherWorld.setBlockState(pos, state);
+            BlockState state = otherWorld.getBlockState(pos);
+            boolean changed = state.get(POWER, 0) != power;
+
+            otherWorld.setBlockState(pos, state.withIfExists(POWER, power));
             otherWorld.updateNeighbors(pos, state.getBlock());
+
+            if (changed) {
+                update(world, pos);
+            }
         }
     }
 

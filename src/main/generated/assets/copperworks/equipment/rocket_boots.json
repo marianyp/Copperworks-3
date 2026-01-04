@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "copperworks:rocket_boots"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "copperworks:rocket_boots"
+      }
+    ]
+  }
+}

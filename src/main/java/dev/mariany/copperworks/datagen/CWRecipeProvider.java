@@ -3,10 +3,12 @@ package dev.mariany.copperworks.datagen;
 import dev.mariany.copperworks.Copperworks;
 import dev.mariany.copperworks.block.CWBlocks;
 import dev.mariany.copperworks.item.CWItems;
+import dev.mariany.copperworks.recipe.MergeDragonBreathFullnessRecipe;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.data.recipe.ComplexRecipeJsonBuilder;
 import net.minecraft.data.recipe.RecipeExporter;
 import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.item.Item;
@@ -46,6 +48,34 @@ public class CWRecipeProvider extends FabricRecipeProvider {
                 this.createRadioRecipe();
                 this.createCopperLeverRecipe();
                 this.createCopperScaffoldingRecipe();
+                this.createRocketBootsRecipe();
+                this.createMergeDragonBreathRecipe();
+                this.createEnderPowderRecipe();
+            }
+
+            private void createEnderPowderRecipe() {
+                this.createShapeless(RecipeCategory.MISC, CWItems.ENDER_POWDER)
+                    .input(Items.BLAZE_POWDER)
+                    .input(Items.DRAGON_BREATH)
+                    .criterion(hasItem(Items.DRAGON_BREATH), conditionsFromItem(Items.DRAGON_BREATH))
+                    .offerTo(this.exporter);
+            }
+
+            private void createMergeDragonBreathRecipe() {
+                ComplexRecipeJsonBuilder.create(MergeDragonBreathFullnessRecipe::new)
+                                        .offerTo(this.exporter, "merge_dragon_breath");
+            }
+
+            private void createRocketBootsRecipe() {
+                this.createShaped(RecipeCategory.COMBAT, CWItems.ROCKET_BOOTS)
+                    .pattern("P P")
+                    .pattern("N N")
+                    .pattern("E E")
+                    .input('P', CWItems.COPPER_PLATE)
+                    .input('N', Items.NETHERITE_INGOT)
+                    .input('E', CWItems.ENDER_POWDER)
+                    .criterion(hasItem(CWItems.ENDER_POWDER), this.conditionsFromItem(CWItems.ENDER_POWDER))
+                    .offerTo(this.exporter);
             }
 
             private void createCopperScaffoldingRecipe() {

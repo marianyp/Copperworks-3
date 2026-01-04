@@ -1,4 +1,4 @@
-package dev.mariany.copperworks.client.item;
+package dev.mariany.copperworks.client.radio;
 
 import dev.mariany.copperworks.block.custom.relay.RadioBoundRelayBlockEntity;
 import dev.mariany.copperworks.component.CWComponents;

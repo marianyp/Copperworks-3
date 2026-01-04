@@ -3,14 +3,25 @@ package dev.mariany.copperworks.tag;
 import dev.mariany.copperworks.Copperworks;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
+import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 
 public class CWTags {
+    public static final class Items {
+        public static final TagKey<Item> REPAIRS_ROCKET_BOOTS = createTag("repairs_rocket_boots");
+
+        private static TagKey<Item> createTag(String name) {
+            return TagKey.of(RegistryKeys.ITEM, Copperworks.id(name));
+        }
+    }
+
     public static final class Blocks {
         public static final TagKey<Block> STICKY = createTag("sticky");
         public static final TagKey<Block> EXTENDS_BATTERY_PULSE = createTag("extends_battery_pulse");
-        public static final TagKey<Block> EXTENDS_BATTERY_PULSE_SAME_AXIS = createTag("extends_battery_pulse_same_axis");
+        public static final TagKey<Block> EXTENDS_BATTERY_PULSE_SAME_AXIS = createTag(
+                "extends_battery_pulse_same_axis"
+        );
 
         private static TagKey<Block> createTag(String name) {
             return TagKey.of(RegistryKeys.BLOCK, Copperworks.id(name));

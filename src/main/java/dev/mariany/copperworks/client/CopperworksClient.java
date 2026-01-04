@@ -3,10 +3,11 @@ package dev.mariany.copperworks.client;
 import dev.mariany.copperworks.block.CWBlockEntities;
 import dev.mariany.copperworks.block.CWBlocks;
 import dev.mariany.copperworks.client.gui.screen.ingame.InventoryNetworkScreen;
-import dev.mariany.copperworks.client.item.RadioHandler;
+import dev.mariany.copperworks.client.radio.RadioHandler;
 import dev.mariany.copperworks.client.render.block.entity.BoundRelayBlockEntityRenderer;
 import dev.mariany.copperworks.client.render.block.entity.RelayBlockEntityRenderer;
 import dev.mariany.copperworks.client.render.item.property.bool.CWBooleanProperties;
+import dev.mariany.copperworks.client.render.item.property.numeric.CWNumericProperties;
 import dev.mariany.copperworks.packet.clientbound.ClientboundPackets;
 import dev.mariany.copperworks.screen.CWScreenHandlers;
 import net.fabricmc.api.ClientModInitializer;
@@ -36,6 +37,7 @@ public class CopperworksClient implements ClientModInitializer {
 
     private static void registerItemProperties() {
         CWBooleanProperties.bootstrap();
+        CWNumericProperties.bootstrap();
     }
 
     private static void registerBlockRenderLayers() {

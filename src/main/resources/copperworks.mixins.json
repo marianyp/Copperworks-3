@@ -6,6 +6,7 @@
     "AbstractMinecartEntityMixin",
     "BlockItemMixin",
     "BlockMixin",
+    "EntityEquipmentMixin",
     "EntityMixin",
     "LivingEntityMixin",
     "PlayerEntityMixin",
@@ -20,6 +21,8 @@
   },
   "client": [
     "ClientPlayerInteractionManagerMixin",
-    "HandledScreenMixin"
+    "EquipmentRendererMixin",
+    "HandledScreenMixin",
+    "LivingEntityRendererMixin"
   ]
 }

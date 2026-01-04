@@ -2,19 +2,28 @@ package dev.mariany.copperworks.datagen;
 
 import dev.mariany.copperworks.Copperworks;
 import dev.mariany.copperworks.block.CWBlocks;
+import dev.mariany.copperworks.block.custom.relay.RadioBoundRelayBlock;
 import dev.mariany.copperworks.client.render.item.property.bool.BoundProperty;
+import dev.mariany.copperworks.client.render.item.property.numeric.DragonBreathFullnessProperty;
 import dev.mariany.copperworks.item.CWItems;
+import dev.mariany.copperworks.item.custom.PartialDragonBreathItem;
+import dev.mariany.copperworks.item.equipment.CWEquipmentAssetKeys;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.block.Block;
 import net.minecraft.block.enums.BlockFace;
 import net.minecraft.client.data.*;
 import net.minecraft.client.render.item.model.ItemModel;
+import net.minecraft.client.render.item.model.RangeDispatchItemModel;
 import net.minecraft.client.render.model.json.WeightedVariant;
 import net.minecraft.item.Item;
+import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
+
+import java.util.List;
+import java.util.stream.IntStream;
 
 public class CWModelProvider extends FabricModelProvider {
     public CWModelProvider(FabricDataOutput output) {
@@ -30,7 +39,18 @@ public class CWModelProvider extends FabricModelProvider {
 
         itemModelGenerator.register(CWItems.AMETHYST_PIECE, Models.GENERATED);
 
-        this.registerRadio(itemModelGenerator);
+        itemModelGenerator.register(CWItems.ENDER_POWDER, Models.GENERATED);
+
+        itemModelGenerator.registerArmor(
+                CWItems.ROCKET_BOOTS,
+                CWEquipmentAssetKeys.ROCKET_BOOTS,
+                ItemModelGenerator.BOOTS_TRIM_ID_PREFIX,
+                false
+        );
+
+        registerRadio(itemModelGenerator);
+
+        registerPartialDragonBreath(itemModelGenerator);
     }
 
     @Override
@@ -41,18 +61,106 @@ public class CWModelProvider extends FabricModelProvider {
         blockStateModelGenerator.registerSimpleCubeAll(CWBlocks.COPPER_CLOCK);
 
         blockStateModelGenerator.registerSimpleCubeAll(CWBlocks.RELAY);
-        blockStateModelGenerator.registerSimpleCubeAll(CWBlocks.BOUND_RELAY);
-        blockStateModelGenerator.registerSimpleCubeAll(CWBlocks.RADIO_BOUND_RELAY);
 
-        this.registerLever(blockStateModelGenerator);
-        this.registerStickyBlock(blockStateModelGenerator, CWBlocks.STICKY_COPPER);
-        this.registerStickyBlock(blockStateModelGenerator, CWBlocks.STICKY_COPPER_HONEY);
-        this.registerCopperScaffolding(blockStateModelGenerator);
-        this.registerCopperBarrel(blockStateModelGenerator);
-        this.registerBattery(blockStateModelGenerator);
+        registerLever(blockStateModelGenerator);
+        registerStickyBlock(blockStateModelGenerator, CWBlocks.STICKY_COPPER);
+        registerStickyBlock(blockStateModelGenerator, CWBlocks.STICKY_COPPER_HONEY);
+        registerCopperScaffolding(blockStateModelGenerator);
+        registerCopperBarrel(blockStateModelGenerator);
+        registerBattery(blockStateModelGenerator);
+        registerBoundRelay(blockStateModelGenerator);
+        registerRadioBoundRelay(blockStateModelGenerator);
     }
 
-    public void registerRadio(ItemModelGenerator itemModelGenerator) {
+    private static void registerPartialDragonBreath(ItemModelGenerator itemModelGenerator) {
+        PartialDragonBreathItem partialDragonBreath = CWItems.PARTIAL_DRAGON_BREATH;
+        int maxFullness = partialDragonBreath.getMaxFullness();
+
+        List<RangeDispatchItemModel.Entry> entries = IntStream
+                .rangeClosed(1, maxFullness)
+                .boxed()
+                .map(fullness -> {
+                    ItemModel.Unbaked fullnessModel = ItemModels.basic(
+                            itemModelGenerator.registerSubModel(
+                                    partialDragonBreath,
+                                    "_" + fullness,
+                                    Models.GENERATED
+                            )
+                    );
+
+                    return ItemModels.rangeDispatchEntry(fullnessModel, fullness);
+                }).toList();
+
+        itemModelGenerator.output.accept(
+                partialDragonBreath,
+                ItemModels.rangeDispatch(new DragonBreathFullnessProperty(), entries.getLast().model(), entries)
+        );
+    }
+
+    private static void registerRadioBoundRelay(BlockStateModelGenerator blockStateModelGenerator) {
+        Block radioBoundRelay = CWBlocks.RADIO_BOUND_RELAY;
+
+        WeightedVariant defaultVariant = BlockStateModelGenerator.createWeightedVariant(
+                TexturedModel.CUBE_ALL.upload(radioBoundRelay, blockStateModelGenerator.modelCollector)
+        );
+
+        WeightedVariant onVariant = BlockStateModelGenerator.createWeightedVariant(
+                blockStateModelGenerator.createSubModel(radioBoundRelay, "_on", Models.CUBE_ALL, TextureMap::all)
+        );
+
+        blockStateModelGenerator.blockStateCollector
+                .accept(
+                        VariantsBlockModelDefinitionCreator
+                                .of(radioBoundRelay)
+                                .with(
+                                        BlockStateModelGenerator.createBooleanModelMap(
+                                                RadioBoundRelayBlock.POWERED,
+                                                onVariant,
+                                                defaultVariant
+                                        )
+                                )
+                );
+    }
+
+    private static void registerBoundRelay(BlockStateModelGenerator blockStateModelGenerator) {
+        Block boundRelay = CWBlocks.BOUND_RELAY;
+
+        WeightedVariant defaultVariant = BlockStateModelGenerator.createWeightedVariant(
+                TexturedModel.CUBE_ALL.upload(boundRelay, blockStateModelGenerator.modelCollector)
+        );
+
+        WeightedVariant onVariant = BlockStateModelGenerator.createWeightedVariant(
+                blockStateModelGenerator.createSubModel(boundRelay, "_on", Models.CUBE_ALL, TextureMap::all)
+        );
+
+        blockStateModelGenerator.blockStateCollector
+                .accept(
+                        VariantsBlockModelDefinitionCreator
+                                .of(boundRelay)
+                                .with(createPowerModelMap(onVariant, defaultVariant))
+                );
+    }
+
+    private static BlockStateVariantMap<WeightedVariant> createPowerModelMap(
+            WeightedVariant nonZeroModel,
+            WeightedVariant zeroModel
+    ) {
+        IntProperty property = Properties.POWER;
+
+        BlockStateVariantMap.SingleProperty<WeightedVariant, Integer> map = BlockStateVariantMap.models(property);
+
+        for (Integer integer : property.getValues()) {
+            if (integer > 0) {
+                map.register(integer, nonZeroModel);
+            } else {
+                map.register(integer, zeroModel);
+            }
+        }
+
+        return map;
+    }
+
+    private static void registerRadio(ItemModelGenerator itemModelGenerator) {
         Item radio = CWItems.RADIO;
         ItemModel.Unbaked defaultModel = ItemModels.basic(itemModelGenerator.upload(radio, Models.GENERATED));
         ItemModel.Unbaked boundModel = ItemModels.basic(
@@ -61,7 +169,7 @@ public class CWModelProvider extends FabricModelProvider {
         itemModelGenerator.registerCondition(radio, new BoundProperty(), boundModel, defaultModel);
     }
 
-    private void registerBattery(BlockStateModelGenerator blockStateModelGenerator) {
+    private static void registerBattery(BlockStateModelGenerator blockStateModelGenerator) {
         Block battery = CWBlocks.BATTERY;
 
         WeightedVariant defaultVariant = BlockStateModelGenerator.createWeightedVariant(
@@ -162,7 +270,7 @@ public class CWModelProvider extends FabricModelProvider {
                 );
     }
 
-    private void registerCopperBarrel(BlockStateModelGenerator blockStateModelGenerator) {
+    private static void registerCopperBarrel(BlockStateModelGenerator blockStateModelGenerator) {
         Block barrel = CWBlocks.COPPER_BARREL;
 
         WeightedVariant weightedVariant = BlockStateModelGenerator.createWeightedVariant(
@@ -177,7 +285,7 @@ public class CWModelProvider extends FabricModelProvider {
                 );
     }
 
-    private void registerCopperScaffolding(BlockStateModelGenerator blockStateModelGenerator) {
+    private static void registerCopperScaffolding(BlockStateModelGenerator blockStateModelGenerator) {
         Block frame = CWBlocks.COPPER_SCAFFOLDING;
 
         blockStateModelGenerator.registerItemModel(frame.asItem());
@@ -191,7 +299,7 @@ public class CWModelProvider extends FabricModelProvider {
 
     }
 
-    private void registerStickyBlock(BlockStateModelGenerator blockStateModelGenerator, Block block) {
+    private static void registerStickyBlock(BlockStateModelGenerator blockStateModelGenerator, Block block) {
         Identifier base = Copperworks.id("block/sticky_copper_base");
 
         blockStateModelGenerator.registerSingleton(
@@ -204,7 +312,7 @@ public class CWModelProvider extends FabricModelProvider {
         );
     }
 
-    private void registerLever(BlockStateModelGenerator blockStateModelGenerator) {
+    private static void registerLever(BlockStateModelGenerator blockStateModelGenerator) {
         Block lever = CWBlocks.COPPER_LEVER;
 
         WeightedVariant weightedVariant = BlockStateModelGenerator.createWeightedVariant(
