@@ -32,9 +32,10 @@ public class LivingEntityMixin {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
 
         FlyingEquippableComponent flyingEquippableComponent = oldStack.get(CWComponents.FLYING_EQUIPPABLE);
+        FlyingEquippableComponent newFlyingEquippableComponent = newStack.get(CWComponents.FLYING_EQUIPPABLE);
 
         if (flyingEquippableComponent != null) {
-            flyingEquippableComponent.onRemoveStack(livingEntity, slot);
+            flyingEquippableComponent.onRemoveStack(livingEntity, slot, newFlyingEquippableComponent);
         }
     }
 

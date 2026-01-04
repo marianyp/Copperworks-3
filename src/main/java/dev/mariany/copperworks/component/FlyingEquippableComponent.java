@@ -137,10 +137,17 @@ public class FlyingEquippableComponent {
         return !stack.willBreakNextUse();
     }
 
-    public void onRemoveStack(LivingEntity livingEntity, EquipmentSlot slot) {
+    public void onRemoveStack(
+            LivingEntity livingEntity,
+            EquipmentSlot slot,
+            @Nullable FlyingEquippableComponent newFlyingEquippableComponent
+    ) {
         if (slot.isArmorSlot() && livingEntity instanceof PlayerEntity player) {
-            resetAbilities(player);
-            player.sendAbilitiesUpdate();
+            if (newFlyingEquippableComponent == null) {
+                resetAbilities(player);
+            } else {
+                updateAbilities(player);
+            }
         }
     }
 
@@ -194,10 +201,7 @@ public class FlyingEquippableComponent {
         } else {
             abilities.allowFlying = true;
             abilities.setFlySpeed(0.02F);
-            player.sendAbilitiesUpdate();
         }
-
-        player.sendAbilitiesUpdate();
     }
 
     private static void resetAbilities(PlayerEntity player) {
@@ -205,7 +209,6 @@ public class FlyingEquippableComponent {
 
         if (gameMode != null) {
             PlayerAbilities abilities = player.getAbilities();
-
             abilities.setFlySpeed(0.05F);
             gameMode.setAbilities(abilities);
         }
