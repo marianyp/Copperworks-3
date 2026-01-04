@@ -2,7 +2,6 @@ package dev.mariany.copperworks.item.custom;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
 
 public class RocketBootsItem extends Item {
@@ -21,6 +20,6 @@ public class RocketBootsItem extends Item {
 
     @Override
     public int getItemBarColor(ItemStack stack) {
-        return ColorHelper.fromFloats(1, 0.812F, 0.004F, 0.906F);
+        return super.getItemBarColor(stack);
     }
 }

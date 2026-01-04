@@ -4,7 +4,9 @@ import dev.mariany.copperworks.item.CWItems;
 import dev.mariany.copperworks.tag.CWTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.registry.tag.ItemTags;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -18,8 +20,7 @@ public class CWItemTagProviders extends FabricTagProvider.ItemTagProvider {
 
     @Override
     protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
-        valueLookupBuilder(CWTags.Items.REPAIRS_ROCKET_BOOTS).add(
-                CWItems.ENDER_POWDER
-        );
+        valueLookupBuilder(ItemTags.FOOT_ARMOR).add(CWItems.ROCKET_BOOTS);
+        valueLookupBuilder(CWTags.Items.REPAIRS_ROCKET_BOOTS).add(Items.BLAZE_POWDER);
     }
 }

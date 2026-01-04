@@ -11,7 +11,7 @@ import java.util.Map;
 public interface CWArmorMaterials {
     ArmorMaterial ROCKET_BOOTS = new ArmorMaterial(
             37,
-            createDefenseMap(3, 0, 0, 0, 0),
+            createDefenseMap(1, 0, 0, 0, 0),
             15,
             CWSoundEvents.ITEM_ARMOR_EQUIP_ROCKET_BOOTS,
             3F,

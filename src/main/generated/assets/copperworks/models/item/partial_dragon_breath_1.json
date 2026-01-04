@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "copperworks:item/partial_dragon_breath_1"
-  }
-}

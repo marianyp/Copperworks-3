@@ -17,27 +17,27 @@
       "minecraft:block/copper/break4"
     ]
   },
-  "block.copper_barrel.open": {
-    "subtitle": "subtitles.block.copper_barrel.open",
+  "block.copper_barrel.lid_moved": {
+    "subtitle": "subtitles.block.copperworks.copper_barrel.lid_moved",
     "sounds": [
-      "copperworks:block/copper_barrel/open1",
-      "copperworks:block/copper_barrel/open2",
-      "copperworks:block/copper_barrel/open3"
+      "copperworks:block/copper_barrel/lid/moved1",
+      "copperworks:block/copper_barrel/lid/moved2",
+      "copperworks:block/copper_barrel/lid/moved3"
     ]
   },
   "block.clock.interact": {
-    "subtitle": "subtitles.block.clock.interact",
+    "subtitle": "subtitles.block.copperworks.clock.interact",
     "sounds": [
       "minecraft:note/hat"
     ]
   },
   "block.relay.insert": {
-    "subtitle": "subtitles.block.bound_relay.insert",
+    "subtitle": "subtitles.block.copperworks.bound_relay.insert",
     "sounds": [
       {
         "name": "minecraft:block/amethyst/step1",
         "pitch": 0.01,
-        "volume":0.7
+        "volume": 0.7
       },
       {
         "name": "minecraft:block/amethyst/step2",
@@ -107,7 +107,7 @@
     ]
   },
   "block.bound_relay.disconnect": {
-    "subtitle": "subtitles.block.bound_relay.disconnect",
+    "subtitle": "subtitles.block.copperworks.bound_relay.disconnect",
     "sounds": [
       {
         "name": "minecraft:block/amethyst_cluster/break1",
@@ -132,9 +132,50 @@
     ]
   },
   "item.radio": {
-    "subtitle": "subtitles.item.radio",
+    "subtitle": "subtitles.item.copperworks.radio",
     "sounds": [
       "copperworks:item/radio/radio"
+    ]
+  },
+  "item.armor.equip.rocket_boots": {
+    "subtitle": "subtitles.item.armor.equip.copperworks.rocket_boots",
+    "sounds": [
+      {
+        "name": "item/armor/equip_netherite1",
+        "volume": 0.8
+      },
+      {
+        "name": "item/armor/equip_netherite1",
+        "pitch": 0.9,
+        "volume": 0.8
+      },
+      {
+        "name": "item/armor/equip_netherite2",
+        "volume": 0.8
+      },
+      {
+        "name": "item/armor/equip_netherite2",
+        "pitch": 0.9,
+        "volume": 0.8
+      },
+      {
+        "name": "item/armor/equip_netherite3",
+        "volume": 0.8
+      },
+      {
+        "name": "item/armor/equip_netherite3",
+        "pitch": 0.9,
+        "volume": 0.8
+      },
+      {
+        "name": "item/armor/equip_netherite4",
+        "volume": 0.8
+      },
+      {
+        "name": "item/armor/equip_netherite4",
+        "pitch": 0.9,
+        "volume": 0.8
+      }
     ]
   }
 }

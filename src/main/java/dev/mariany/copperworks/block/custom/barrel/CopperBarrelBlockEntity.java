@@ -57,7 +57,7 @@ public class CopperBarrelBlockEntity extends InventoryNetworkBlockEntity {
         world.playSound(
                 null,
                 pos,
-                CWSoundEvents.BLOCK_COPPER_BARREL_OPEN,
+                CWSoundEvents.BLOCK_COPPER_BARREL_LID_MOVED,
                 SoundCategory.BLOCKS,
                 volume,
                 MathHelper.nextBetween(random, minPitch, maxPitch)

@@ -13,13 +13,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.item.Items;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.registry.*;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
@@ -82,6 +82,8 @@ public class CopperUpgradeItem extends Item {
     ) {
         textConsumer.accept(APPLIES_TO_TEXT);
 
+        textConsumer.accept(getAppliesToText(Items.NETHERITE_BOOTS.getName()));
+
         RegistryWrapper.WrapperLookup wrapperLookup = context.getRegistryLookup();
 
         if (wrapperLookup != null) {
@@ -105,24 +107,21 @@ public class CopperUpgradeItem extends Item {
                                                         )
                                                 )
                                         )
-                                        .ifPresent(blockReference -> {
-                                            String translationKey = Util.createTranslationKey(
-                                                    "item",
-                                                    Copperworks.id("copper_upgrade_kit.applies_to")
-                                            );
-
-                                            MutableText mutableText =
-                                                    Text.translatable(
-                                                                translationKey,
-                                                                blockReference.value().getName()
-                                                        )
-                                                        .formatted(Formatting.BLUE);
-
-                                            textConsumer.accept(ScreenTexts.space().append(mutableText));
-                                        });
+                                        .ifPresent(blockReference -> textConsumer.accept(
+                                                getAppliesToText(blockReference.value().getName())
+                                        ));
                             })
                     );
         }
+    }
+
+    private static Text getAppliesToText(Text text) {
+        String translationKey = Util.createTranslationKey(
+                "item",
+                Copperworks.id("copper_upgrade_kit.applies_to")
+        );
+
+        return ScreenTexts.space().append(Text.translatable(translationKey, text).formatted(Formatting.BLUE));
     }
 
     @Override

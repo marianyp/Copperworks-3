@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "minecraft:blaze_powder",
+  "base": "minecraft:netherite_boots",
+  "result": {
+    "id": "copperworks:rocket_boots"
+  },
+  "template": "copperworks:copper_upgrade_kit"
+}

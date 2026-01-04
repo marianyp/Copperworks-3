@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_dragon_breath": {
+    "has_netherite_boots": {
       "conditions": {
         "items": [
           {
-            "items": "minecraft:dragon_breath"
+            "items": "minecraft:netherite_boots"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "copperworks:ender_powder"
+        "recipe": "copperworks:rocket_boots_smithing"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_dragon_breath"
+      "has_netherite_boots"
     ]
   ],
   "rewards": {
     "recipes": [
-      "copperworks:ender_powder"
+      "copperworks:rocket_boots_smithing"
     ]
   }
 }

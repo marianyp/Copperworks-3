@@ -8,7 +8,6 @@ import net.minecraft.loot.LootTables;
 import net.minecraft.loot.condition.RandomChanceLootCondition;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.function.SetDamageLootFunction;
-import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.loot.provider.number.UniformLootNumberProvider;
 import net.minecraft.registry.RegistryKey;
 
@@ -30,7 +29,7 @@ public class LootTableModifiers {
                         if (CONTAINS_COPPER_UPGRADE.contains(key)) {
                             tableBuilder.pool(
                                     LootPool.builder()
-                                            .rolls(ConstantLootNumberProvider.create(1))
+                                            .rolls(UniformLootNumberProvider.create(0, 2))
                                             .conditionally(RandomChanceLootCondition.builder(0.7F))
                                             .with(
                                                     ItemEntry.builder(CWItems.COPPER_UPGRADE_KIT)

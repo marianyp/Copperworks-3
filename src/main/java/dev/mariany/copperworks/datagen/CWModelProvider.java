@@ -4,9 +4,7 @@ import dev.mariany.copperworks.Copperworks;
 import dev.mariany.copperworks.block.CWBlocks;
 import dev.mariany.copperworks.block.custom.relay.RadioBoundRelayBlock;
 import dev.mariany.copperworks.client.render.item.property.bool.BoundProperty;
-import dev.mariany.copperworks.client.render.item.property.numeric.DragonBreathFullnessProperty;
 import dev.mariany.copperworks.item.CWItems;
-import dev.mariany.copperworks.item.custom.PartialDragonBreathItem;
 import dev.mariany.copperworks.item.equipment.CWEquipmentAssetKeys;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -14,16 +12,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.enums.BlockFace;
 import net.minecraft.client.data.*;
 import net.minecraft.client.render.item.model.ItemModel;
-import net.minecraft.client.render.item.model.RangeDispatchItemModel;
 import net.minecraft.client.render.model.json.WeightedVariant;
 import net.minecraft.item.Item;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
-
-import java.util.List;
-import java.util.stream.IntStream;
 
 public class CWModelProvider extends FabricModelProvider {
     public CWModelProvider(FabricDataOutput output) {
@@ -39,8 +33,6 @@ public class CWModelProvider extends FabricModelProvider {
 
         itemModelGenerator.register(CWItems.AMETHYST_PIECE, Models.GENERATED);
 
-        itemModelGenerator.register(CWItems.ENDER_POWDER, Models.GENERATED);
-
         itemModelGenerator.registerArmor(
                 CWItems.ROCKET_BOOTS,
                 CWEquipmentAssetKeys.ROCKET_BOOTS,
@@ -49,8 +41,6 @@ public class CWModelProvider extends FabricModelProvider {
         );
 
         registerRadio(itemModelGenerator);
-
-        registerPartialDragonBreath(itemModelGenerator);
     }
 
     @Override
@@ -63,38 +53,18 @@ public class CWModelProvider extends FabricModelProvider {
         blockStateModelGenerator.registerSimpleCubeAll(CWBlocks.RELAY);
 
         registerLever(blockStateModelGenerator);
+
         registerStickyBlock(blockStateModelGenerator, CWBlocks.STICKY_COPPER);
         registerStickyBlock(blockStateModelGenerator, CWBlocks.STICKY_COPPER_HONEY);
+
         registerCopperScaffolding(blockStateModelGenerator);
+
         registerCopperBarrel(blockStateModelGenerator);
+
         registerBattery(blockStateModelGenerator);
+
         registerBoundRelay(blockStateModelGenerator);
         registerRadioBoundRelay(blockStateModelGenerator);
-    }
-
-    private static void registerPartialDragonBreath(ItemModelGenerator itemModelGenerator) {
-        PartialDragonBreathItem partialDragonBreath = CWItems.PARTIAL_DRAGON_BREATH;
-        int maxFullness = partialDragonBreath.getMaxFullness();
-
-        List<RangeDispatchItemModel.Entry> entries = IntStream
-                .rangeClosed(1, maxFullness)
-                .boxed()
-                .map(fullness -> {
-                    ItemModel.Unbaked fullnessModel = ItemModels.basic(
-                            itemModelGenerator.registerSubModel(
-                                    partialDragonBreath,
-                                    "_" + fullness,
-                                    Models.GENERATED
-                            )
-                    );
-
-                    return ItemModels.rangeDispatchEntry(fullnessModel, fullness);
-                }).toList();
-
-        itemModelGenerator.output.accept(
-                partialDragonBreath,
-                ItemModels.rangeDispatch(new DragonBreathFullnessProperty(), entries.getLast().model(), entries)
-        );
     }
 
     private static void registerRadioBoundRelay(BlockStateModelGenerator blockStateModelGenerator) {
