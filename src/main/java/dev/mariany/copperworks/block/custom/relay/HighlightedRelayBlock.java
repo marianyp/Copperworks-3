@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
-public abstract class HighlightedRelayBlock<E extends HighlightedRelayBlockEntity> extends BlockWithEntity {
+public abstract class HighlightedRelayBlock<E extends HighlightedBlockEntity> extends BlockWithEntity {
     private final Supplier<BlockEntityType<? extends E>> entityTypeRetriever;
 
     protected HighlightedRelayBlock(Settings settings, Supplier<BlockEntityType<? extends E>> entityTypeRetriever) {
@@ -24,7 +24,7 @@ public abstract class HighlightedRelayBlock<E extends HighlightedRelayBlockEntit
     protected abstract MapCodec<? extends HighlightedRelayBlock<E>> getCodec();
 
     @Override
-    public abstract HighlightedRelayBlockEntity createBlockEntity(BlockPos pos, BlockState state);
+    public abstract HighlightedBlockEntity createBlockEntity(BlockPos pos, BlockState state);
 
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(
@@ -33,11 +33,11 @@ public abstract class HighlightedRelayBlock<E extends HighlightedRelayBlockEntit
             BlockEntityType<T> type
     ) {
         return world.isClient() ?
-                validateTicker(type, this.getExpectedEntityType(), HighlightedRelayBlockEntity::clientTick) :
+                validateTicker(type, this.getExpectedEntityType(), HighlightedBlockEntity::clientTick) :
                 null;
     }
 
-    private BlockEntityType<? extends HighlightedRelayBlockEntity> getExpectedEntityType() {
+    private BlockEntityType<? extends HighlightedBlockEntity> getExpectedEntityType() {
         return this.entityTypeRetriever.get();
     }
 }

@@ -20,8 +20,6 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 
 @Environment(EnvType.CLIENT)
 public class CopperworksClient implements ClientModInitializer {
-    private final RadioHandler radioHandler = new RadioHandler();
-
     @Override
     public void onInitializeClient() {
         ClientboundPackets.bootstrap();
@@ -31,7 +29,7 @@ public class CopperworksClient implements ClientModInitializer {
         registerScreenHandlers();
         registerBlockEntityRenderers();
 
-        ClientTickEvents.END_CLIENT_TICK.register(this.radioHandler::onTick);
+        ClientTickEvents.END_CLIENT_TICK.register(RadioHandler::onTick);
     }
 
     private static void registerItemProperties() {

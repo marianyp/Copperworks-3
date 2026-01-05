@@ -18,50 +18,50 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Environment(EnvType.CLIENT)
-public class RadioHandler {
-    private final Map<Hand, BlockPos> radioMapping = new HashMap<>();
+public interface RadioHandler {
+    Map<Hand, BlockPos> RADIO_MAPPING = new HashMap<>();
 
-    public void onTick(MinecraftClient client) {
+    static void onTick(MinecraftClient client) {
         ClientPlayerEntity player = client.player;
+
+        boolean newRadio = false;
 
         if (player != null) {
             World world = player.getEntityWorld();
-            Map<Hand, BlockPos> previousState = Map.copyOf(this.radioMapping);
+            Map<Hand, BlockPos> previousState = Map.copyOf(RADIO_MAPPING);
 
             if (player.isSneaking()) {
-                boolean newRadio = false;
-
                 for (Hand hand : Hand.values()) {
                     if (refreshRadioState(player, hand)) {
                         newRadio = true;
                     }
                 }
-
-                if (newRadio) {
-                    for (BlockPos pos : this.radioMapping.values()) {
-                        if (world.getBlockEntity(pos) instanceof RadioRelayBlockEntity radioRelayBlockEntity) {
-                            radioRelayBlockEntity.focus(true);
-                        }
-                    }
-                }
             } else {
-                this.radioMapping.clear();
+                RADIO_MAPPING.clear();
             }
 
             for (Map.Entry<Hand, BlockPos> entry : previousState.entrySet()) {
                 Hand hand = entry.getKey();
                 BlockPos pos = entry.getValue();
 
-                if (!this.radioMapping.containsKey(hand) || !this.radioMapping.get(hand).equals(pos)) {
+                if (!RADIO_MAPPING.containsKey(hand) || !RADIO_MAPPING.get(hand).equals(pos)) {
                     if (world.getBlockEntity(pos) instanceof RadioRelayBlockEntity radioRelayBlockEntity) {
                         radioRelayBlockEntity.focus(false);
+                    }
+                }
+            }
+
+            if (newRadio) {
+                for (BlockPos pos : RADIO_MAPPING.values()) {
+                    if (world.getBlockEntity(pos) instanceof RadioRelayBlockEntity radioRelayBlockEntity) {
+                        radioRelayBlockEntity.focus(true);
                     }
                 }
             }
         }
     }
 
-    private boolean refreshRadioState(PlayerEntity player, Hand hand) {
+    private static boolean refreshRadioState(PlayerEntity player, Hand hand) {
         World world = player.getEntityWorld();
         ItemStack stack = player.getStackInHand(hand);
 
@@ -71,13 +71,13 @@ public class RadioHandler {
             if (relayPosition != null && world.getRegistryKey().equals(relayPosition.dimension())) {
                 BlockPos pos = relayPosition.pos();
 
-                if (!this.radioMapping.containsKey(hand) || !this.radioMapping.get(hand).equals(pos)) {
-                    this.radioMapping.put(hand, pos);
+                if (!RADIO_MAPPING.containsKey(hand) || !RADIO_MAPPING.get(hand).equals(pos)) {
+                    RADIO_MAPPING.put(hand, pos);
                     return true;
                 }
             }
         } else {
-            this.radioMapping.remove(hand);
+            RADIO_MAPPING.remove(hand);
         }
 
         return false;

@@ -4,9 +4,10 @@ import com.mojang.logging.LogUtils;
 import dev.mariany.copperworks.Copperworks;
 import dev.mariany.copperworks.block.CWBlockEntities;
 import dev.mariany.copperworks.block.CWBlocks;
-import dev.mariany.copperworks.block.custom.relay.HighlightedRelayBlockEntity;
+import dev.mariany.copperworks.block.custom.relay.HighlightedBlockEntity;
 import dev.mariany.copperworks.sound.CWSoundEvents;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
@@ -28,7 +29,7 @@ import org.slf4j.Logger;
 
 import java.util.Optional;
 
-public class BoundRelayBlockEntity extends HighlightedRelayBlockEntity {
+public class BoundRelayBlockEntity extends HighlightedBlockEntity {
     private static final Logger LOGGER = LogUtils.getLogger();
     protected static final String BOUND_KEY = Copperworks.id("bound").toString();
 
@@ -53,7 +54,27 @@ public class BoundRelayBlockEntity extends HighlightedRelayBlockEntity {
 
     @Override
     public void focus(boolean focus) {
+        if (focus && this.areAnyFocused()) {
+            return;
+        }
+
         this.animator.setFocused(focus, 4);
+    }
+
+    protected boolean areAnyFocused() {
+        if (this.world == null || this.bound == null) {
+            return false;
+        }
+
+        if (this.world.getRegistryKey().equals(this.bound.dimension())) {
+            BlockEntity blockEntity = this.world.getBlockEntity(this.bound.pos());
+
+            if (blockEntity instanceof HighlightedBlockEntity highlightedBlockEntity) {
+                return highlightedBlockEntity.isFocused();
+            }
+        }
+
+        return this.isFocused();
     }
 
     public void bind(GlobalPos pos) {

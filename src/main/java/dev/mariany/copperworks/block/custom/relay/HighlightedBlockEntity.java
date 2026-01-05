@@ -8,11 +8,11 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public abstract class HighlightedRelayBlockEntity extends BlockEntity {
+public abstract class HighlightedBlockEntity extends BlockEntity {
     protected final Animator animator = new Animator();
     protected final Vec3d color;
 
-    public HighlightedRelayBlockEntity(
+    public HighlightedBlockEntity(
             BlockEntityType<?> type,
             BlockPos pos,
             BlockState state,
@@ -26,9 +26,13 @@ public abstract class HighlightedRelayBlockEntity extends BlockEntity {
             World world,
             BlockPos pos,
             BlockState state,
-            HighlightedRelayBlockEntity blockEntity
+            HighlightedBlockEntity blockEntity
     ) {
         blockEntity.animator.step();
+    }
+
+    public boolean isFocused() {
+        return this.animator.isFocused();
     }
 
     public abstract void focus(boolean focus);
@@ -49,8 +53,8 @@ public abstract class HighlightedRelayBlockEntity extends BlockEntity {
         private boolean forward = true;
         private int iterations = INFINITE_ITERATIONS;
 
-        public float getProgress(float tickProgress) {
-            return MathHelper.lerp(tickProgress, this.lastProgress, this.progress);
+        public boolean isFocused() {
+            return this.focused;
         }
 
         public void setFocused(boolean focused) {
@@ -66,6 +70,10 @@ public abstract class HighlightedRelayBlockEntity extends BlockEntity {
                 this.lastProgress = 0;
                 this.forward = true;
             }
+        }
+
+        public float getProgress(float tickProgress) {
+            return MathHelper.lerp(tickProgress, this.lastProgress, this.progress);
         }
 
         public void reset() {
