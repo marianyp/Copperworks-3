@@ -115,10 +115,10 @@ public class BoundRelayBlock extends HighlightedRelayBlock<BoundRelayBlockEntity
             BlockState state = otherWorld.getBlockState(pos);
             boolean changed = state.get(POWER, 0) != power;
 
-            otherWorld.setBlockState(pos, state.withIfExists(POWER, power));
-            otherWorld.updateNeighbors(pos, state.getBlock());
-
             if (changed) {
+                otherWorld.setBlockState(pos, state.withIfExists(POWER, power));
+                otherWorld.updateNeighbors(pos, state.getBlock());
+
                 update(world, pos);
             }
         }
