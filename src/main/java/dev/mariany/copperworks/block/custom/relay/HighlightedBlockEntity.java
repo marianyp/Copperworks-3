@@ -90,6 +90,7 @@ public abstract class HighlightedBlockEntity extends BlockEntity {
 
             if (!this.focused || this.iterations == 0) {
                 reset();
+                this.focused = false;
                 return;
             }
 
