@@ -18,7 +18,7 @@ public class LivingEntityRendererMixin {
     public <T extends LivingEntity, S extends LivingEntityRenderState> void injectUpdateRenderState(
             T livingEntity,
             S state,
-            float f,
+            float tickProgress,
             CallbackInfo ci
     ) {
         if (FlyingEquippableComponent.canFly(livingEntity)) {

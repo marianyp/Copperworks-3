@@ -34,7 +34,9 @@ public class FlyingEquippableComponent {
                                         Codec.BOOL.fieldOf("damage_queued")
                                                   .forGetter(FlyingEquippableComponent::isDamageQueued),
                                         Codec.DOUBLE.fieldOf("speed")
-                                                    .forGetter(FlyingEquippableComponent::getSpeed)
+                                                    .forGetter(FlyingEquippableComponent::getSpeed),
+                                        Codec.BOOL.fieldOf("prevented_fall_damage")
+                                                  .forGetter(FlyingEquippableComponent::hasPreventedFallDamage)
                                 )
                                 .apply(instance, FlyingEquippableComponent::new)
     );
@@ -52,6 +54,8 @@ public class FlyingEquippableComponent {
             FlyingEquippableComponent::isDamageQueued,
             PacketCodecs.DOUBLE,
             FlyingEquippableComponent::getSpeed,
+            PacketCodecs.BOOLEAN,
+            FlyingEquippableComponent::hasPreventedFallDamage,
             FlyingEquippableComponent::new
     );
 
@@ -61,6 +65,7 @@ public class FlyingEquippableComponent {
     private final int damageTickRate;
     private boolean damageQueued;
     private double speed;
+    private boolean preventedFallDamage;
 
     public FlyingEquippableComponent(
             ParticleEffect particleEffect,
@@ -68,7 +73,15 @@ public class FlyingEquippableComponent {
             double windUp,
             int damageTickRate
     ) {
-        this(particleEffect, maximumSpeed, windUp, damageTickRate, false, 0);
+        this(
+                particleEffect,
+                maximumSpeed,
+                windUp,
+                damageTickRate,
+                false,
+                0,
+                false
+        );
     }
 
     private FlyingEquippableComponent(
@@ -77,7 +90,8 @@ public class FlyingEquippableComponent {
             double windUp,
             int damageTickRate,
             boolean damageQueued,
-            double speed
+            double speed,
+            boolean preventedFallDamage
     ) {
         this.particleEffect = particleEffect;
         this.maximumSpeed = maximumSpeed;
@@ -85,6 +99,7 @@ public class FlyingEquippableComponent {
         this.damageTickRate = damageTickRate;
         this.damageQueued = damageQueued;
         this.speed = speed;
+        this.preventedFallDamage = preventedFallDamage;
     }
 
     public ParticleEffect getParticleEffect() {
@@ -111,10 +126,26 @@ public class FlyingEquippableComponent {
         return this.speed;
     }
 
+    public boolean hasPreventedFallDamage() {
+        return this.preventedFallDamage;
+    }
+
     public static boolean shouldShowParticles(LivingEntity livingEntity) {
+        if (isHalting(livingEntity)) {
+            return false;
+        }
+
+        boolean canFly = canFly(livingEntity);
+
+        if (!canFly) {
+            return false;
+        }
+
         boolean flying = livingEntity instanceof PlayerEntity player && player.getAbilities().flying;
-        boolean gliding = livingEntity.isGliding() && !isHalting(livingEntity);
-        return canFly(livingEntity) && (flying || gliding || livingEntity.fallDistance >= 1);
+        boolean gliding = livingEntity.isGliding();
+        boolean savedFromFallDamage = wasSavedFromFallDamage(livingEntity);
+
+        return flying || gliding || savedFromFallDamage;
     }
 
     public static boolean canFly(LivingEntity livingEntity) {
@@ -126,6 +157,23 @@ public class FlyingEquippableComponent {
             ItemStack stack = livingEntity.getEquippedStack(equipmentSlot);
 
             if (stack.contains(CWComponents.FLYING_EQUIPPABLE) && canFly(stack)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean wasSavedFromFallDamage(LivingEntity livingEntity) {
+        if (livingEntity.isSpectator()) {
+            return false;
+        }
+
+        for (EquipmentSlot equipmentSlot : EquipmentSlot.VALUES) {
+            ItemStack stack = livingEntity.getEquippedStack(equipmentSlot);
+            FlyingEquippableComponent flyingEquippableComponent = stack.get(CWComponents.FLYING_EQUIPPABLE);
+
+            if (flyingEquippableComponent != null && flyingEquippableComponent.preventedFallDamage) {
                 return true;
             }
         }
@@ -160,6 +208,10 @@ public class FlyingEquippableComponent {
             return;
         }
 
+        if (entity.isOnGround()) {
+            this.preventedFallDamage = false;
+        }
+
         if (!canFly(stack) || entity.isSpectator()) {
             if (entity instanceof PlayerEntity player) {
                 resetAbilities(player);
@@ -189,6 +241,7 @@ public class FlyingEquippableComponent {
 
             if (handleFallDamage(livingEntity)) {
                 this.damageQueued = true;
+                this.preventedFallDamage = true;
             }
         }
     }

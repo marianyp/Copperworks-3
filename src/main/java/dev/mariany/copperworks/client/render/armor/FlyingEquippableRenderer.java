@@ -110,7 +110,7 @@ public class FlyingEquippableRenderer {
                 livingEntity.getY() + yOffset,
                 livingEntity.getZ() + sideOffsetZ + forwardOffsetZ,
                 0,
-                0,
+                -0.025,
                 0
         );
     }

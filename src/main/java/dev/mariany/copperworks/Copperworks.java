@@ -21,6 +21,7 @@ import dev.mariany.copperworks.stat.CWStats;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,9 @@ public class Copperworks implements ModInitializer {
     }
 
     public static void bootstrapLog(String type) {
-        Copperworks.LOGGER.info("Registering {} for {}", type, MOD_ID);
+        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+            LOGGER.info("Registering {}", type);
+        }
     }
 
     @Override
