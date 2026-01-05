@@ -33,6 +33,8 @@ public class CWModelProvider extends FabricModelProvider {
 
         itemModelGenerator.register(CWItems.AMETHYST_PIECE, Models.GENERATED);
 
+        itemModelGenerator.register(CWItems.PATINA, Models.GENERATED);
+
         itemModelGenerator.registerArmor(
                 CWItems.ROCKET_BOOTS,
                 CWEquipmentAssetKeys.ROCKET_BOOTS,

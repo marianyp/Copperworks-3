@@ -3,6 +3,7 @@ package dev.mariany.copperworks.item;
 import dev.mariany.copperworks.Copperworks;
 import dev.mariany.copperworks.component.CWComponents;
 import dev.mariany.copperworks.component.FlyingEquippableComponent;
+import dev.mariany.copperworks.item.custom.PatinaItem;
 import dev.mariany.copperworks.item.custom.RocketBootsItem;
 import dev.mariany.copperworks.item.custom.copperupgrade.CopperUpgradeItem;
 import dev.mariany.copperworks.item.custom.radio.RadioItem;
@@ -54,6 +55,8 @@ public class CWItems {
                     )
     );
 
+    public static final PatinaItem PATINA = register("patina", PatinaItem::new);
+
     private static Item register(String name) {
         return register(name, Item::new, new Item.Settings());
     }
@@ -87,6 +90,8 @@ public class CWItems {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries -> {
             entries.addAfter(Items.IRON_INGOT, IRON_PLATE);
             entries.addAfter(Items.COPPER_INGOT, COPPER_PLATE);
+
+            entries.addAfter(Items.GUNPOWDER, PATINA);
         });
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {

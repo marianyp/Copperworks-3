@@ -13,13 +13,16 @@
   "block.copperworks.sticky_copper_honey": "Sticky Copper",
   "block.copperworks.wooden_rail": "Wooden Rail",
   "container.copperworks.copper_barrel": "Copper Barrel",
-  "item.copperworks.rocket_boots": "Rocket Boots",
+  "gamerule.waterPotionsDegradeBlocks": "Water potions degrade blocks",
+  "gamerule.waterPotionsDegradeBlocks.description": "Splash potions of water degrade copper blocks",
   "item.copperworks.amethyst_piece": "Amethyst Piece",
   "item.copperworks.copper_plate": "Copper Plate",
   "item.copperworks.copper_upgrade_kit": "Copper Upgrade Kit",
   "item.copperworks.copper_upgrade_kit.applies_to": "- %s",
   "item.copperworks.iron_plate": "Iron Plate",
+  "item.copperworks.patina": "Patina",
   "item.copperworks.radio": "Radio",
+  "item.copperworks.rocket_boots": "Rocket Boots",
   "item.radio.unavailable": "Relay is unavailable",
   "stat.copperworks.interact_with_copper_clock": "Interactions with Copper Clock",
   "stat.copperworks.open_copper_barrel": "Copper Barrels Opened",
@@ -27,8 +30,6 @@
   "subtitles.block.copperworks.bound_relay.insert": "Amethyst Piece inserted into Relay",
   "subtitles.block.copperworks.clock.interact": "Clock modified",
   "subtitles.block.copperworks.copper_barrel.lid_moved": "Copper Barrel lid moved",
-  "subtitles.item.copperworks.radio": "Radio used",
   "subtitles.item.armor.equip.copperworks.rocket_boots": "Rocket boots clank",
-  "gamerule.waterPotionsDegradeBlocks": "Water potions degrade blocks",
-  "gamerule.waterPotionsDegradeBlocks.description": "Splash potions of water degrade copper blocks"
+  "subtitles.item.copperworks.radio": "Radio used"
 }
