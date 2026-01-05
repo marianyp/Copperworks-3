@@ -6,10 +6,11 @@ import dev.mariany.copperworks.block.custom.BatteryBlock;
 import dev.mariany.copperworks.block.custom.TimedLeverBlock;
 import dev.mariany.copperworks.block.custom.barrel.CopperBarrelBlock;
 import dev.mariany.copperworks.block.custom.clock.CopperClockBlock;
+import dev.mariany.copperworks.block.custom.relay.RelayBlock;
 import dev.mariany.copperworks.block.custom.relay.bound.BoundRelayBlock;
 import dev.mariany.copperworks.block.custom.relay.ender.EnderRelayBlock;
 import dev.mariany.copperworks.block.custom.relay.radio.RadioRelayBlock;
-import dev.mariany.copperworks.block.custom.relay.RelayBlock;
+import dev.mariany.copperworks.block.custom.sensor.SensorBlock;
 import dev.mariany.copperworks.item.custom.AlternativeScaffoldingBlockItem;
 import dev.mariany.copperworks.sound.CWSoundEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
@@ -111,6 +112,12 @@ public class CWBlocks {
             AbstractBlock.Settings.copy(RELAY)
     );
 
+    public static final Block COPPER_SENSOR = register(
+            "copper_sensor",
+            SensorBlock::new,
+            genericCopperSettings().solidBlock(Blocks::never)
+    );
+
     private static AbstractBlock.Settings genericCopperSettings() {
         return AbstractBlock.Settings.create()
                                      .mapColor(MapColor.ORANGE)
@@ -159,6 +166,8 @@ public class CWBlocks {
             entries.addAfter(Items.REDSTONE_BLOCK, RELAY);
 
             entries.addAfter(RELAY, BATTERY);
+
+            entries.addBefore(Items.OBSERVER, COPPER_SENSOR);
         });
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(entries -> {

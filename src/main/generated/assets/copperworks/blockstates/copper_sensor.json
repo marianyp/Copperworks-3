@@ -1,0 +1,49 @@
+{
+  "variants": {
+    "face=ceiling,facing=east": {
+      "model": "copperworks:block/copper_sensor_ceiling",
+      "y": 90
+    },
+    "face=ceiling,facing=north": {
+      "model": "copperworks:block/copper_sensor_ceiling"
+    },
+    "face=ceiling,facing=south": {
+      "model": "copperworks:block/copper_sensor_ceiling",
+      "y": 180
+    },
+    "face=ceiling,facing=west": {
+      "model": "copperworks:block/copper_sensor_ceiling",
+      "y": 270
+    },
+    "face=floor,facing=east": {
+      "model": "copperworks:block/copper_sensor",
+      "y": 90
+    },
+    "face=floor,facing=north": {
+      "model": "copperworks:block/copper_sensor"
+    },
+    "face=floor,facing=south": {
+      "model": "copperworks:block/copper_sensor",
+      "y": 180
+    },
+    "face=floor,facing=west": {
+      "model": "copperworks:block/copper_sensor",
+      "y": 270
+    },
+    "face=wall,facing=east": {
+      "model": "copperworks:block/copper_sensor_wall",
+      "y": 90
+    },
+    "face=wall,facing=north": {
+      "model": "copperworks:block/copper_sensor_wall"
+    },
+    "face=wall,facing=south": {
+      "model": "copperworks:block/copper_sensor_wall",
+      "y": 180
+    },
+    "face=wall,facing=west": {
+      "model": "copperworks:block/copper_sensor_wall",
+      "y": 270
+    }
+  }
+}

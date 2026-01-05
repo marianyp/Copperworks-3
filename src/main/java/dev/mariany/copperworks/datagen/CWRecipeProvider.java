@@ -49,6 +49,16 @@ public class CWRecipeProvider extends FabricRecipeProvider {
                 this.createCopperLeverRecipe();
                 this.createCopperScaffoldingRecipe();
                 this.createRocketBootsRecipe();
+                this.createCopperSensorRecipe();
+            }
+
+            private void createCopperSensorRecipe() {
+                this.createShaped(RecipeCategory.REDSTONE, CWBlocks.COPPER_SENSOR)
+                    .pattern("CEC")
+                    .input('C', CWItems.COPPER_PLATE)
+                    .input('E', Items.ENDER_EYE)
+                    .criterion(hasItem(Items.ENDER_EYE), this.conditionsFromItem(Items.ENDER_EYE))
+                    .offerTo(this.exporter);
             }
 
             private void createRocketBootsRecipe() {

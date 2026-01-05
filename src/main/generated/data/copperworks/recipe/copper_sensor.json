@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "C": "copperworks:copper_plate",
+    "E": "minecraft:ender_eye"
+  },
+  "pattern": [
+    "CEC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "copperworks:copper_sensor"
+  }
+}

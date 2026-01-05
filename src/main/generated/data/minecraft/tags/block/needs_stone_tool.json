@@ -6,8 +6,11 @@
     "copperworks:copper_scaffolding",
     "copperworks:copper_barrel",
     "copperworks:copper_clock",
+    "copperworks:battery",
     "copperworks:relay",
     "copperworks:bound_relay",
-    "copperworks:radio_relay"
+    "copperworks:radio_relay",
+    "copperworks:ender_relay",
+    "copperworks:copper_sensor"
   ]
 }

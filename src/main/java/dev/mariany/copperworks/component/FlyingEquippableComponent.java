@@ -348,7 +348,11 @@ public class FlyingEquippableComponent {
         double rate = this.windUp / 2;
 
         if (livingEntity.age % (rate * 20) == 0) {
-            this.speed = MathHelper.clamp(this.speed + this.windUp, getGravity(livingEntity), this.maximumSpeed);
+            this.speed = MathHelper.clamp(
+                    this.speed + this.windUp,
+                    getMinimumSpeed(livingEntity),
+                    this.maximumSpeed
+            );
         }
     }
 
@@ -357,9 +361,13 @@ public class FlyingEquippableComponent {
 
         this.speed = MathHelper.clamp(
                 this.maximumSpeed * (speedBaseline - angleChange),
-                getGravity(livingEntity),
+                getMinimumSpeed(livingEntity),
                 this.maximumSpeed
         );
+    }
+
+    private double getMinimumSpeed(LivingEntity livingEntity) {
+        return getGravity(livingEntity) + this.windUp;
     }
 
     private static double getGravity(LivingEntity livingEntity) {

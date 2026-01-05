@@ -1,0 +1,44 @@
+{
+	"textures": {
+		"front": "copperworks:block/copper_sensor_front",
+		"back": "copperworks:block/copper_sensor_back",
+		"horizontal": "copperworks:block/copper_sensor_horizontal",
+		"vertical": "copperworks:block/copper_sensor_vertical",
+		"particle": "#back"
+	},
+	"elements": [
+		{
+			"name": "ceiling",
+			"from": [2, 12, 4],
+			"to": [14, 16, 12],
+			"faces": {
+				"north": {
+					"uv": [14, 6, 2, 10],
+					"rotation": 180,
+					"texture": "#vertical"
+				},
+				"east": {
+					"uv": [4, 6, 12, 10],
+					"rotation": 180,
+					"texture": "#horizontal"
+				},
+				"south": {
+					"uv": [14, 10, 2, 6],
+					"rotation": 180,
+					"texture": "#vertical"
+				},
+				"west": {
+					"uv": [4, 6, 12, 10],
+					"rotation": 180,
+					"texture": "#horizontal"
+				},
+				"up": {
+					"uv": [2, 4, 14, 12],
+					"texture": "#back",
+					"cullface": "down"
+				},
+				"down": { "uv": [2, 4, 14, 12], "texture": "#front" }
+			}
+		}
+	]
+}

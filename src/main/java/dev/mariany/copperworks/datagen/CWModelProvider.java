@@ -18,6 +18,8 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 
+import java.util.Map;
+
 public class CWModelProvider extends FabricModelProvider {
     public CWModelProvider(FabricDataOutput output) {
         super(output);
@@ -33,6 +35,8 @@ public class CWModelProvider extends FabricModelProvider {
         itemModelGenerator.register(CWItems.AMETHYST_PIECE, Models.GENERATED);
 
         itemModelGenerator.register(CWItems.PATINA, Models.GENERATED);
+
+        itemModelGenerator.register(CWBlocks.COPPER_SENSOR.asItem(), Models.GENERATED);
 
         itemModelGenerator.registerArmor(
                 CWItems.ROCKET_BOOTS,
@@ -67,6 +71,47 @@ public class CWModelProvider extends FabricModelProvider {
         registerBoundRelay(blockStateModelGenerator);
         registerPowered(blockStateModelGenerator, CWBlocks.RADIO_RELAY);
         registerPowered(blockStateModelGenerator, CWBlocks.ENDER_RELAY);
+
+        registerSensor(blockStateModelGenerator);
+    }
+
+    private static void registerSensor(BlockStateModelGenerator blockStateModelGenerator) {
+        Block sensorBlock = CWBlocks.COPPER_SENSOR;
+
+        WeightedVariant defaultVariant = BlockStateModelGenerator.createWeightedVariant(
+                ModelIds.getBlockModelId(sensorBlock)
+        );
+
+        WeightedVariant ceilingVariant = BlockStateModelGenerator.createWeightedVariant(
+                ModelIds.getBlockSubModelId(sensorBlock, "_ceiling")
+        );
+
+        WeightedVariant wallVariant = BlockStateModelGenerator.createWeightedVariant(
+                ModelIds.getBlockSubModelId(sensorBlock, "_wall")
+        );
+
+        Map<BlockFace, WeightedVariant> blockFaceMap = Map.of(
+                BlockFace.FLOOR, defaultVariant,
+                BlockFace.CEILING, ceilingVariant,
+                BlockFace.WALL, wallVariant
+        );
+
+        BlockStateVariantMap.DoubleProperty<WeightedVariant, BlockFace, Direction> variantMap = BlockStateVariantMap
+                .models(Properties.BLOCK_FACE, Properties.HORIZONTAL_FACING);
+
+        for (Map.Entry<BlockFace, WeightedVariant> entry : blockFaceMap.entrySet()) {
+            BlockFace blockFace = entry.getKey();
+            WeightedVariant variant = entry.getValue();
+
+            variantMap.register(blockFace, Direction.NORTH, variant);
+            variantMap.register(blockFace, Direction.EAST, variant.apply(BlockStateModelGenerator.ROTATE_Y_90));
+            variantMap.register(blockFace, Direction.SOUTH, variant.apply(BlockStateModelGenerator.ROTATE_Y_180));
+            variantMap.register(blockFace, Direction.WEST, variant.apply(BlockStateModelGenerator.ROTATE_Y_270));
+        }
+
+        blockStateModelGenerator.blockStateCollector.accept(
+                VariantsBlockModelDefinitionCreator.of(sensorBlock).with(variantMap)
+        );
     }
 
     private static void registerPowered(BlockStateModelGenerator blockStateModelGenerator, Block block) {

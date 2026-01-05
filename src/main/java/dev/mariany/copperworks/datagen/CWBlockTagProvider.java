@@ -26,9 +26,12 @@ public class CWBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 CWBlocks.COPPER_SCAFFOLDING,
                 CWBlocks.COPPER_BARREL,
                 CWBlocks.COPPER_CLOCK,
+                CWBlocks.BATTERY,
                 CWBlocks.RELAY,
                 CWBlocks.BOUND_RELAY,
-                CWBlocks.RADIO_RELAY
+                CWBlocks.RADIO_RELAY,
+                CWBlocks.ENDER_RELAY,
+                CWBlocks.COPPER_SENSOR
         );
 
         valueLookupBuilder(BlockTags.AXE_MINEABLE).add(CWBlocks.WOODEN_RAIL);
@@ -40,9 +43,12 @@ public class CWBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 CWBlocks.COPPER_SCAFFOLDING,
                 CWBlocks.COPPER_BARREL,
                 CWBlocks.COPPER_CLOCK,
+                CWBlocks.BATTERY,
                 CWBlocks.RELAY,
                 CWBlocks.BOUND_RELAY,
-                CWBlocks.RADIO_RELAY
+                CWBlocks.RADIO_RELAY,
+                CWBlocks.ENDER_RELAY,
+                CWBlocks.COPPER_SENSOR
         );
 
         valueLookupBuilder(BlockTags.RAILS).add(
