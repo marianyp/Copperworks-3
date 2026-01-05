@@ -131,10 +131,6 @@ public class FlyingEquippableComponent {
     }
 
     public static boolean shouldShowParticles(LivingEntity livingEntity) {
-        if (isHalting(livingEntity)) {
-            return false;
-        }
-
         boolean canFly = canFly(livingEntity);
 
         if (!canFly) {
@@ -142,7 +138,7 @@ public class FlyingEquippableComponent {
         }
 
         boolean flying = livingEntity instanceof PlayerEntity player && player.getAbilities().flying;
-        boolean gliding = livingEntity.isGliding();
+        boolean gliding = livingEntity.isGliding() && !isHalting(livingEntity);
         boolean savedFromFallDamage = wasSavedFromFallDamage(livingEntity);
 
         return flying || gliding || savedFromFallDamage;
