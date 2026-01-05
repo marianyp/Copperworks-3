@@ -220,6 +220,7 @@ public class CopperUpgradeItem extends Item {
         }
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected static BlockState copyProperties(
             BlockState originalState,
             BlockState sourceState,

@@ -28,5 +28,7 @@
   "subtitles.block.copperworks.clock.interact": "Clock modified",
   "subtitles.block.copperworks.copper_barrel.lid_moved": "Copper Barrel lid moved",
   "subtitles.item.copperworks.radio": "Radio used",
-  "subtitles.item.armor.equip.copperworks.rocket_boots": "Rocket boots clank"
+  "subtitles.item.armor.equip.copperworks.rocket_boots": "Rocket boots clank",
+  "gamerule.waterPotionsDegradeBlocks": "Water potions degrade blocks",
+  "gamerule.waterPotionsDegradeBlocks.description": "Splash potions of water degrade copper blocks"
 }

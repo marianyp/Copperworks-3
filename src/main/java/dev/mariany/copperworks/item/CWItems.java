@@ -82,7 +82,7 @@ public class CWItems {
     }
 
     public static void bootstrap() {
-        Copperworks.LOGGER.info("Registering Items for {}", Copperworks.MOD_ID);
+        Copperworks.bootstrapLog("Items");
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries -> {
             entries.addAfter(Items.IRON_INGOT, IRON_PLATE);

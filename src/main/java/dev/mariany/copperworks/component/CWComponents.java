@@ -37,6 +37,6 @@ public class CWComponents {
     }
 
     public static void bootstrap() {
-        Copperworks.LOGGER.info("Registering Components for {}", Copperworks.MOD_ID);
+        Copperworks.bootstrapLog("Components");
     }
 }

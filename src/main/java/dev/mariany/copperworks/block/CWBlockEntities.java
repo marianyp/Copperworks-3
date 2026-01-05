@@ -36,6 +36,6 @@ public class CWBlockEntities {
     }
 
     public static void bootstrap() {
-        Copperworks.LOGGER.info("Registering Block Entities for {}", Copperworks.MOD_ID);
+        Copperworks.bootstrapLog("Block Entities");
     }
 }

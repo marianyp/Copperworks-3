@@ -44,6 +44,6 @@ public class CWSoundEvents {
     }
 
     public static void bootstrap() {
-        Copperworks.LOGGER.info("Registering Sound Events for {}", Copperworks.MOD_ID);
+        Copperworks.bootstrapLog("Sound Events");
     }
 }

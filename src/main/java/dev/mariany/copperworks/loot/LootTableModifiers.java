@@ -35,10 +35,7 @@ public class LootTableModifiers {
                                                     ItemEntry.builder(CWItems.COPPER_UPGRADE_KIT)
                                                              .apply(
                                                                      SetDamageLootFunction.builder(
-                                                                             UniformLootNumberProvider.create(
-                                                                                     0.1F,
-                                                                                     1
-                                                                             )
+                                                                             UniformLootNumberProvider.create(0.1F, 1)
                                                                      )
                                                              )
                                             )

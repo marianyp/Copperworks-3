@@ -22,6 +22,6 @@ public class CWStats {
     }
 
     public static void bootstrap() {
-        Copperworks.LOGGER.info("Registering Stats for {}", Copperworks.MOD_ID);
+        Copperworks.bootstrapLog("Stats");
     }
 }

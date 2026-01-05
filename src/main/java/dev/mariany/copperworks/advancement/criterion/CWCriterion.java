@@ -22,6 +22,6 @@ public class CWCriterion {
     }
 
     public static void bootstrap() {
-        Copperworks.LOGGER.info("Registering Criteria for {}", Copperworks.MOD_ID);
+        Copperworks.bootstrapLog("Criteria");
     }
 }

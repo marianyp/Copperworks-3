@@ -137,7 +137,7 @@ public class CWBlocks {
     }
 
     public static void bootstrap() {
-        Copperworks.LOGGER.info("Registering Blocks for {}", Copperworks.MOD_ID);
+        Copperworks.bootstrapLog("Blocks");
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.REDSTONE).register(entries -> {
             entries.addBefore(Items.RAIL, WOODEN_RAIL);

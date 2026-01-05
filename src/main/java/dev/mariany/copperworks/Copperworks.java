@@ -4,9 +4,11 @@ import dev.mariany.copperworks.advancement.criterion.CWCriterion;
 import dev.mariany.copperworks.block.CWBlockEntities;
 import dev.mariany.copperworks.block.CWBlocks;
 import dev.mariany.copperworks.component.CWComponents;
+import dev.mariany.copperworks.degrade.PotionDegradationHandler;
 import dev.mariany.copperworks.event.entity.EntityEvents;
 import dev.mariany.copperworks.event.entity.MinecartEventHandler;
 import dev.mariany.copperworks.event.server.ServerTickEventsHandler;
+import dev.mariany.copperworks.gamerule.CWGamerules;
 import dev.mariany.copperworks.item.CWItems;
 import dev.mariany.copperworks.item.custom.copperupgrade.CopperUpgrade;
 import dev.mariany.copperworks.loot.LootTableModifiers;
@@ -31,6 +33,10 @@ public class Copperworks implements ModInitializer {
         return Identifier.of(Copperworks.MOD_ID, resource);
     }
 
+    public static void bootstrapLog(String type) {
+        Copperworks.LOGGER.info("Registering {} for {}", type, MOD_ID);
+    }
+
     @Override
     public void onInitialize() {
         DynamicRegistries.registerSynced(CWRegistryKeys.COPPER_UPGRADE, CopperUpgrade.CODEC);
@@ -38,6 +44,7 @@ public class Copperworks implements ModInitializer {
         CWPackets.bootstrap();
         ServerboundPackets.bootstrap();
 
+        CWGamerules.bootstrap();
         CWSoundEvents.bootstrap();
         CWCriterion.bootstrap();
         CWStats.bootstrap();
@@ -51,5 +58,6 @@ public class Copperworks implements ModInitializer {
 
         EntityEvents.BEFORE_MINECART_TRAVEL.register(MinecartEventHandler::onMinecartTravel);
         ServerTickEvents.END_WORLD_TICK.register(ServerTickEventsHandler::onWorldTick);
+        EntityEvents.BEFORE_POTION_COLLISION.register(PotionDegradationHandler::onPotionCollision);
     }
 }

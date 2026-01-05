@@ -29,9 +29,7 @@ public class CWTags {
     }
 
     public static final class Entities {
-        public static final TagKey<EntityType<?>> STICKY_IMMUNE = createTag(
-                "sticky_immune"
-        );
+        public static final TagKey<EntityType<?>> STICKY_IMMUNE = createTag("sticky_immune");
 
         private static TagKey<EntityType<?>> createTag(String name) {
             return TagKey.of(RegistryKeys.ENTITY_TYPE, Copperworks.id(name));

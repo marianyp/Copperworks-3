@@ -25,6 +25,6 @@ public class CWScreenHandlers {
     }
 
     public static void bootstrap() {
-        Copperworks.LOGGER.info("Registering Screen Handlers for {}", Copperworks.MOD_ID);
+        Copperworks.bootstrapLog("Screen Handlers");
     }
 }
