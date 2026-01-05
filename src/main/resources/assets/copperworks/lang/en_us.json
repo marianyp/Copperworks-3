@@ -7,7 +7,8 @@
   "block.copperworks.copper_lever": "Copper Lever",
   "block.copperworks.copper_rail": "Copper Rail",
   "block.copperworks.copper_scaffolding": "Copper Scaffolding",
-  "block.copperworks.radio_bound_relay": "Radio Bound Relay",
+  "block.copperworks.ender_relay": "Ender Relay",
+  "block.copperworks.radio_relay": "Radio Relay",
   "block.copperworks.relay": "Relay",
   "block.copperworks.sticky_copper": "Sticky Copper",
   "block.copperworks.sticky_copper_honey": "Sticky Copper",
@@ -30,6 +31,7 @@
   "subtitles.block.copperworks.bound_relay.insert": "Amethyst Piece inserted into Relay",
   "subtitles.block.copperworks.clock.interact": "Clock modified",
   "subtitles.block.copperworks.copper_barrel.lid_moved": "Copper Barrel lid moved",
+  "subtitles.block.copperworks.ender_relay.bind": "Ender Relay bound",
   "subtitles.item.armor.equip.copperworks.rocket_boots": "Rocket boots clank",
   "subtitles.item.copperworks.radio": "Radio used"
 }

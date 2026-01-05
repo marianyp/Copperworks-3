@@ -22,5 +22,6 @@ public class CWItemTagProviders extends FabricTagProvider.ItemTagProvider {
     protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
         valueLookupBuilder(ItemTags.FOOT_ARMOR).add(CWItems.ROCKET_BOOTS);
         valueLookupBuilder(CWTags.Items.REPAIRS_ROCKET_BOOTS).add(Items.BLAZE_POWDER);
+        valueLookupBuilder(CWTags.Items.BINDS_ENDER_RELAY).add(Items.ENDER_PEARL);
     }
 }

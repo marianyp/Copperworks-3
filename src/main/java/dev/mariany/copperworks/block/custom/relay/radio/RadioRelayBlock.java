@@ -1,8 +1,9 @@
-package dev.mariany.copperworks.block.custom.relay;
+package dev.mariany.copperworks.block.custom.relay.radio;
 
 import com.mojang.serialization.MapCodec;
 import dev.mariany.copperworks.block.CWBlockEntities;
 import dev.mariany.copperworks.block.CWBlocks;
+import dev.mariany.copperworks.block.custom.relay.HighlightedRelayBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
@@ -17,13 +18,13 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
-public class RadioBoundRelayBlock extends AbstractRelayBlock<RadioBoundRelayBlockEntity> {
-    public static final MapCodec<RadioBoundRelayBlock> CODEC = createCodec(RadioBoundRelayBlock::new);
+public class RadioRelayBlock extends HighlightedRelayBlock<RadioRelayBlockEntity> {
+    public static final MapCodec<RadioRelayBlock> CODEC = createCodec(RadioRelayBlock::new);
 
     public static final BooleanProperty POWERED = Properties.POWERED;
 
-    public RadioBoundRelayBlock(Settings settings) {
-        super(settings, () -> CWBlockEntities.RADIO_BOUND_RELAY);
+    public RadioRelayBlock(Settings settings) {
+        super(settings, () -> CWBlockEntities.RADIO_RELAY);
         this.setDefaultState(this.getDefaultState().with(POWERED, false));
     }
 
@@ -32,14 +33,14 @@ public class RadioBoundRelayBlock extends AbstractRelayBlock<RadioBoundRelayBloc
     }
 
     @Override
-    protected MapCodec<? extends RadioBoundRelayBlock> getCodec() {
+    protected MapCodec<? extends RadioRelayBlock> getCodec() {
         return CODEC;
     }
 
     @Override
     @Nullable
-    public RadioBoundRelayBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new RadioBoundRelayBlockEntity(pos, state);
+    public RadioRelayBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new RadioRelayBlockEntity(pos, state);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package dev.mariany.copperworks.degrade;
+package dev.mariany.copperworks.block;
 
 import dev.mariany.copperworks.gamerule.CWGamerules;
 import net.minecraft.block.BlockState;
@@ -14,7 +14,7 @@ import net.minecraft.util.math.Vec3d;
 
 import java.util.Optional;
 
-public interface PotionDegradationHandler {
+public interface PotionDegradation {
     static void onPotionCollision(
             ServerWorld world,
             Vec3d origin,

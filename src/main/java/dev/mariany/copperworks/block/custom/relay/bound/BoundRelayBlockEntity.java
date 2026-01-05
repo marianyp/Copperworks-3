@@ -1,9 +1,10 @@
-package dev.mariany.copperworks.block.custom.relay;
+package dev.mariany.copperworks.block.custom.relay.bound;
 
 import com.mojang.logging.LogUtils;
 import dev.mariany.copperworks.Copperworks;
 import dev.mariany.copperworks.block.CWBlockEntities;
 import dev.mariany.copperworks.block.CWBlocks;
+import dev.mariany.copperworks.block.custom.relay.HighlightedRelayBlockEntity;
 import dev.mariany.copperworks.sound.CWSoundEvents;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
@@ -27,7 +28,7 @@ import org.slf4j.Logger;
 
 import java.util.Optional;
 
-public class BoundRelayBlockEntity extends AbstractRelayBlockEntity {
+public class BoundRelayBlockEntity extends HighlightedRelayBlockEntity {
     private static final Logger LOGGER = LogUtils.getLogger();
     protected static final String BOUND_KEY = Copperworks.id("bound").toString();
 

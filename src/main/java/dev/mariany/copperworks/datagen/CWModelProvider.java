@@ -2,7 +2,6 @@ package dev.mariany.copperworks.datagen;
 
 import dev.mariany.copperworks.Copperworks;
 import dev.mariany.copperworks.block.CWBlocks;
-import dev.mariany.copperworks.block.custom.relay.RadioBoundRelayBlock;
 import dev.mariany.copperworks.client.render.item.property.bool.BoundProperty;
 import dev.mariany.copperworks.item.CWItems;
 import dev.mariany.copperworks.item.equipment.CWEquipmentAssetKeys;
@@ -66,27 +65,26 @@ public class CWModelProvider extends FabricModelProvider {
         registerBattery(blockStateModelGenerator);
 
         registerBoundRelay(blockStateModelGenerator);
-        registerRadioBoundRelay(blockStateModelGenerator);
+        registerPowered(blockStateModelGenerator, CWBlocks.RADIO_RELAY);
+        registerPowered(blockStateModelGenerator, CWBlocks.ENDER_RELAY);
     }
 
-    private static void registerRadioBoundRelay(BlockStateModelGenerator blockStateModelGenerator) {
-        Block radioBoundRelay = CWBlocks.RADIO_BOUND_RELAY;
-
+    private static void registerPowered(BlockStateModelGenerator blockStateModelGenerator, Block block) {
         WeightedVariant defaultVariant = BlockStateModelGenerator.createWeightedVariant(
-                TexturedModel.CUBE_ALL.upload(radioBoundRelay, blockStateModelGenerator.modelCollector)
+                TexturedModel.CUBE_ALL.upload(block, blockStateModelGenerator.modelCollector)
         );
 
         WeightedVariant onVariant = BlockStateModelGenerator.createWeightedVariant(
-                blockStateModelGenerator.createSubModel(radioBoundRelay, "_on", Models.CUBE_ALL, TextureMap::all)
+                blockStateModelGenerator.createSubModel(block, "_on", Models.CUBE_ALL, TextureMap::all)
         );
 
         blockStateModelGenerator.blockStateCollector
                 .accept(
                         VariantsBlockModelDefinitionCreator
-                                .of(radioBoundRelay)
+                                .of(block)
                                 .with(
                                         BlockStateModelGenerator.createBooleanModelMap(
-                                                RadioBoundRelayBlock.POWERED,
+                                                Properties.POWERED,
                                                 onVariant,
                                                 defaultVariant
                                         )

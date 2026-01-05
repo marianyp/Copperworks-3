@@ -3,6 +3,6 @@ dea398f27fba8e2cbcbb39bb07e69a9d1b1f61e0 data/copperworks/tags/block/extends_bat
 ed669b33bf8da0d4d006567681adc9ba3794c9ad data/copperworks/tags/block/extends_battery_pulse_same_axis.json
 acfb35dc512c1b2e7bbc16016fbc8ee62d9ebb91 data/copperworks/tags/block/sticky.json
 35e634887d3e279af5e5b4301e39aed1e23d0589 data/minecraft/tags/block/mineable/axe.json
-712e6744d029be29440e6e3c015aebf75c536067 data/minecraft/tags/block/mineable/pickaxe.json
-712e6744d029be29440e6e3c015aebf75c536067 data/minecraft/tags/block/needs_stone_tool.json
+7a698c01668b6a9932ce12d85319489cbb51ab2c data/minecraft/tags/block/mineable/pickaxe.json
+7a698c01668b6a9932ce12d85319489cbb51ab2c data/minecraft/tags/block/needs_stone_tool.json
 c5bc897289c41ba5ed0fbf8b706ef47e0f93f38b data/minecraft/tags/block/rails.json

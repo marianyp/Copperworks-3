@@ -177,5 +177,25 @@
         "volume": 0.8
       }
     ]
+  },
+  "block.ender_relay.bind": {
+    "subtitle": "subtitles.block.copperworks.ender_relay.bind",
+    "sounds": [
+      {
+        "name": "block/end_portal/eyeplace1",
+        "pitch": 2,
+        "volume": 0.3
+      },
+      {
+        "name": "block/end_portal/eyeplace2",
+        "pitch": 2,
+        "volume": 0.3
+      },
+      {
+        "name": "block/end_portal/eyeplace3",
+        "pitch": 2,
+        "volume": 0.3
+      }
+    ]
   }
 }

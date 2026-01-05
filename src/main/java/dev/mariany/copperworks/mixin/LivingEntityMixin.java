@@ -2,7 +2,7 @@ package dev.mariany.copperworks.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import dev.mariany.copperworks.block.StickyLogic;
+import dev.mariany.copperworks.block.StickyHelper;
 import dev.mariany.copperworks.component.CWComponents;
 import dev.mariany.copperworks.component.FlyingEquippableComponent;
 import net.minecraft.entity.EquipmentSlot;
@@ -22,7 +22,7 @@ public class LivingEntityMixin {
     protected void injectIsImmobile(CallbackInfoReturnable<Boolean> cir) {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
 
-        if (livingEntity instanceof PlayerEntity && StickyLogic.isStuck(livingEntity)) {
+        if (livingEntity instanceof PlayerEntity && StickyHelper.isStuck(livingEntity)) {
             cir.setReturnValue(true);
         }
     }

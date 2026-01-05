@@ -8,11 +8,11 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public abstract class AbstractRelayBlockEntity extends BlockEntity {
+public abstract class HighlightedRelayBlockEntity extends BlockEntity {
     protected final Animator animator = new Animator();
     protected final Vec3d color;
 
-    public AbstractRelayBlockEntity(
+    public HighlightedRelayBlockEntity(
             BlockEntityType<?> type,
             BlockPos pos,
             BlockState state,
@@ -22,7 +22,12 @@ public abstract class AbstractRelayBlockEntity extends BlockEntity {
         this.color = color;
     }
 
-    public static void clientTick(World world, BlockPos pos, BlockState state, AbstractRelayBlockEntity blockEntity) {
+    public static void clientTick(
+            World world,
+            BlockPos pos,
+            BlockState state,
+            HighlightedRelayBlockEntity blockEntity
+    ) {
         blockEntity.animator.step();
     }
 

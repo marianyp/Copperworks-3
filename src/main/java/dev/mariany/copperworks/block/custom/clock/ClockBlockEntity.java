@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 public class ClockBlockEntity extends BlockEntity {
     protected final static int SECOND_IN_TICKS = 20;
 
-    protected int target = ClockState.DEFAULT.target();
+    protected int target = ClockData.DEFAULT.target();
     protected int progress;
     protected int poweredTicks;
 
@@ -149,14 +149,14 @@ public class ClockBlockEntity extends BlockEntity {
     protected void writeData(WriteView view) {
         super.writeData(view);
 
-        view.put(ClockState.KEY, ClockState.CODEC, new ClockState(this.target, this.progress));
+        view.put(ClockData.KEY, ClockData.CODEC, new ClockData(this.target, this.progress));
     }
 
     @Override
     protected void readData(ReadView view) {
         super.readData(view);
 
-        ClockState state = view.read(ClockState.KEY, ClockState.CODEC).orElse(ClockState.DEFAULT);
+        ClockData state = view.read(ClockData.KEY, ClockData.CODEC).orElse(ClockData.DEFAULT);
 
         this.target = state.target();
         this.progress = state.progress();

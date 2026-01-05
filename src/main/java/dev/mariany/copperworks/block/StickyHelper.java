@@ -12,7 +12,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.entry.RegistryEntry;
 
-public interface StickyLogic {
+public interface StickyHelper {
     static boolean isStuck(Entity entity) {
         if (entity.getType().isIn(CWTags.Entities.STICKY_IMMUNE)) {
             return false;

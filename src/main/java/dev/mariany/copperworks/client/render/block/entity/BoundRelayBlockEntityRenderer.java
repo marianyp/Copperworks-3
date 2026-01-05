@@ -1,6 +1,6 @@
 package dev.mariany.copperworks.client.render.block.entity;
 
-import dev.mariany.copperworks.block.custom.relay.BoundRelayBlockEntity;
+import dev.mariany.copperworks.block.custom.relay.bound.BoundRelayBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;

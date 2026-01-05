@@ -12,7 +12,9 @@
     "LivingEntityMixin",
     "PlayerEntityMixin",
     "PotionEntityMixin",
+    "PrepareSpawnTaskMixin",
     "ScreenHandlerMixin",
+    "ServerPlayerEntityMixin",
     "ServerPlayerInteractionManagerMixin"
   ],
   "injectors": {

@@ -2,9 +2,12 @@ package dev.mariany.copperworks.block.custom.relay;
 
 import dev.mariany.copperworks.advancement.criterion.CWCriterion;
 import dev.mariany.copperworks.block.CWBlocks;
+import dev.mariany.copperworks.block.custom.relay.bound.BoundRelayBlockEntity;
+import dev.mariany.copperworks.block.custom.relay.ender.EnderRelayBlock;
 import dev.mariany.copperworks.component.CWComponents;
 import dev.mariany.copperworks.item.CWItems;
 import dev.mariany.copperworks.sound.CWSoundEvents;
+import dev.mariany.copperworks.tag.CWTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -57,19 +60,25 @@ public class RelayBlock extends Block {
                 stack.decrement(1);
 
                 playInsertSound(world, pos, true);
+            } else if (stack.isIn(CWTags.Items.BINDS_ENDER_RELAY)) {
+                EnderRelayBlock.completeBinding(serverPlayer.getEntityWorld(), pos, player, stack);
+            } else {
+                return ActionResult.FAIL;
             }
+
+            return ActionResult.SUCCESS_SERVER;
         }
 
-        return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
+        return ActionResult.CONSUME;
     }
 
-    protected ItemStack initiateBinding(World world, BlockPos pos) {
+    protected static ItemStack initiateBinding(World world, BlockPos pos) {
         ItemStack stack = CWItems.AMETHYST_PIECE.getDefaultStack();
         stack.set(CWComponents.RELAY_POSITION, GlobalPos.create(world.getRegistryKey(), pos));
         return stack;
     }
 
-    protected boolean completeBinding(ServerPlayerEntity player, ItemStack stack, GlobalPos globalPos) {
+    protected static boolean completeBinding(ServerPlayerEntity player, ItemStack stack, GlobalPos globalPos) {
         ServerWorld world = player.getEntityWorld();
         MinecraftServer server = world.getServer();
 
@@ -101,7 +110,7 @@ public class RelayBlock extends Block {
         return false;
     }
 
-    protected void createBoundRelay(ServerWorld world, BlockPos pos, GlobalPos boundPos) {
+    protected static void createBoundRelay(ServerWorld world, BlockPos pos, GlobalPos boundPos) {
         world.setBlockState(pos, CWBlocks.BOUND_RELAY.getDefaultState(), Block.NOTIFY_LISTENERS);
 
         if (world.getBlockEntity(pos) instanceof BoundRelayBlockEntity boundRelayBlockEntity) {
@@ -109,7 +118,7 @@ public class RelayBlock extends Block {
         }
     }
 
-    protected void playInsertSound(World world, BlockPos pos, boolean completed) {
+    protected static void playInsertSound(World world, BlockPos pos, boolean completed) {
         world.playSound(
                 null,
                 pos,

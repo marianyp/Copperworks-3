@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "copperworks:block/radio_relay"
+    },
+    "powered=true": {
+      "model": "copperworks:block/radio_relay_on"
+    }
+  }
+}

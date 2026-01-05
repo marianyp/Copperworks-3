@@ -6,8 +6,9 @@ import dev.mariany.copperworks.block.custom.BatteryBlock;
 import dev.mariany.copperworks.block.custom.TimedLeverBlock;
 import dev.mariany.copperworks.block.custom.barrel.CopperBarrelBlock;
 import dev.mariany.copperworks.block.custom.clock.CopperClockBlock;
-import dev.mariany.copperworks.block.custom.relay.BoundRelayBlock;
-import dev.mariany.copperworks.block.custom.relay.RadioBoundRelayBlock;
+import dev.mariany.copperworks.block.custom.relay.bound.BoundRelayBlock;
+import dev.mariany.copperworks.block.custom.relay.ender.EnderRelayBlock;
+import dev.mariany.copperworks.block.custom.relay.radio.RadioRelayBlock;
 import dev.mariany.copperworks.block.custom.relay.RelayBlock;
 import dev.mariany.copperworks.item.custom.AlternativeScaffoldingBlockItem;
 import dev.mariany.copperworks.sound.CWSoundEvents;
@@ -98,10 +99,16 @@ public class CWBlocks {
             AbstractBlock.Settings.copy(RELAY)
     );
 
-    public static final Block RADIO_BOUND_RELAY = register(
-            "radio_bound_relay",
-            RadioBoundRelayBlock::new,
-            AbstractBlock.Settings.copy(RELAY).pistonBehavior(PistonBehavior.BLOCK)
+    public static final Block RADIO_RELAY = register(
+            "radio_relay",
+            RadioRelayBlock::new,
+            AbstractBlock.Settings.copy(RELAY)
+    );
+
+    public static final Block ENDER_RELAY = register(
+            "ender_relay",
+            EnderRelayBlock::new,
+            AbstractBlock.Settings.copy(RELAY)
     );
 
     private static AbstractBlock.Settings genericCopperSettings() {

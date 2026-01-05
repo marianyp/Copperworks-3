@@ -49,6 +49,6 @@ public class CopperworksClient implements ClientModInitializer {
 
     private void registerBlockEntityRenderers() {
         BlockEntityRendererFactories.register(CWBlockEntities.BOUND_RELAY, BoundRelayBlockEntityRenderer::new);
-        BlockEntityRendererFactories.register(CWBlockEntities.RADIO_BOUND_RELAY, RelayBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(CWBlockEntities.RADIO_RELAY, RelayBlockEntityRenderer::new);
     }
 }

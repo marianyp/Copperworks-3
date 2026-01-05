@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "copperworks:block/ender_relay"
+    },
+    "powered=true": {
+      "model": "copperworks:block/ender_relay_on"
+    }
+  }
+}

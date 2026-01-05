@@ -1,8 +1,9 @@
-package dev.mariany.copperworks.block.custom.relay;
+package dev.mariany.copperworks.block.custom.relay.bound;
 
 import com.mojang.serialization.MapCodec;
 import dev.mariany.copperworks.block.CWBlockEntities;
 import dev.mariany.copperworks.block.CWBlocks;
+import dev.mariany.copperworks.block.custom.relay.HighlightedRelayBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,12 +20,11 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.GlobalPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import net.minecraft.world.block.WireOrientation;
 import org.jetbrains.annotations.Nullable;
 
-public class BoundRelayBlock extends AbstractRelayBlock<BoundRelayBlockEntity> {
+public class BoundRelayBlock extends HighlightedRelayBlock<BoundRelayBlockEntity> {
     public static final MapCodec<BoundRelayBlock> CODEC = createCodec(BoundRelayBlock::new);
 
     public static final IntProperty POWER = Properties.POWER;
@@ -63,11 +63,6 @@ public class BoundRelayBlock extends AbstractRelayBlock<BoundRelayBlockEntity> {
     @Override
     protected int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
         return state.get(POWER);
-    }
-
-    @Override
-    public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
-        super.onBroken(world, pos, state);
     }
 
     @Override

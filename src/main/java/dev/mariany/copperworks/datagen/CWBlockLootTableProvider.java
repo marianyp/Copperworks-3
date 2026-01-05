@@ -19,12 +19,18 @@ public class CWBlockLootTableProvider extends FabricBlockLootTableProvider {
     public void generate() {
         addDrop(CWBlocks.WOODEN_RAIL);
         addDrop(CWBlocks.COPPER_RAIL);
+
         addDrop(CWBlocks.COPPER_LEVER);
+
         addDrop(CWBlocks.COPPER_SCAFFOLDING);
+
         addDrop(CWBlocks.COPPER_BARREL, this::nameableContainerDrops);
+
         addDrop(CWBlocks.COPPER_CLOCK);
+
         addDrop(CWBlocks.RELAY);
         addDrop(CWBlocks.BOUND_RELAY, CWBlocks.RELAY);
-        addDrop(CWBlocks.RADIO_BOUND_RELAY, CWBlocks.RELAY);
+        addDrop(CWBlocks.RADIO_RELAY, CWBlocks.RELAY);
+        addDrop(CWBlocks.ENDER_RELAY, CWBlocks.RELAY);
     }
 }

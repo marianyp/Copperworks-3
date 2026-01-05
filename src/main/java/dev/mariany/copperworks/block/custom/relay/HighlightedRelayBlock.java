@@ -12,19 +12,19 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
-public abstract class AbstractRelayBlock<E extends AbstractRelayBlockEntity> extends BlockWithEntity {
+public abstract class HighlightedRelayBlock<E extends HighlightedRelayBlockEntity> extends BlockWithEntity {
     private final Supplier<BlockEntityType<? extends E>> entityTypeRetriever;
 
-    protected AbstractRelayBlock(Settings settings, Supplier<BlockEntityType<? extends E>> entityTypeRetriever) {
+    protected HighlightedRelayBlock(Settings settings, Supplier<BlockEntityType<? extends E>> entityTypeRetriever) {
         super(settings);
         this.entityTypeRetriever = entityTypeRetriever;
     }
 
     @Override
-    protected abstract MapCodec<? extends AbstractRelayBlock<E>> getCodec();
+    protected abstract MapCodec<? extends HighlightedRelayBlock<E>> getCodec();
 
     @Override
-    public abstract AbstractRelayBlockEntity createBlockEntity(BlockPos pos, BlockState state);
+    public abstract HighlightedRelayBlockEntity createBlockEntity(BlockPos pos, BlockState state);
 
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(
@@ -33,11 +33,11 @@ public abstract class AbstractRelayBlock<E extends AbstractRelayBlockEntity> ext
             BlockEntityType<T> type
     ) {
         return world.isClient() ?
-                validateTicker(type, this.getExpectedEntityType(), AbstractRelayBlockEntity::clientTick) :
+                validateTicker(type, this.getExpectedEntityType(), HighlightedRelayBlockEntity::clientTick) :
                 null;
     }
 
-    private BlockEntityType<? extends AbstractRelayBlockEntity> getExpectedEntityType() {
+    private BlockEntityType<? extends HighlightedRelayBlockEntity> getExpectedEntityType() {
         return this.entityTypeRetriever.get();
     }
 }

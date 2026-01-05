@@ -10,6 +10,7 @@ import net.minecraft.registry.tag.TagKey;
 public class CWTags {
     public static final class Items {
         public static final TagKey<Item> REPAIRS_ROCKET_BOOTS = createTag("repairs_rocket_boots");
+        public static final TagKey<Item> BINDS_ENDER_RELAY = createTag("binds_ender_relay");
 
         private static TagKey<Item> createTag(String name) {
             return TagKey.of(RegistryKeys.ITEM, Copperworks.id(name));

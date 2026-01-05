@@ -28,7 +28,7 @@ public class CWBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 CWBlocks.COPPER_CLOCK,
                 CWBlocks.RELAY,
                 CWBlocks.BOUND_RELAY,
-                CWBlocks.RADIO_BOUND_RELAY
+                CWBlocks.RADIO_RELAY
         );
 
         valueLookupBuilder(BlockTags.AXE_MINEABLE).add(CWBlocks.WOODEN_RAIL);
@@ -42,7 +42,7 @@ public class CWBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 CWBlocks.COPPER_CLOCK,
                 CWBlocks.RELAY,
                 CWBlocks.BOUND_RELAY,
-                CWBlocks.RADIO_BOUND_RELAY
+                CWBlocks.RADIO_RELAY
         );
 
         valueLookupBuilder(BlockTags.RAILS).add(

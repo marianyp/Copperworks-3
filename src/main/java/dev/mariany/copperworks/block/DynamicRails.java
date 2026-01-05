@@ -1,6 +1,5 @@
-package dev.mariany.copperworks.event.entity;
+package dev.mariany.copperworks.block;
 
-import dev.mariany.copperworks.block.CWBlocks;
 import dev.mariany.copperworks.sound.CWSoundEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -18,34 +17,32 @@ import net.minecraft.world.World;
 
 import java.util.Map;
 
-public class MinecartEventHandler {
-    private static final Map<Block, FastRailProperties> FAST_RAILS = Map.of(
-            CWBlocks.WOODEN_RAIL, new FastRailProperties(0.3F, 0.3F),
-            CWBlocks.COPPER_RAIL, new FastRailProperties(0.4F, 0.1F)
+public interface DynamicRails {
+    Map<Block, RailProperties> MOMENTUM_RAILS = Map.of(
+            CWBlocks.WOODEN_RAIL, new RailProperties(0.3F, 0.3F),
+            CWBlocks.COPPER_RAIL, new RailProperties(0.4F, 0.1F)
     );
 
-    private static final Map<Block, Float> FRAGILE_RAILS = Map.of(
-            CWBlocks.WOODEN_RAIL, 0.03F
-    );
+    Map<Block, Float> FRAGILE_RAILS = Map.of(CWBlocks.WOODEN_RAIL, 0.03F);
 
-    public static void onMinecartTravel(AbstractMinecartEntity abstractMinecart) {
+    static void onMinecartTravel(AbstractMinecartEntity abstractMinecart) {
         if (!abstractMinecart.getEntityWorld().isClient()) {
             BlockPos previousPosition = abstractMinecart.getBlockPos();
 
-            handleFastRails(abstractMinecart);
+            handleMomentumRails(abstractMinecart);
             handleFragileRails(abstractMinecart, previousPosition);
         }
     }
 
-    private static void handleFastRails(AbstractMinecartEntity abstractMinecart) {
+    private static void handleMomentumRails(AbstractMinecartEntity abstractMinecart) {
         World world = abstractMinecart.getEntityWorld();
         BlockPos railPos = abstractMinecart.getBlockPos();
         BlockState railBlockState = world.getBlockState(railPos);
         Block railBlock = railBlockState.getBlock();
         Entity passenger = abstractMinecart.getFirstPassenger();
-        FastRailProperties fastRailProperties = FAST_RAILS.get(railBlock);
+        RailProperties railProperties = MOMENTUM_RAILS.get(railBlock);
 
-        if (fastRailProperties != null && passenger != null && !isCurvedRail(railBlockState)) {
+        if (railProperties != null && passenger != null && !isCurvedRail(railBlockState)) {
             boolean shouldMove;
 
             if (passenger instanceof PlayerEntity player) {
@@ -53,14 +50,14 @@ public class MinecartEventHandler {
                 shouldMove = hungerManager.getFoodLevel() > 6;
 
                 if (shouldMove && player.age % 10 == 0) {
-                    hungerManager.addExhaustion(fastRailProperties.exhaustion);
+                    hungerManager.addExhaustion(railProperties.exhaustion);
                 }
             } else {
                 shouldMove = false;
             }
 
             if (shouldMove) {
-                moveMinecart(abstractMinecart, fastRailProperties.additionalSpeed);
+                moveMinecart(abstractMinecart, railProperties.additionalSpeed);
             }
         }
     }
@@ -112,6 +109,6 @@ public class MinecartEventHandler {
         world.breakBlock(blockPos, false);
     }
 
-    record FastRailProperties(float additionalSpeed, float exhaustion) {
+    record RailProperties(float additionalSpeed, float exhaustion) {
     }
 }

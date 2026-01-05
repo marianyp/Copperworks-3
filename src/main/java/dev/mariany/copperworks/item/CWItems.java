@@ -96,8 +96,14 @@ public class CWItems {
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {
             entries.addBefore(Items.NAME_TAG, COPPER_UPGRADE_KIT);
+
             entries.addBefore(Items.COMPASS, RADIO);
+
+            entries.addAfter(Items.ELYTRA, ROCKET_BOOTS);
         });
+
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.REDSTONE)
+                       .register(entries -> entries.addBefore(Items.LEVER, RADIO));
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT)
                        .register(entries -> entries.addAfter(Items.NETHERITE_BOOTS, ROCKET_BOOTS));

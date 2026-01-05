@@ -1,6 +1,6 @@
 package dev.mariany.copperworks.client.radio;
 
-import dev.mariany.copperworks.block.custom.relay.RadioBoundRelayBlockEntity;
+import dev.mariany.copperworks.block.custom.relay.radio.RadioRelayBlockEntity;
 import dev.mariany.copperworks.component.CWComponents;
 import dev.mariany.copperworks.item.custom.radio.RadioItem;
 import net.fabricmc.api.EnvType;
@@ -39,8 +39,8 @@ public class RadioHandler {
 
                 if (newRadio) {
                     for (BlockPos pos : this.radioMapping.values()) {
-                        if (world.getBlockEntity(pos) instanceof RadioBoundRelayBlockEntity radioBoundRelayBlock) {
-                            radioBoundRelayBlock.focus(true);
+                        if (world.getBlockEntity(pos) instanceof RadioRelayBlockEntity radioRelayBlockEntity) {
+                            radioRelayBlockEntity.focus(true);
                         }
                     }
                 }
@@ -53,8 +53,8 @@ public class RadioHandler {
                 BlockPos pos = entry.getValue();
 
                 if (!this.radioMapping.containsKey(hand) || !this.radioMapping.get(hand).equals(pos)) {
-                    if (world.getBlockEntity(pos) instanceof RadioBoundRelayBlockEntity radioBoundRelayBlock) {
-                        radioBoundRelayBlock.focus(false);
+                    if (world.getBlockEntity(pos) instanceof RadioRelayBlockEntity radioRelayBlockEntity) {
+                        radioRelayBlockEntity.focus(false);
                     }
                 }
             }

@@ -1,7 +1,7 @@
 package dev.mariany.copperworks.item.custom.radio;
 
 import dev.mariany.copperworks.block.CWBlocks;
-import dev.mariany.copperworks.block.custom.relay.RadioBoundRelayBlock;
+import dev.mariany.copperworks.block.custom.relay.radio.RadioRelayBlock;
 import dev.mariany.copperworks.block.custom.relay.RelayBlock;
 import dev.mariany.copperworks.component.CWComponents;
 import dev.mariany.copperworks.sound.CWSoundEvents;
@@ -38,9 +38,9 @@ public class RadioItem extends Item {
         ItemStack stack = context.getStack();
         Block block = world.getBlockState(pos).getBlock();
 
-        if (block instanceof RelayBlock || block instanceof RadioBoundRelayBlock) {
+        if (block instanceof RelayBlock || block instanceof RadioRelayBlock) {
             stack.set(CWComponents.RELAY_POSITION, new GlobalPos(world.getRegistryKey(), pos));
-            world.setBlockState(pos, CWBlocks.RADIO_BOUND_RELAY.getDefaultState());
+            world.setBlockState(pos, CWBlocks.RADIO_RELAY.getDefaultState());
             return ActionResult.SUCCESS;
         }
 
@@ -92,20 +92,20 @@ public class RadioItem extends Item {
             if (otherWorld.isTickingFutureReady(otherChunkPos.toLong())) {
                 BlockState state = otherWorld.getBlockState(otherPos);
 
-                if (state.getBlock() instanceof RadioBoundRelayBlock radioBoundRelayBlock) {
-                    if (state.get(RadioBoundRelayBlock.POWERED, false)) {
+                if (state.getBlock() instanceof RadioRelayBlock radioRelayBlock) {
+                    if (state.get(RadioRelayBlock.POWERED, false)) {
                         return RadioState.BUSY;
                     }
 
                     otherWorld.setBlockState(
                             otherPos,
-                            state.withIfExists(RadioBoundRelayBlock.POWERED, true)
+                            state.withIfExists(RadioRelayBlock.POWERED, true)
                     );
 
                     otherWorld.scheduleBlockTick(
                             otherPos,
-                            radioBoundRelayBlock,
-                            radioBoundRelayBlock.getPulseDuration()
+                            radioRelayBlock,
+                            radioRelayBlock.getPulseDuration()
                     );
 
                     return RadioState.AVAILABLE;

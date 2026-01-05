@@ -1,6 +1,6 @@
 package dev.mariany.copperworks.client.render.block.entity;
 
-import dev.mariany.copperworks.block.custom.relay.AbstractRelayBlockEntity;
+import dev.mariany.copperworks.block.custom.relay.HighlightedRelayBlockEntity;
 import dev.mariany.copperworks.client.render.CWRenderLayers;
 import dev.mariany.copperworks.client.render.block.entity.state.RelayBlockEntityRenderState;
 import net.fabricmc.api.EnvType;
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
-public class RelayBlockEntityRenderer<T extends AbstractRelayBlockEntity>
+public class RelayBlockEntityRenderer<T extends HighlightedRelayBlockEntity>
         implements BlockEntityRenderer<T, RelayBlockEntityRenderState> {
     public RelayBlockEntityRenderer(BlockEntityRendererFactory.Context context) {
     }

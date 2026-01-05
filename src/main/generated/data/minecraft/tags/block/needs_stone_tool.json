@@ -8,6 +8,6 @@
     "copperworks:copper_clock",
     "copperworks:relay",
     "copperworks:bound_relay",
-    "copperworks:radio_bound_relay"
+    "copperworks:radio_relay"
   ]
 }

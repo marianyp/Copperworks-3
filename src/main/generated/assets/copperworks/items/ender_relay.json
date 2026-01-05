@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "copperworks:block/radio_bound_relay"
+    "model": "copperworks:block/ender_relay"
   }
 }
