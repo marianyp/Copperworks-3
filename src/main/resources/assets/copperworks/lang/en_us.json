@@ -10,6 +10,8 @@
   "block.copperworks.copper_sensor": "Copper Sensor",
   "block.copperworks.ender_relay": "Ender Relay",
   "block.copperworks.muffler": "Muffler",
+  "block.copperworks.muffler.enter": "(🎵) Entering muffled area",
+  "block.copperworks.muffler.exit": "(🎵) Leaving muffled area",
   "block.copperworks.radio_relay": "Radio Relay",
   "block.copperworks.relay": "Relay",
   "block.copperworks.sticky_copper": "Sticky Copper",

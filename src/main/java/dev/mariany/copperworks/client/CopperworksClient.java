@@ -3,6 +3,7 @@ package dev.mariany.copperworks.client;
 import dev.mariany.copperworks.block.CWBlockEntities;
 import dev.mariany.copperworks.block.CWBlocks;
 import dev.mariany.copperworks.client.gui.screen.ingame.InventoryNetworkScreen;
+import dev.mariany.copperworks.client.muffler.MuffledNotifier;
 import dev.mariany.copperworks.client.muffler.MufflerHandler;
 import dev.mariany.copperworks.client.render.block.entity.BoundRelayBlockEntityRenderer;
 import dev.mariany.copperworks.client.render.block.entity.HighlightedBlockEntityRenderer;
@@ -32,6 +33,7 @@ public class CopperworksClient implements ClientModInitializer {
         registerBlockEntityRenderers();
 
         ClientTickEvents.END_CLIENT_TICK.register(RadioHandler::onTick);
+        ClientTickEvents.END_CLIENT_TICK.register(MuffledNotifier::onTick);
 
         ClientChunkEvents.CHUNK_LOAD.register(MufflerHandler::onChunkLoad);
         ClientChunkEvents.CHUNK_UNLOAD.register(MufflerHandler::onChunkUnload);

@@ -11,9 +11,13 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.chunk.WorldChunk;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public interface MufflerHandler {
@@ -37,23 +41,31 @@ public interface MufflerHandler {
 
     static boolean shouldMuffle(Vec3d soundPos) {
         BlockPos pos = BlockPos.ofFloored(soundPos);
-        return isMufflerNearby(pos, pos) || isMufflerNearPlayer(pos);
-    }
-
-    static boolean isMufflerNearPlayer(BlockPos soundPos) {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
 
         if (player != null) {
+            if (isMufflerNearPlayer(player, pos)) {
+                return true;
+            }
+        }
+
+        return isMufflerNearby(pos, pos);
+    }
+
+    static boolean isMufflerNearPlayer(PlayerEntity player, @Nullable BlockPos ignorePos) {
+        if (player != null) {
             BlockPos playerPos = player.getBlockPos();
-            return isMufflerNearby(playerPos, soundPos);
+            return isMufflerNearby(playerPos, ignorePos);
         }
 
         return false;
     }
 
-    static boolean isMufflerNearby(BlockPos pos, BlockPos ignorePos) {
-        for (MuffledArea muffledArea : MufflerStorage.getMuffledAreas()) {
+    static boolean isMufflerNearby(BlockPos pos, @Nullable BlockPos ignorePos) {
+        List<MuffledArea> muffledAreas = MufflerStorage.getMuffledAreas();
+
+        for (MuffledArea muffledArea : muffledAreas) {
             int range = muffledArea.range();
             BlockPos mufflerPos = muffledArea.pos();
 
