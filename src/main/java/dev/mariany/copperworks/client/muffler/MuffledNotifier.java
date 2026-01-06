@@ -25,6 +25,5 @@ public class MuffledNotifier {
             player.sendMessage(text, true);
             IN_MUFFLED_AREA = muffled;
         }
-
     }
 }
