@@ -39,5 +39,7 @@ public class CWBlockLootTableProvider extends FabricBlockLootTableProvider {
         addDrop(CWBlocks.ENDER_RELAY, CWBlocks.RELAY);
 
         addDrop(CWBlocks.COPPER_SENSOR);
+
+        addDrop(CWBlocks.MUFFLER);
     }
 }

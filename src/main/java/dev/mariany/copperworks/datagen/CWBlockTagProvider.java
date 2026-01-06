@@ -31,7 +31,8 @@ public class CWBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 CWBlocks.BOUND_RELAY,
                 CWBlocks.RADIO_RELAY,
                 CWBlocks.ENDER_RELAY,
-                CWBlocks.COPPER_SENSOR
+                CWBlocks.COPPER_SENSOR,
+                CWBlocks.MUFFLER
         );
 
         valueLookupBuilder(BlockTags.AXE_MINEABLE).add(CWBlocks.WOODEN_RAIL);
@@ -48,7 +49,8 @@ public class CWBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 CWBlocks.BOUND_RELAY,
                 CWBlocks.RADIO_RELAY,
                 CWBlocks.ENDER_RELAY,
-                CWBlocks.COPPER_SENSOR
+                CWBlocks.COPPER_SENSOR,
+                CWBlocks.MUFFLER
         );
 
         valueLookupBuilder(BlockTags.RAILS).add(

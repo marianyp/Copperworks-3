@@ -19,6 +19,7 @@ import dev.mariany.copperworks.screen.CWScreenHandlers;
 import dev.mariany.copperworks.server.world.CWChunkTickets;
 import dev.mariany.copperworks.sound.CWSoundEvents;
 import dev.mariany.copperworks.stat.CWStats;
+import dev.mariany.copperworks.world.poi.CWPointOfInterestTypes;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
@@ -58,6 +59,7 @@ public class Copperworks implements ModInitializer {
         CWItems.bootstrap();
         CWBlocks.bootstrap();
         CWBlockEntities.bootstrap();
+        CWPointOfInterestTypes.bootstrap();
 
         LootTableModifiers.modifyLootTables();
 

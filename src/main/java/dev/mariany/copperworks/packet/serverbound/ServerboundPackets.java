@@ -9,5 +9,6 @@ public class ServerboundPackets {
         ServerPlayNetworking.registerGlobalReceiver(UpdateSearchEntriesPacket.ID, UpdateSearchEntriesPacket::apply);
         ServerPlayNetworking.registerGlobalReceiver(UpdateSearchQueryPacket.ID, UpdateSearchQueryPacket::apply);
         ServerPlayNetworking.registerGlobalReceiver(QuickMoveAllPacket.ID, QuickMoveAllPacket::apply);
+        ServerPlayNetworking.registerGlobalReceiver(RequestMufflersPacket.ID, RequestMufflersPacket::apply);
     }
 }

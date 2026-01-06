@@ -3,7 +3,7 @@ package dev.mariany.copperworks.client;
 import dev.mariany.copperworks.block.CWBlockEntities;
 import dev.mariany.copperworks.block.CWBlocks;
 import dev.mariany.copperworks.client.gui.screen.ingame.InventoryNetworkScreen;
-import dev.mariany.copperworks.client.radio.RadioHandler;
+import dev.mariany.copperworks.client.muffler.MufflerHandler;
 import dev.mariany.copperworks.client.render.block.entity.BoundRelayBlockEntityRenderer;
 import dev.mariany.copperworks.client.render.block.entity.RelayBlockEntityRenderer;
 import dev.mariany.copperworks.client.render.item.property.bool.CWBooleanProperties;
@@ -12,7 +12,9 @@ import dev.mariany.copperworks.screen.CWScreenHandlers;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.BlockRenderLayer;
@@ -30,6 +32,10 @@ public class CopperworksClient implements ClientModInitializer {
         registerBlockEntityRenderers();
 
         ClientTickEvents.END_CLIENT_TICK.register(RadioHandler::onTick);
+
+        ClientChunkEvents.CHUNK_LOAD.register(MufflerHandler::onChunkLoad);
+        ClientChunkEvents.CHUNK_UNLOAD.register(MufflerHandler::onChunkUnload);
+        ClientPlayConnectionEvents.DISCONNECT.register(MufflerHandler::onDisconnect);
     }
 
     private static void registerItemProperties() {

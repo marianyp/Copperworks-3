@@ -61,10 +61,6 @@ public class CWItems {
         return register(name, Item::new, new Item.Settings());
     }
 
-    private static Item register(String name, Item.Settings settings) {
-        return register(name, Item::new, settings);
-    }
-
     private static <T extends Item> T register(String name, Function<Item.Settings, T> factory) {
         return register(name, factory, new Item.Settings());
     }

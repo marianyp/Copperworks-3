@@ -6,6 +6,7 @@ import dev.mariany.copperworks.block.custom.BatteryBlock;
 import dev.mariany.copperworks.block.custom.TimedLeverBlock;
 import dev.mariany.copperworks.block.custom.barrel.CopperBarrelBlock;
 import dev.mariany.copperworks.block.custom.clock.CopperClockBlock;
+import dev.mariany.copperworks.block.custom.muffler.MufflerBlock;
 import dev.mariany.copperworks.block.custom.relay.RelayBlock;
 import dev.mariany.copperworks.block.custom.relay.bound.BoundRelayBlock;
 import dev.mariany.copperworks.block.custom.relay.ender.EnderRelayBlock;
@@ -118,6 +119,12 @@ public class CWBlocks {
             genericCopperSettings().solidBlock(Blocks::never)
     );
 
+    public static final Block MUFFLER = register(
+            "muffler",
+            MufflerBlock::new,
+            genericCopperSettings().solidBlock(Blocks::never)
+    );
+
     private static AbstractBlock.Settings genericCopperSettings() {
         return AbstractBlock.Settings.create()
                                      .mapColor(MapColor.ORANGE)
@@ -168,6 +175,8 @@ public class CWBlocks {
             entries.addAfter(RELAY, BATTERY);
 
             entries.addBefore(Items.OBSERVER, COPPER_SENSOR);
+
+            entries.addAfter(Items.NOTE_BLOCK, MUFFLER);
         });
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(entries -> {

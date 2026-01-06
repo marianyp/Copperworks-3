@@ -27,6 +27,7 @@
     "ClientPlayerInteractionManagerMixin",
     "EquipmentRendererMixin",
     "HandledScreenMixin",
-    "LivingEntityRendererMixin"
+    "LivingEntityRendererMixin",
+    "SoundSystemMixin"
   ]
 }

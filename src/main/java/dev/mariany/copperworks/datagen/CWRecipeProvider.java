@@ -50,6 +50,19 @@ public class CWRecipeProvider extends FabricRecipeProvider {
                 this.createCopperScaffoldingRecipe();
                 this.createRocketBootsRecipe();
                 this.createCopperSensorRecipe();
+                this.createMufflerRecipe();
+            }
+
+            private void createMufflerRecipe() {
+                this.createShaped(RecipeCategory.REDSTONE, CWBlocks.MUFFLER)
+                    .pattern("CWC")
+                    .pattern("WNW")
+                    .pattern("CWC")
+                    .input('C', CWItems.COPPER_PLATE)
+                    .input('W', ItemTags.WOOL)
+                    .input('N', Items.NOTE_BLOCK)
+                    .criterion(hasItem(Items.NOTE_BLOCK), this.conditionsFromItem(Items.NOTE_BLOCK))
+                    .offerTo(this.exporter);
             }
 
             private void createCopperSensorRecipe() {

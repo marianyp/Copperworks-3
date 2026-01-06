@@ -1,5 +1,6 @@
 package dev.mariany.copperworks.packet.clientbound;
 
+import dev.mariany.copperworks.client.muffler.MufflerStorage;
 import dev.mariany.copperworks.inventory.InventoryNetworkState;
 import dev.mariany.copperworks.packet.serverbound.InventoryNetworkHandshakePacket;
 import dev.mariany.copperworks.screen.scroll.ScrollableInventory;
@@ -44,6 +45,22 @@ public class ClientboundPackets {
                         }
                     }
                 }
+        );
+
+        ClientPlayNetworking.registerGlobalReceiver(
+                MuffledAreasPacket.ID,
+                (payload, context) -> MufflerStorage.put(
+                        payload.chunkPos(),
+                        payload.muffledAreas()
+                )
+        );
+
+        ClientPlayNetworking.registerGlobalReceiver(
+                MuffledAreaUpdatedPacket.ID,
+                (payload, context) -> MufflerStorage.update(
+                        payload.chunkPos(),
+                        payload.muffledArea()
+                )
         );
     }
 }

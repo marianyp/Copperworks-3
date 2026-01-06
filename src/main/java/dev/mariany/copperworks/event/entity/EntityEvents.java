@@ -5,11 +5,8 @@ import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.entity.projectile.thrown.PotionEntity;
 import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 
-public class EntityEvents {
-    private EntityEvents() {
-    }
-
-    public static final Event<BeforeMinecartTravel> BEFORE_MINECART_TRAVEL = EventFactory.createArrayBacked(
+public interface EntityEvents {
+    Event<BeforeMinecartTravel> BEFORE_MINECART_TRAVEL = EventFactory.createArrayBacked(
             BeforeMinecartTravel.class,
             callbacks -> minecartEntity -> {
                 for (BeforeMinecartTravel callback : callbacks) {
@@ -18,7 +15,7 @@ public class EntityEvents {
             }
     );
 
-    public static final Event<BeforePotionCollision> BEFORE_POTION_COLLISION = EventFactory.createArrayBacked(
+    Event<BeforePotionCollision> BEFORE_POTION_COLLISION = EventFactory.createArrayBacked(
             BeforePotionCollision.class,
             callbacks -> potionEntity -> {
                 for (BeforePotionCollision callback : callbacks) {
@@ -27,11 +24,11 @@ public class EntityEvents {
             }
     );
 
-    public interface BeforeMinecartTravel {
+    interface BeforeMinecartTravel {
         void onMinecartTravel(AbstractMinecartEntity abstractMinecart);
     }
 
-    public interface BeforePotionCollision {
+    interface BeforePotionCollision {
         void onPotionCollision(PotionEntity potionEntity);
     }
 }

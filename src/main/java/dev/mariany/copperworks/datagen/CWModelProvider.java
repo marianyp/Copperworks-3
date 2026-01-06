@@ -57,6 +57,8 @@ public class CWModelProvider extends FabricModelProvider {
 
         blockStateModelGenerator.registerSimpleCubeAll(CWBlocks.RELAY);
 
+        blockStateModelGenerator.registerSimpleCubeAll(CWBlocks.MUFFLER);
+
         registerLever(blockStateModelGenerator);
 
         registerStickyBlock(blockStateModelGenerator, CWBlocks.STICKY_COPPER);

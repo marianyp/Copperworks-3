@@ -11,6 +11,7 @@
     "copperworks:bound_relay",
     "copperworks:radio_relay",
     "copperworks:ender_relay",
-    "copperworks:copper_sensor"
+    "copperworks:copper_sensor",
+    "copperworks:muffler"
   ]
 }
