@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
-public class BoundRelayBlockEntityRenderer extends RelayBlockEntityRenderer<BoundRelayBlockEntity> {
+public class BoundRelayBlockEntityRenderer extends HighlightedBlockEntityRenderer<BoundRelayBlockEntity> {
     public BoundRelayBlockEntityRenderer(BlockEntityRendererFactory.Context context) {
         super(context);
     }

@@ -7,12 +7,12 @@ import net.minecraft.client.render.RenderLayer;
 
 @Environment(EnvType.CLIENT)
 public class CWRenderLayers {
-    public static final RenderLayer.MultiPhase RELAY_HIGHLIGHT = RenderLayer.of(
-            "relay_highlight",
+    public static final RenderLayer.MultiPhase HIGHLIGHTED_BLOCK = RenderLayer.of(
+            "highlighted_block",
             1536,
             false,
             true,
-            CWRenderPipelines.RELAY_HIGHLIGHT,
+            CWRenderPipelines.HIGHLIGHTED_BLOCK,
             RenderLayer.MultiPhaseParameters
                     .builder()
                     .layering(RenderLayer.VIEW_OFFSET_Z_LAYERING)

@@ -5,7 +5,7 @@ import dev.mariany.copperworks.block.CWBlocks;
 import dev.mariany.copperworks.client.gui.screen.ingame.InventoryNetworkScreen;
 import dev.mariany.copperworks.client.muffler.MufflerHandler;
 import dev.mariany.copperworks.client.render.block.entity.BoundRelayBlockEntityRenderer;
-import dev.mariany.copperworks.client.render.block.entity.RelayBlockEntityRenderer;
+import dev.mariany.copperworks.client.render.block.entity.HighlightedBlockEntityRenderer;
 import dev.mariany.copperworks.client.render.item.property.bool.CWBooleanProperties;
 import dev.mariany.copperworks.packet.clientbound.ClientboundPackets;
 import dev.mariany.copperworks.screen.CWScreenHandlers;
@@ -53,6 +53,6 @@ public class CopperworksClient implements ClientModInitializer {
 
     private void registerBlockEntityRenderers() {
         BlockEntityRendererFactories.register(CWBlockEntities.BOUND_RELAY, BoundRelayBlockEntityRenderer::new);
-        BlockEntityRendererFactories.register(CWBlockEntities.RADIO_RELAY, RelayBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(CWBlockEntities.RADIO_RELAY, HighlightedBlockEntityRenderer::new);
     }
 }

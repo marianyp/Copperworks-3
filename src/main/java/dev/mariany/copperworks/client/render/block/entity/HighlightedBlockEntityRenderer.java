@@ -21,9 +21,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
-public class RelayBlockEntityRenderer<T extends HighlightedBlockEntity>
+public class HighlightedBlockEntityRenderer<T extends HighlightedBlockEntity>
         implements BlockEntityRenderer<T, RelayBlockEntityRenderState> {
-    public RelayBlockEntityRenderer(BlockEntityRendererFactory.Context context) {
+    public HighlightedBlockEntityRenderer(BlockEntityRendererFactory.Context context) {
     }
 
     protected Optional<BlockPos> getBoundPosition(T blockEntity) {
@@ -95,7 +95,7 @@ public class RelayBlockEntityRenderer<T extends HighlightedBlockEntity>
     ) {
         queue.submitCustom(
                 matrices,
-                CWRenderLayers.RELAY_HIGHLIGHT,
+                CWRenderLayers.HIGHLIGHTED_BLOCK,
                 (matricesEntry, vertexConsumer) -> VoxelShapes
                         .fullCube()
                         .forEachBox(
