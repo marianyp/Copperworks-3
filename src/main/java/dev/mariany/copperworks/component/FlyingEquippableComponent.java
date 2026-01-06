@@ -300,7 +300,7 @@ public class FlyingEquippableComponent {
     }
 
     private boolean handleGlide(LivingEntity livingEntity) {
-        if (isHalting(livingEntity) || isOutOfBounds(livingEntity)) {
+        if (isHalting(livingEntity)) {
             this.speed = 0;
             return false;
         }
@@ -331,10 +331,6 @@ public class FlyingEquippableComponent {
 
     private static boolean isHalting(Entity entitySneaking) {
         return !entitySneaking.isOnGround() && entitySneaking.isSneaking();
-    }
-
-    private static boolean isOutOfBounds(Entity entity) {
-        return entity.getY() > entity.getEntityWorld().getDimension().height();
     }
 
     private Vec3d calculateNewVelocity(Vec3d rotationVector, Vec3d velocity) {
