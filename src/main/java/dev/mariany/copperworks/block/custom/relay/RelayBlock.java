@@ -6,6 +6,7 @@ import dev.mariany.copperworks.block.custom.relay.bound.BoundRelayBlockEntity;
 import dev.mariany.copperworks.block.custom.relay.ender.EnderRelayBlock;
 import dev.mariany.copperworks.component.CWComponents;
 import dev.mariany.copperworks.item.CWItems;
+import dev.mariany.copperworks.item.custom.radio.RadioItem;
 import dev.mariany.copperworks.sound.CWSoundEvents;
 import dev.mariany.copperworks.tag.CWTags;
 import net.minecraft.block.Block;
@@ -40,8 +41,13 @@ public class RelayBlock extends Block {
             Hand hand,
             BlockHitResult hit
     ) {
+        boolean isRadio = stack.getItem() instanceof RadioItem;
+        boolean isAmethystShard = stack.isOf(Items.AMETHYST_SHARD);
+        boolean isAmethystPiece = stack.isOf(CWItems.AMETHYST_PIECE);
+        boolean bindsEnderRelay = stack.isIn(CWTags.Items.BINDS_ENDER_RELAY);
+
         if (player instanceof ServerPlayerEntity serverPlayer) {
-            if (stack.isOf(Items.AMETHYST_SHARD)) {
+            if (isAmethystShard) {
                 ItemStack piece = ItemUsage.exchangeStack(
                         stack,
                         serverPlayer,
@@ -52,7 +58,7 @@ public class RelayBlock extends Block {
                 serverPlayer.setStackInHand(hand, piece);
 
                 playInsertSound(world, pos, false);
-            } else if (stack.isOf(CWItems.AMETHYST_PIECE)) {
+            } else if (isAmethystPiece) {
                 if (!completeBinding(serverPlayer, stack, GlobalPos.create(world.getRegistryKey(), pos))) {
                     return ActionResult.FAIL;
                 }
@@ -60,13 +66,19 @@ public class RelayBlock extends Block {
                 stack.decrement(1);
 
                 playInsertSound(world, pos, true);
-            } else if (stack.isIn(CWTags.Items.BINDS_ENDER_RELAY)) {
+            } else if (bindsEnderRelay) {
                 EnderRelayBlock.completeBinding(serverPlayer.getEntityWorld(), pos, player, stack);
+            } else if (isRadio) {
+                RadioItem.completeBinding(world, pos, stack);
             } else {
                 return ActionResult.FAIL;
             }
 
             return ActionResult.SUCCESS_SERVER;
+        }
+
+        if (isRadio || isAmethystShard || bindsEnderRelay) {
+            return ActionResult.SUCCESS;
         }
 
         return ActionResult.CONSUME;

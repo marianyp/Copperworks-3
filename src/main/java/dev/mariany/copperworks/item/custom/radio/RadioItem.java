@@ -2,15 +2,12 @@ package dev.mariany.copperworks.item.custom.radio;
 
 import dev.mariany.copperworks.block.CWBlocks;
 import dev.mariany.copperworks.block.custom.relay.radio.RadioRelayBlock;
-import dev.mariany.copperworks.block.custom.relay.RelayBlock;
 import dev.mariany.copperworks.component.CWComponents;
 import dev.mariany.copperworks.sound.CWSoundEvents;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
@@ -31,20 +28,9 @@ public class RadioItem extends Item {
         super(settings);
     }
 
-    @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        World world = context.getWorld();
-        BlockPos pos = context.getBlockPos();
-        ItemStack stack = context.getStack();
-        Block block = world.getBlockState(pos).getBlock();
-
-        if (block instanceof RelayBlock || block instanceof RadioRelayBlock) {
-            stack.set(CWComponents.RELAY_POSITION, new GlobalPos(world.getRegistryKey(), pos));
-            world.setBlockState(pos, CWBlocks.RADIO_RELAY.getDefaultState());
-            return ActionResult.SUCCESS;
-        }
-
-        return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
+    public static void completeBinding(World world, BlockPos pos, ItemStack stack) {
+        stack.set(CWComponents.RELAY_POSITION, new GlobalPos(world.getRegistryKey(), pos));
+        world.setBlockState(pos, CWBlocks.RADIO_RELAY.getDefaultState());
     }
 
     @Override
