@@ -2,10 +2,8 @@ package dev.mariany.copperworks.event.entity;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.component.type.PotionContentsComponent;
+import net.minecraft.entity.projectile.thrown.PotionEntity;
 import net.minecraft.entity.vehicle.AbstractMinecartEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Vec3d;
 
 public class EntityEvents {
     private EntityEvents() {
@@ -13,23 +11,18 @@ public class EntityEvents {
 
     public static final Event<BeforeMinecartTravel> BEFORE_MINECART_TRAVEL = EventFactory.createArrayBacked(
             BeforeMinecartTravel.class,
-            callbacks -> map -> {
+            callbacks -> minecartEntity -> {
                 for (BeforeMinecartTravel callback : callbacks) {
-                    callback.onMinecartTravel(map);
+                    callback.onMinecartTravel(minecartEntity);
                 }
             }
     );
 
     public static final Event<BeforePotionCollision> BEFORE_POTION_COLLISION = EventFactory.createArrayBacked(
             BeforePotionCollision.class,
-            callbacks -> (
-                    world,
-                    origin,
-                    potionContentsComponent,
-                    radius
-            ) -> {
+            callbacks -> potionEntity -> {
                 for (BeforePotionCollision callback : callbacks) {
-                    callback.onPotionCollision(world, origin, potionContentsComponent, radius);
+                    callback.onPotionCollision(potionEntity);
                 }
             }
     );
@@ -39,11 +32,6 @@ public class EntityEvents {
     }
 
     public interface BeforePotionCollision {
-        void onPotionCollision(
-                ServerWorld world,
-                Vec3d origin,
-                PotionContentsComponent potionContentsComponent,
-                float radius
-        );
+        void onPotionCollision(PotionEntity potionEntity);
     }
 }
