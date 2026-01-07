@@ -131,15 +131,17 @@ public class InventoryNetworkScreen extends HandledScreen<InventoryNetworkScreen
     }
 
     @Override
-    public void drawSlot(DrawContext context, Slot slot) {
-        if (slot instanceof SearchSlot searchSlot && this.handler.isEmptySearchSlot(slot.id)) {
-            this.drawSearchSlot(context, searchSlot);
-        } else {
-            super.drawSlot(context, slot);
+    protected void drawForeground(DrawContext context, int mouseX, int mouseY) {
+        super.drawForeground(context, mouseX, mouseY);
+
+        for (Slot slot : this.handler.slots) {
+            if (slot instanceof SearchSlot searchSlot && !searchSlot.isEnabled()) {
+                this.drawEmptySearchSlot(context, searchSlot);
+            }
         }
     }
 
-    private void drawSearchSlot(DrawContext context, SearchSlot slot) {
+    private void drawEmptySearchSlot(DrawContext context, SearchSlot slot) {
         context.drawGuiTexture(
                 RenderPipelines.GUI_TEXTURED,
                 DISABLED_SLOT_TEXTURE,

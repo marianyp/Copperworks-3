@@ -101,15 +101,6 @@ public class AlternativeScaffoldingBlock extends Block implements Waterloggable,
     }
 
     @Override
-    protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        if(context.isPlacement()) {
-            return VoxelShapes.fullCube();
-        }
-
-        return SHAPE;
-    }
-
-    @Override
     protected VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         if(context.isPlacement()) {
             return VoxelShapes.fullCube();

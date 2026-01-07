@@ -18,4 +18,9 @@ public class SearchSlot extends Slot {
     public boolean canBeHighlighted() {
         return this.hasStack();
     }
+
+    @Override
+    public boolean isEnabled() {
+        return this.hasStack();
+    }
 }

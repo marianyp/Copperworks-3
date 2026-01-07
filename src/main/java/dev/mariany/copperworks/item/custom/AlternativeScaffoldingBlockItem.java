@@ -20,10 +20,6 @@ public class AlternativeScaffoldingBlockItem extends BlockItem {
         super(block, settings);
     }
 
-    protected boolean canPlace(ItemPlacementContext context) {
-        return this.canPlace(context, this.getBlock().getDefaultState());
-    }
-
     @Override
     public ActionResult use(World world, PlayerEntity player, Hand hand) {
         boolean isClose = player.isSneaking();
@@ -34,34 +30,35 @@ public class AlternativeScaffoldingBlockItem extends BlockItem {
             return ActionResult.PASS;
         }
 
-        if (!world.isClient()) {
-            final double step = 0.5;
-
-            DoubleFunction<ActionResult> tryPlaceAt = (distance) -> {
-                BlockPos pos = getPlacePosition(player, distance);
-                return this.place(createItemPlacementContext(player, hand, pos));
-            };
-
-            for (double distance = startDistance; distance > 0; distance -= step) {
-                ActionResult result = tryPlaceAt.apply(distance);
-
-                if (result.isAccepted()) {
-                    return result;
-                }
-            }
-
-            for (double distance = 0; distance <= blockInteractionRange; distance += step) {
-                ActionResult result = tryPlaceAt.apply(distance);
-
-                if (result.isAccepted()) {
-                    return result;
-                }
-            }
-
-            return ActionResult.FAIL;
+        if (world.isClient()) {
+            return ActionResult.SUCCESS;
         }
 
-        return ActionResult.SUCCESS;
+        final double step = 0.5;
+
+        DoubleFunction<ActionResult> tryPlaceAt = (distance) -> this.place(createItemPlacementContext(
+                player,
+                hand,
+                getPlacePosition(player, distance)
+        ));
+
+        for (double distance = startDistance; distance > 0; distance -= step) {
+            ActionResult result = tryPlaceAt.apply(distance);
+
+            if (result.isAccepted()) {
+                return result;
+            }
+        }
+
+        for (double distance = 0; distance <= blockInteractionRange; distance += step) {
+            ActionResult result = tryPlaceAt.apply(distance);
+
+            if (result.isAccepted()) {
+                return result;
+            }
+        }
+
+        return ActionResult.FAIL;
     }
 
     private static BlockPos getPlacePosition(PlayerEntity player, double distance) {

@@ -177,14 +177,6 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
         return this.searchQuery != null && !this.searchQuery.isBlank();
     }
 
-    public boolean isEmptySearchSlot(int slot) {
-        if (this.virtualNetworkInventory instanceof SearchVirtualNetworkInventory) {
-            return this.virtualNetworkInventory.getStack(slot).isEmpty();
-        }
-
-        return false;
-    }
-
     public void updateScrollPosition(float scrollPosition) {
         this.scrollPosition = scrollPosition;
         this.virtualNetworkInventory.scrollItems(scrollPosition);
