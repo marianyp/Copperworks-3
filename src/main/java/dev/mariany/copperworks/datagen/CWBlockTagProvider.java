@@ -4,6 +4,7 @@ import dev.mariany.copperworks.block.CWBlocks;
 import dev.mariany.copperworks.tag.CWTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.minecraft.block.Blocks;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
 
@@ -70,5 +71,10 @@ public class CWBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         valueLookupBuilder(CWTags.Blocks.EXTENDS_BATTERY_PULSE_SAME_AXIS).addOptionalTag(
                 BlockTags.LIGHTNING_RODS
         );
+
+        valueLookupBuilder(CWTags.Blocks.WRENCH_BLACKLIST)
+                .addOptionalTag(BlockTags.BEDS)
+                .add(Blocks.BIG_DRIPLEAF, Blocks.BIG_DRIPLEAF_STEM);
+
     }
 }

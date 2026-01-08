@@ -38,6 +38,8 @@ public class CWModelProvider extends FabricModelProvider {
 
         itemModelGenerator.register(CWBlocks.COPPER_SENSOR.asItem(), Models.GENERATED);
 
+        itemModelGenerator.register(CWItems.WRENCH, Models.HANDHELD_ROD);
+
         itemModelGenerator.registerArmor(
                 CWItems.ROCKET_BOOTS,
                 CWEquipmentAssetKeys.ROCKET_BOOTS,

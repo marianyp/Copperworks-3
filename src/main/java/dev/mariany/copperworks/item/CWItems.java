@@ -5,6 +5,7 @@ import dev.mariany.copperworks.component.CWComponents;
 import dev.mariany.copperworks.component.FlyingEquippableComponent;
 import dev.mariany.copperworks.item.custom.PatinaItem;
 import dev.mariany.copperworks.item.custom.RocketBootsItem;
+import dev.mariany.copperworks.item.custom.WrenchItem;
 import dev.mariany.copperworks.item.custom.copperupgrade.CopperUpgradeItem;
 import dev.mariany.copperworks.item.custom.radio.RadioItem;
 import dev.mariany.copperworks.item.equipment.CWArmorMaterials;
@@ -57,6 +58,12 @@ public class CWItems {
 
     public static final PatinaItem PATINA = register("patina", PatinaItem::new);
 
+    public static final WrenchItem WRENCH = register(
+            "wrench",
+            WrenchItem::new,
+            new Item.Settings().maxDamage(256)
+    );
+
     private static Item register(String name) {
         return register(name, Item::new, new Item.Settings());
     }
@@ -96,6 +103,8 @@ public class CWItems {
             entries.addBefore(Items.COMPASS, RADIO);
 
             entries.addAfter(Items.ELYTRA, ROCKET_BOOTS);
+
+            entries.addBefore(Items.BRUSH, WRENCH);
         });
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.REDSTONE)

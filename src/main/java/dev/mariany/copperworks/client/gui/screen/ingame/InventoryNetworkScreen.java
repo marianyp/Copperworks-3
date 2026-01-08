@@ -47,8 +47,8 @@ public class InventoryNetworkScreen extends HandledScreen<InventoryNetworkScreen
             "container/inventory_network/scroller_disabled"
     );
 
-    protected static final Identifier DISABLED_SLOT_TEXTURE = Copperworks.id(
-            "container/inventory_network/disabled_slot"
+    protected static final Identifier EMPTY_SEARCH_SLOT_TEXTURE = Copperworks.id(
+            "container/inventory_network/empty_search_slot"
     );
 
     protected static final int TEXTURE_WIDTH = 256;
@@ -144,7 +144,7 @@ public class InventoryNetworkScreen extends HandledScreen<InventoryNetworkScreen
     private void drawEmptySearchSlot(DrawContext context, SearchSlot slot) {
         context.drawGuiTexture(
                 RenderPipelines.GUI_TEXTURED,
-                DISABLED_SLOT_TEXTURE,
+                EMPTY_SEARCH_SLOT_TEXTURE,
                 slot.x - 1,
                 slot.y - 1,
                 InventoryNetworkScreenHandler.SLOT_BOX_SIZE,

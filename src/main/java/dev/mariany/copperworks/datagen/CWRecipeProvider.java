@@ -51,6 +51,17 @@ public class CWRecipeProvider extends FabricRecipeProvider {
                 this.createRocketBootsRecipe();
                 this.createCopperSensorRecipe();
                 this.createMufflerRecipe();
+                this.createWrenchRecipe();
+            }
+
+            private void createWrenchRecipe() {
+                this.createShaped(RecipeCategory.TOOLS, CWItems.WRENCH)
+                    .pattern("C C")
+                    .pattern(" C ")
+                    .pattern(" C ")
+                    .input('C', Items.COPPER_INGOT)
+                    .criterion(hasItem(Items.COPPER_INGOT), this.conditionsFromItem(Items.COPPER_INGOT))
+                    .offerTo(this.exporter);
             }
 
             private void createMufflerRecipe() {

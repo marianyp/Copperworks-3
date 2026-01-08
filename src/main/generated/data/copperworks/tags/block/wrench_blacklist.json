@@ -1,0 +1,10 @@
+{
+  "values": [
+    {
+      "id": "#minecraft:beds",
+      "required": false
+    },
+    "minecraft:big_dripleaf",
+    "minecraft:big_dripleaf_stem"
+  ]
+}

@@ -36,6 +36,7 @@ dbb1a552918e1b5a0eab3c58bf0176647f412148 assets/copperworks/items/patina.json
 1bf1d9a7f3d8fa6823d32d68459741ad04bd1c5c assets/copperworks/items/sticky_copper.json
 70aca940bebd2398f9b707848bd6e2073a1e2e89 assets/copperworks/items/sticky_copper_honey.json
 bf5b7eb72c785af4a96b5580f25debfaef3e7e6b assets/copperworks/items/wooden_rail.json
+5fc39a18b4117eb769f4c894ca8d0b4987306f47 assets/copperworks/items/wrench.json
 161d5ad4158812993fb982870f099ef1ba119569 assets/copperworks/models/block/bound_relay.json
 0fca311da58b8524e7ae94149872c8c76b2e9fb8 assets/copperworks/models/block/bound_relay_on.json
 11db09339b65a596b220561655beefb1a09f8e6e assets/copperworks/models/block/copper_barrel.json
@@ -80,3 +81,4 @@ d95c6f25128a56f1340df794134925d6fe268558 assets/copperworks/models/item/rocket_b
 a8c55562e29e2303cf52bd4491cd227a86aa954a assets/copperworks/models/item/rocket_boots_redstone_trim.json
 4bfef7ebf9e201fd4b25ae47485efff19aa42f5e assets/copperworks/models/item/rocket_boots_resin_trim.json
 35f5b5a784ce034cab07175bdbc2c83171f87af2 assets/copperworks/models/item/wooden_rail.json
+d75b05204f601513baa9c1c0e263e977f55beb7a assets/copperworks/models/item/wrench.json

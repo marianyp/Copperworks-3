@@ -13,6 +13,7 @@ c483c353063f16471eda9c6e4d150a63605fd3c4 data/copperworks/advancement/recipes/re
 7538234d89fd3c1fd4fdf043caf6de6dde8bf32b data/copperworks/advancement/recipes/redstone/radio.json
 dbf7924cbdf29cc40a09054361ce0cced6ea5749 data/copperworks/advancement/recipes/redstone/relay.json
 42414ed4bffd50eb4bc7cc61da5b020b182af458 data/copperworks/advancement/recipes/redstone/reset_radio.json
+eec8ca624d62221b23b3a818e68ec8f1ac0fc9cd data/copperworks/advancement/recipes/tools/wrench.json
 332dec9826338e771d5ed25b4ce9a0f06dde892d data/copperworks/advancement/recipes/transportation/wooden_rail.json
 2070abb42b2e5d329bf0068cc25c0ba62a80b05f data/copperworks/recipe/battery.json
 cd404407e408405c3f5b0d5f6d9e142dc14dafef data/copperworks/recipe/copper_clock.json
@@ -29,3 +30,4 @@ ff127ce0941268ad05a76de8161643f0b4307fa1 data/copperworks/recipe/radio.json
 984be16c2ce07c77eeff298a0b55f36d311636e6 data/copperworks/recipe/sticky_copper.json
 e0750b2af6cba5d1a974ebddd5ee27171ffc0c4b data/copperworks/recipe/sticky_copper_honey.json
 b3d57c80ea3e3b364188989cbbe37ba28aab85cc data/copperworks/recipe/wooden_rail.json
+950add11712c6a2588769af85d7208d9ae0c4fdd data/copperworks/recipe/wrench.json
