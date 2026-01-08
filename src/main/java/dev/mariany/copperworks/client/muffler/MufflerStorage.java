@@ -12,7 +12,10 @@ public interface MufflerStorage {
     Map<Long, Set<MuffledArea>> LOADED = new HashMap<>();
 
     static List<MuffledArea> getMuffledAreas() {
-        return LOADED.values().stream().flatMap(Collection::stream).toList();
+        return new ArrayList<>(LOADED.values())
+                .stream()
+                .flatMap(Collection::stream)
+                .toList();
     }
 
     static void put(ChunkPos chunkPos, Collection<MuffledArea> muffledAreas) {
