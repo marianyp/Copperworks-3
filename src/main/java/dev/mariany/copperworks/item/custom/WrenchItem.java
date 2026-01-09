@@ -14,6 +14,8 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
@@ -37,6 +39,18 @@ public class WrenchItem extends Item {
 
     public WrenchItem(Settings settings) {
         super(settings);
+    }
+
+    public static boolean shouldOverrideInteraction(PlayerEntity player, Hand hand, BlockHitResult hitResult) {
+        if (player.getStackInHand(hand).getItem() instanceof WrenchItem) {
+            World world = player.getEntityWorld();
+            BlockPos pos = hitResult.getBlockPos();
+            BlockState state = world.getBlockState(pos);
+
+            return canWrench(world, pos, state) && getWrenchStates(world, pos, state).size() > 1;
+        }
+
+        return false;
     }
 
     @Override
@@ -143,7 +157,7 @@ public class WrenchItem extends Item {
                         continue outer;
                     }
 
-                    if(!possibleState.canPlaceAt(world, pos)) {
+                    if (!possibleState.canPlaceAt(world, pos)) {
                         continue outer;
                     }
                 }

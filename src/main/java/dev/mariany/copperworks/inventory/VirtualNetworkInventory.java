@@ -8,11 +8,16 @@ import net.minecraft.item.ItemStack;
 
 public abstract class VirtualNetworkInventory extends SimpleInventory implements InventoryChangedListener {
     protected final InventoryNetworkScreenHandler handler;
+    protected boolean prepared = false;
 
     public VirtualNetworkInventory(InventoryNetworkScreenHandler handler) {
         super(handler.getColumns() * handler.getRows());
         this.handler = handler;
         this.addListener(this);
+    }
+
+    public void setPrepared() {
+        this.prepared = true;
     }
 
     public void scrollItems(float position) {
@@ -43,6 +48,13 @@ public abstract class VirtualNetworkInventory extends SimpleInventory implements
     abstract protected boolean shouldUpdateRemovals();
 
     @Override
+    public void markDirty() {
+        if (this.prepared) {
+            super.markDirty();
+        }
+    }
+
+    @Override
     public void onInventoryChanged(Inventory sender) {
         if (this.syncStacks()) {
             this.handler.getNetwork().ifPresent(InventoryNetwork::markDirty);
@@ -53,7 +65,7 @@ public abstract class VirtualNetworkInventory extends SimpleInventory implements
     public ItemStack removeStack(int slot, int amount) {
         ItemStack result = super.removeStack(slot, amount);
 
-        if(!result.isEmpty() && this.shouldUpdateRemovals()) {
+        if (!result.isEmpty() && this.shouldUpdateRemovals()) {
             this.handler.getNetwork().ifPresent(InventoryNetwork::markDirty);
         }
 

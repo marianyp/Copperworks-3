@@ -238,6 +238,7 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
         }
 
         this.updateScrollPosition(0);
+        this.virtualNetworkInventory.setPrepared();
 
         this.addPlayerSlots(
                 this.player.getInventory(),
@@ -264,12 +265,23 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
 
     @Override
     public void updateSlotStacks(int revision, List<ItemStack> stacks, ItemStack cursorStack) {
+        if (this.isValidated()) {
+            super.updateSlotStacks(revision, stacks, cursorStack);
+        }
+    }
+
+    @Override
+    public void setStackInSlot(int slot, int revision, ItemStack stack) {
+        if (this.isValidated()) {
+            super.setStackInSlot(slot, revision, stack);
+        }
+    }
+
+    public boolean isValidated() {
         boolean scrollPositionValid = Objects.equals(this.scrollPosition, this.validatedScrollPosition);
         boolean searchQueryValid = Objects.equals(this.searchQuery, this.validatedSearchQuery);
 
-        if (scrollPositionValid && searchQueryValid) {
-            super.updateSlotStacks(revision, stacks, cursorStack);
-        }
+        return scrollPositionValid && searchQueryValid;
     }
 
     public boolean handlePickupAll(int clickedSlotIndex, int button, SlotActionType actionType) {
@@ -516,7 +528,6 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
     @Override
     public void onScroll(float scrollPosition) {
         this.updateScrollPosition(scrollPosition);
-        this.virtualNetworkInventory.scrollItems(this.getScrollPosition());
     }
 
     @Override

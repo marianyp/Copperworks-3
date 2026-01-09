@@ -88,6 +88,14 @@ public class SearchEntry {
     }
 
     @Override
+    public String toString() {
+        return "SearchEntry{" +
+                "slot=" + this.slot +
+                ", terms=" + this.terms +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object other) {
         if (this == other) {
             return true;

@@ -3,6 +3,7 @@ package dev.mariany.copperworks.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import dev.mariany.copperworks.item.custom.WrenchItem;
 import dev.mariany.copperworks.item.custom.copperupgrade.CopperUpgradeItem;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
@@ -27,6 +28,10 @@ public class ServerPlayerInteractionManagerMixin {
             @Local(index = 5, argsOnly = true) BlockHitResult hitResult
     ) {
         if (CopperUpgradeItem.shouldOverrideInteraction(player, hand, hitResult)) {
+            return true;
+        }
+
+        if (WrenchItem.shouldOverrideInteraction(player, hand, hitResult)) {
             return true;
         }
 
