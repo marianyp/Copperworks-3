@@ -8,6 +8,7 @@ import dev.mariany.copperworks.packet.serverbound.UpdateSearchEntriesPacket;
 import dev.mariany.copperworks.packet.serverbound.UpdateSearchQueryPacket;
 import dev.mariany.copperworks.screen.InventoryNetworkScreenHandler;
 import dev.mariany.copperworks.screen.search.SearchEntry;
+import dev.mariany.copperworks.screen.search.SearchEntryHelper;
 import dev.mariany.copperworks.screen.slot.SearchSlot;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -361,12 +362,16 @@ public class InventoryNetworkScreen extends HandledScreen<InventoryNetworkScreen
         this.handler.getNetwork().ifPresent(network -> {
             World world = this.client == null ? null : this.client.world;
 
-            List<SearchEntry> searchEntries = SearchEntry.getEntries(world, network.getHeldStacks());
-
-            ClientPlayNetworking.send(new UpdateSearchEntriesPacket(this.handler.syncId, searchEntries));
+            List<SearchEntry> searchEntries = SearchEntryHelper.getEntries(world, network.getHeldStacks());
 
             this.handler.updateSearchEntries(searchEntries);
+
+            SearchEntryHelper.batchSearchEntries(1_572_864, searchEntries, this::sendBatch);
         });
+    }
+
+    protected void sendBatch(List<SearchEntry> searchEntries, boolean start, boolean end) {
+        ClientPlayNetworking.send(new UpdateSearchEntriesPacket(this.handler.syncId, searchEntries, start, end));
     }
 
     @Override

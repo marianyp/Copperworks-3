@@ -542,9 +542,20 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
 
     @Override
     public void updateSearchEntries(List<SearchEntry> entries) {
-        this.searchEntries.clear();
+        this.updateSearchEntries(entries, true, true);
+    }
+
+    @Override
+    public void updateSearchEntries(List<SearchEntry> entries, boolean clearExisting, boolean updateSlots) {
+        if (clearExisting) {
+            this.searchEntries.clear();
+        }
+
         this.searchEntries.addAll(entries);
-        this.search();
+
+        if (updateSlots) {
+            this.search();
+        }
     }
 
     @Override

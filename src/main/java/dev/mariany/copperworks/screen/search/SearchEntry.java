@@ -69,16 +69,6 @@ public class SearchEntry {
         return new String(bytes, 0, end, StandardCharsets.UTF_8);
     }
 
-    public static List<SearchEntry> getEntries(@Nullable World world, Collection<StackWithSlot> stacksWithSlot) {
-        List<SearchEntry> searchEntries = new ArrayList<>();
-
-        for (StackWithSlot stackWithSlot : stacksWithSlot) {
-            searchEntries.add(new SearchEntry(world, stackWithSlot));
-        }
-
-        return searchEntries;
-    }
-
     public Set<String> getTerms() {
         return this.terms;
     }

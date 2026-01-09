@@ -42,6 +42,18 @@ public class Copperworks implements ModInitializer {
         }
     }
 
+    public static void infoLog(String msg, Object... arguments) {
+        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+            LOGGER.info(msg, arguments);
+        }
+    }
+
+    public static void warnLog(String msg, Object... arguments) {
+        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+            LOGGER.warn(msg, arguments);
+        }
+    }
+
     @Override
     public void onInitialize() {
         DynamicRegistries.registerSynced(CWRegistryKeys.COPPER_UPGRADE, CopperUpgrade.CODEC);
