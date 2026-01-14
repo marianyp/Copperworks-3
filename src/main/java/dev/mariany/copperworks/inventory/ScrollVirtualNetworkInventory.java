@@ -9,11 +9,6 @@ public class ScrollVirtualNetworkInventory extends VirtualNetworkInventory {
     }
 
     @Override
-    protected boolean shouldUpdateRemovals() {
-        return true;
-    }
-
-    @Override
     protected ItemStack getStack(float position, int virtualIndex) {
         int index = this.handler.virtualToRealIndex(position, virtualIndex);
 
@@ -36,7 +31,7 @@ public class ScrollVirtualNetworkInventory extends VirtualNetworkInventory {
 
                     network.setStackNoCallbacks(index, newStack);
 
-                    if (didStackChange(previousStack, newStack)) {
+                    if (InventoryHelper.didStackChange(previousStack, newStack)) {
                         changed = true;
                     }
                 }

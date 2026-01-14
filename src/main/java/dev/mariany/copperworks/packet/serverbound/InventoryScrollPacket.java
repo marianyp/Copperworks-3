@@ -31,16 +31,13 @@ public record InventoryScrollPacket(int syncId, float scrollPosition) implements
         float scrolledPosition = payload.scrollPosition();
 
         ServerPlayerEntity player = context.player();
-        ScreenHandler screenHandler = player.currentScreenHandler;
+        ScreenHandler handler = player.currentScreenHandler;
 
         player.updateLastActionTime();
 
-        if (screenHandler.syncId == syncId && !player.isSpectator()) {
-            if (screenHandler instanceof ScrollableInventory scrollableInventory && screenHandler.canUse(player)) {
+        if (handler.syncId == syncId) {
+            if (handler instanceof ScrollableInventory scrollableInventory && handler.canUse(player)) {
                 scrollableInventory.onScroll(scrolledPosition);
-                screenHandler.sendContentUpdates();
-            } else {
-                Copperworks.LOGGER.debug("Player {} interacted with invalid menu {}", player, screenHandler);
             }
         }
     }

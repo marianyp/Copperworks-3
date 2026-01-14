@@ -12,11 +12,6 @@ public class SearchVirtualNetworkInventory extends VirtualNetworkInventory {
     }
 
     @Override
-    protected boolean shouldUpdateRemovals() {
-        return false;
-    }
-
-    @Override
     protected ItemStack getStack(float position, int virtualIndex) {
         List<SearchEntry> searchResults = this.handler.getSearchResults();
 
@@ -32,23 +27,22 @@ public class SearchVirtualNetworkInventory extends VirtualNetworkInventory {
 
     @Override
     protected boolean syncStacks() {
-        List<SearchEntry> searchResults = this.handler.getSearchResults();
-
         return this.handler.getNetwork().map(network -> {
+            List<SearchEntry> searchResults = this.handler.getSearchResults();
+
             boolean changed = false;
 
-            for (int virtualIndex = 0; virtualIndex < searchResults.size(); virtualIndex++) {
+            for (int virtualIndex = 0; virtualIndex < this.size(); virtualIndex++) {
                 int index = this.handler.virtualToRealIndex(this.handler.getScrollPosition(), virtualIndex);
 
-                if (index >= 0 && index < searchResults.size()) {
+                if (index < searchResults.size()) {
                     int networkIndex = searchResults.get(index).getSlot();
-
-                    ItemStack previousStack = network.getStack(networkIndex);
                     ItemStack newStack = this.getStack(virtualIndex);
+                    ItemStack previousStack = network.getStack(index);
 
                     network.setStackNoCallbacks(networkIndex, newStack);
 
-                    if (didStackChange(previousStack, newStack)) {
+                    if (InventoryHelper.didStackChange(previousStack, newStack)) {
                         changed = true;
                     }
                 }

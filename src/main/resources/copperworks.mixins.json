@@ -15,7 +15,8 @@
     "PrepareSpawnTaskMixin",
     "ScreenHandlerMixin",
     "ServerPlayerEntityMixin",
-    "ServerPlayerInteractionManagerMixin"
+    "ServerPlayerInteractionManagerMixin",
+    "accessor.ScreenHandlerAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

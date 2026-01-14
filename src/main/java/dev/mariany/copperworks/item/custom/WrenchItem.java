@@ -188,6 +188,20 @@ public class WrenchItem extends Item {
     }
 
     protected static String mapStateKey(Map.Entry<Property<?>, Comparable<?>> entry) {
-        return entry.getKey().toString() + ":" + entry.getValue().toString();
+        return entry.getKey().toString() + ":" + padSingleDigit(entry.getValue().toString());
+    }
+
+    protected static String padSingleDigit(String input) {
+        try {
+            int number = Integer.parseInt(input);
+
+            if (number >= 0 && number <= 9) {
+                return "0" + number;
+            }
+
+            return input;
+        } catch (NumberFormatException e) {
+            return input;
+        }
     }
 }

@@ -397,7 +397,7 @@ public class InventoryNetwork implements Inventory {
 
     @Override
     public void markDirty() {
-        if (this.world != null && this.controllerPos != null) {
+        if (this.controllerPos != null && this.world != null && !this.world.isClient()) {
             BlockEntity blockEntity = this.world.getBlockEntity(this.controllerPos);
 
             if (blockEntity != null) {
@@ -465,8 +465,12 @@ public class InventoryNetwork implements Inventory {
 
     @Override
     public void clear() {
-        this.heldStacks.clear();
+        this.clearNoCallbacks();
         this.markDirty();
+    }
+
+    public void clearNoCallbacks() {
+        this.heldStacks.clear();
     }
 
     @Override

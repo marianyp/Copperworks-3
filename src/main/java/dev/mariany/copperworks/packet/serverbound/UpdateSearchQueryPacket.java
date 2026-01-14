@@ -34,6 +34,8 @@ public record UpdateSearchQueryPacket(int syncId, @Nullable String searchQuery) 
         ServerPlayerEntity player = context.player();
         ScreenHandler handler = player.currentScreenHandler;
 
+        player.updateLastActionTime();
+
         if (handler.syncId == syncId) {
             if (handler instanceof SearchableInventory searchableInventory) {
                 searchableInventory.updateSearchQuery(query);

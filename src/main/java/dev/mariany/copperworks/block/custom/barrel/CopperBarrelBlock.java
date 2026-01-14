@@ -1,7 +1,7 @@
 package dev.mariany.copperworks.block.custom.barrel;
 
 import com.mojang.serialization.MapCodec;
-import dev.mariany.copperworks.block.custom.AbstractInventoryNetworkBlock;
+import dev.mariany.copperworks.block.custom.InventoryNetworkBlock;
 import dev.mariany.copperworks.stat.CWStats;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -18,7 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
-public class CopperBarrelBlock extends AbstractInventoryNetworkBlock {
+public class CopperBarrelBlock extends InventoryNetworkBlock {
     public static final MapCodec<CopperBarrelBlock> CODEC = createCodec(CopperBarrelBlock::new);
     public static final EnumProperty<Direction> FACING = Properties.FACING;
 
@@ -28,7 +28,7 @@ public class CopperBarrelBlock extends AbstractInventoryNetworkBlock {
     }
 
     @Override
-    protected MapCodec<? extends AbstractInventoryNetworkBlock> getCodec() {
+    protected MapCodec<? extends InventoryNetworkBlock> getCodec() {
         return CODEC;
     }
 

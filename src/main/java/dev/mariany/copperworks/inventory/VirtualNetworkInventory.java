@@ -25,27 +25,18 @@ public abstract class VirtualNetworkInventory extends SimpleInventory implements
         int rows = this.handler.getRows();
 
         for (int virtualIndex = 0; virtualIndex < columns * rows; virtualIndex++) {
-            this.setStackNoCallbacks(virtualIndex, this.getStack(position, virtualIndex));
+            this.setStackNoCallbacks(virtualIndex, this.getStack(position, virtualIndex).copy());
         }
     }
 
-    protected void setStackNoCallbacks(int slot, ItemStack stack) {
+    public void setStackNoCallbacks(int slot, ItemStack stack) {
         this.heldStacks.set(slot, stack);
         stack.capCount(this.getMaxCount(stack));
-    }
-
-    protected boolean didStackChange(ItemStack previousStack, ItemStack newStack) {
-        boolean sameCount = previousStack.getCount() == newStack.getCount();
-        boolean sameItems = ItemStack.areItemsAndComponentsEqual(previousStack, newStack);
-
-        return !sameCount || !sameItems;
     }
 
     abstract protected ItemStack getStack(float position, int virtualIndex);
 
     abstract protected boolean syncStacks();
-
-    abstract protected boolean shouldUpdateRemovals();
 
     @Override
     public void markDirty() {
@@ -59,16 +50,5 @@ public abstract class VirtualNetworkInventory extends SimpleInventory implements
         if (this.syncStacks()) {
             this.handler.getNetwork().ifPresent(InventoryNetwork::markDirty);
         }
-    }
-
-    @Override
-    public ItemStack removeStack(int slot, int amount) {
-        ItemStack result = super.removeStack(slot, amount);
-
-        if (!result.isEmpty() && this.shouldUpdateRemovals()) {
-            this.handler.getNetwork().ifPresent(InventoryNetwork::markDirty);
-        }
-
-        return result;
     }
 }

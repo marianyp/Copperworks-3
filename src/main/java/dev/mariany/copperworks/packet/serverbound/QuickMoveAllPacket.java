@@ -32,18 +32,18 @@ public record QuickMoveAllPacket(int syncId, ItemStack quickMoveStack) implement
         ItemStack stack = payload.quickMoveStack();
 
         ServerPlayerEntity player = context.player();
-        ScreenHandler screenHandler = player.currentScreenHandler;
+        ScreenHandler handler = player.currentScreenHandler;
 
         player.updateLastActionTime();
 
-        if (screenHandler.syncId == syncId && !player.isSpectator()) {
-            if (screenHandler instanceof InventoryNetworkScreenHandler inventoryNetworkScreenHandler) {
+        if (handler.syncId == syncId) {
+            if (handler instanceof InventoryNetworkScreenHandler inventoryNetworkScreenHandler) {
                 inventoryNetworkScreenHandler.quickMoveAll(stack);
             } else {
                 Copperworks.LOGGER.warn(
-                        "Player {} attempted to use custom quick move all action inside of screen {}",
+                        "Player {} attempted to quick move all action inside invalid screen {}",
                         player,
-                        screenHandler
+                        handler
                 );
             }
         }

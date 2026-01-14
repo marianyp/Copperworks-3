@@ -10,7 +10,7 @@ public class CopperClockBlock extends AbstractClockBlock {
     public static final MapCodec<CopperClockBlock> CODEC = createCodec(CopperClockBlock::new);
 
     public CopperClockBlock(Settings settings) {
-        super(settings, 10, 2);
+        super(settings, 10, 10);
     }
 
     @Override

@@ -20,13 +20,13 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class AbstractInventoryNetworkBlock extends BlockWithEntity {
-    public AbstractInventoryNetworkBlock(Settings settings) {
+public abstract class InventoryNetworkBlock extends BlockWithEntity {
+    public InventoryNetworkBlock(Settings settings) {
         super(settings);
     }
 
     @Override
-    protected abstract MapCodec<? extends AbstractInventoryNetworkBlock> getCodec();
+    protected abstract MapCodec<? extends InventoryNetworkBlock> getCodec();
 
     @Override
     @Nullable

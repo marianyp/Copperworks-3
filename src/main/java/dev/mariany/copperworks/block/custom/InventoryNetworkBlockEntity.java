@@ -4,7 +4,7 @@ import dev.mariany.copperworks.Copperworks;
 import dev.mariany.copperworks.inventory.InventoryHelper;
 import dev.mariany.copperworks.inventory.InventoryNetwork;
 import dev.mariany.copperworks.inventory.InventoryNetworkState;
-import dev.mariany.copperworks.packet.clientbound.InventoryNetworkUpdatePacket;
+import dev.mariany.copperworks.packet.clientbound.InventoryNetworkConnectionPacket;
 import dev.mariany.copperworks.screen.InventoryNetworkScreenHandler;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
@@ -37,7 +37,7 @@ import java.util.function.Predicate;
 
 public abstract class InventoryNetworkBlockEntity extends BlockEntity
         implements Inventory, NamedScreenHandlerFactory, Nameable {
-    protected final String NETWORK_KEY = Copperworks.id("network").toString();
+    protected final String NETWORK_KEY = Copperworks.id("stacks").toString();
 
     protected final Text defaultName;
     protected final int slotsPerConnection;
@@ -66,18 +66,22 @@ public abstract class InventoryNetworkBlockEntity extends BlockEntity
 
     public void interact(PlayerEntity player, BlockPos pos) {
         if (player.getEntityWorld() instanceof ServerWorld serverWorld) {
-            GlobalPos globalPos = GlobalPos.create(serverWorld.getRegistryKey(), pos);
-
             if (player instanceof InventoryNetworkState networkState) {
                 networkState.copperworks2$setNetwork(this.network);
             }
 
             if (player instanceof ServerPlayerEntity serverPlayer) {
-                ServerPlayNetworking.send(serverPlayer, new InventoryNetworkUpdatePacket(globalPos, this.network));
+                sendInventoryNetworkUpdate(serverPlayer, pos);
             }
 
             PiglinBrain.onGuardedBlockInteracted(serverWorld, player, true);
         }
+    }
+
+    protected void sendInventoryNetworkUpdate(ServerPlayerEntity serverPlayer, BlockPos pos) {
+        ServerWorld world = serverPlayer.getEntityWorld();
+        GlobalPos globalPos = GlobalPos.create(world.getRegistryKey(), pos);
+        ServerPlayNetworking.send(serverPlayer, new InventoryNetworkConnectionPacket(globalPos, this.network));
     }
 
     public void tick() {

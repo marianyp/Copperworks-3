@@ -1,6 +1,7 @@
 package dev.mariany.copperworks.mixin;
 
 import dev.mariany.copperworks.client.gui.screen.ingame.InventoryNetworkScreen;
+import dev.mariany.copperworks.inventory.SearchVirtualNetworkInventory;
 import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.item.ItemStack;
@@ -41,8 +42,14 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> {
             return;
         }
 
+        // Prevents unintended repeated quick moves when searching
+        if (slot.inventory instanceof SearchVirtualNetworkInventory) {
+            this.doubleClicking = false;
+            return;
+        }
+
         if (this.handler.canInsertIntoSlot(ItemStack.EMPTY, slot) && !this.quickMovingStack.isEmpty()) {
-            if(screen instanceof InventoryNetworkScreen inventoryNetworkScreen) {
+            if (screen instanceof InventoryNetworkScreen inventoryNetworkScreen) {
                 inventoryNetworkScreen.handleQuickMoveAll(this.quickMovingStack);
             }
         }

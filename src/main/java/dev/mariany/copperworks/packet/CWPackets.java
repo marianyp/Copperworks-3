@@ -1,9 +1,6 @@
 package dev.mariany.copperworks.packet;
 
-import dev.mariany.copperworks.packet.clientbound.InventoryNetworkUpdatePacket;
-import dev.mariany.copperworks.packet.clientbound.InventoryValidationPacket;
-import dev.mariany.copperworks.packet.clientbound.MuffledAreaUpdatedPacket;
-import dev.mariany.copperworks.packet.clientbound.MuffledAreasPacket;
+import dev.mariany.copperworks.packet.clientbound.*;
 import dev.mariany.copperworks.packet.serverbound.*;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.network.RegistryByteBuf;
@@ -15,6 +12,7 @@ public class CWPackets {
     }
 
     private static void clientbound(PayloadTypeRegistry<RegistryByteBuf> registry) {
+        registry.register(InventoryNetworkConnectionPacket.ID, InventoryNetworkConnectionPacket.CODEC);
         registry.register(InventoryNetworkUpdatePacket.ID, InventoryNetworkUpdatePacket.CODEC);
         registry.register(InventoryValidationPacket.ID, InventoryValidationPacket.CODEC);
         registry.register(MuffledAreasPacket.ID, MuffledAreasPacket.CODEC);

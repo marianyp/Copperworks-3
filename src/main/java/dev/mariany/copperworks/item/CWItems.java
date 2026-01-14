@@ -10,9 +10,13 @@ import dev.mariany.copperworks.item.custom.copperupgrade.CopperUpgradeItem;
 import dev.mariany.copperworks.item.custom.radio.RadioItem;
 import dev.mariany.copperworks.item.equipment.CWArmorMaterials;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.EquippableComponent;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.Items;
+import net.minecraft.item.equipment.ArmorMaterial;
 import net.minecraft.item.equipment.EquipmentType;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.Registries;
@@ -41,19 +45,7 @@ public class CWItems {
     public static final Item ROCKET_BOOTS = register(
             "rocket_boots",
             RocketBootsItem::new,
-            new Item.Settings()
-                    .armor(CWArmorMaterials.ROCKET_BOOTS, EquipmentType.BOOTS)
-                    .maxDamage(1200)
-                    .fireproof()
-                    .component(
-                            CWComponents.FLYING_EQUIPPABLE,
-                            new FlyingEquippableComponent(
-                                    ParticleTypes.FLAME,
-                                    1.8F,
-                                    0.06F,
-                                    20
-                            )
-                    )
+            createRocketBootsSettings()
     );
 
     public static final PatinaItem PATINA = register("patina", PatinaItem::new);
@@ -61,8 +53,36 @@ public class CWItems {
     public static final WrenchItem WRENCH = register(
             "wrench",
             WrenchItem::new,
-            new Item.Settings().maxDamage(256)
+            new Item.Settings().maxDamage(256).repairable(Items.COPPER_INGOT)
     );
+
+    private static Item.Settings createRocketBootsSettings() {
+        ArmorMaterial material = CWArmorMaterials.ROCKET_BOOTS;
+
+        return new Item.Settings()
+                .fireproof()
+                .maxDamage(2400)
+                .repairable(material.repairIngredient())
+                .enchantable(material.enchantmentValue())
+                .attributeModifiers(material.createAttributeModifiers(EquipmentType.BOOTS))
+                .component(
+                        DataComponentTypes.EQUIPPABLE,
+                        EquippableComponent.builder(EquipmentSlot.FEET)
+                                           .equipSound(material.equipSound())
+                                           .model(material.assetId())
+                                           .damageOnHurt(false)
+                                           .build()
+                )
+                .component(
+                        CWComponents.FLYING_EQUIPPABLE,
+                        new FlyingEquippableComponent(
+                                ParticleTypes.FLAME,
+                                1.8F,
+                                0.06F,
+                                20
+                        )
+                );
+    }
 
     private static Item register(String name) {
         return register(name, Item::new, new Item.Settings());

@@ -87,7 +87,7 @@ public class SearchEntryHelper {
                 boolean start = !sentAny;
                 boolean end = (index == entryCount);
 
-                Copperworks.infoLog("Batching SearchEntry with size of {} bytes.", batchBytes);
+//                Copperworks.infoLog("Batching SearchEntry with size of {} bytes.", batchBytes);
 
                 batchConsumer.accept(batch, start, end);
 

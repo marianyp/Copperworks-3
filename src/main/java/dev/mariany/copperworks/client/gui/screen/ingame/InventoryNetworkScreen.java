@@ -353,6 +353,7 @@ public class InventoryNetworkScreen extends HandledScreen<InventoryNetworkScreen
     }
 
     protected void search() {
+        this.updateSearchEntries();
         String search = this.searchBox.getText();
         ClientPlayNetworking.send(new UpdateSearchQueryPacket(this.handler.syncId, search));
         this.handler.updateSearchQuery(search);

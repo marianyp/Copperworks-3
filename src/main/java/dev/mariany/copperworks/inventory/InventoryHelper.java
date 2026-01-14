@@ -122,6 +122,27 @@ public interface InventoryHelper {
         return false;
     }
 
+    static boolean didStackChange(ItemStack previousStack, ItemStack newStack) {
+        boolean sameCount = previousStack.getCount() == newStack.getCount();
+        boolean sameItems = ItemStack.areItemsAndComponentsEqual(previousStack, newStack);
+
+        return !sameCount || !sameItems;
+    }
+
+    static boolean didStacksChange(List<ItemStack> first, List<ItemStack> second) {
+        if (first.size() != second.size()) {
+            return true;
+        }
+
+        for (int i = 0; i < first.size(); i++) {
+            if (didStackChange(first.get(i), second.get(i))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private static boolean canCombine(ItemStack firstStack, ItemStack secondStack) {
         if (firstStack.isEmpty() || secondStack.isEmpty()) {
             return false;

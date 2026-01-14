@@ -55,8 +55,6 @@ public class CWModelProvider extends FabricModelProvider {
         blockStateModelGenerator.registerTurnableRail(CWBlocks.WOODEN_RAIL);
         blockStateModelGenerator.registerTurnableRail(CWBlocks.COPPER_RAIL);
 
-        blockStateModelGenerator.registerSimpleCubeAll(CWBlocks.COPPER_CLOCK);
-
         blockStateModelGenerator.registerSimpleCubeAll(CWBlocks.RELAY);
 
         blockStateModelGenerator.registerSimpleCubeAll(CWBlocks.MUFFLER);
@@ -75,6 +73,8 @@ public class CWModelProvider extends FabricModelProvider {
         registerBoundRelay(blockStateModelGenerator);
         registerPowered(blockStateModelGenerator, CWBlocks.RADIO_RELAY);
         registerPowered(blockStateModelGenerator, CWBlocks.ENDER_RELAY);
+
+        registerPowered(blockStateModelGenerator, CWBlocks.COPPER_CLOCK);
 
         registerSensor(blockStateModelGenerator);
     }

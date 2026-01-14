@@ -52,7 +52,7 @@ public class CopperBarrelBlockEntity extends InventoryNetworkBlockEntity {
         float minPitch = open ? 0.9F : 0.6F;
         float maxPitch = open ? 1 : 0.7F;
 
-        float volume = open ? 0.8F : 0.4F;
+        float volume = open ? 0.5F : 0.2F;
 
         world.playSound(
                 null,

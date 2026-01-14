@@ -18,6 +18,7 @@ public record InventoryValidationPacket(int syncId, float scrollPosition, Option
             PacketCodecs.INTEGER, InventoryValidationPacket::syncId,
             PacketCodecs.FLOAT, InventoryValidationPacket::scrollPosition,
             PacketCodecs.STRING.collect(PacketCodecs::optional), InventoryValidationPacket::searchQuery,
+
             InventoryValidationPacket::new
     );
 
