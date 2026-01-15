@@ -7,3 +7,5 @@ accessible field net/minecraft/screen/ScreenHandler trackedStacks Lnet/minecraft
 accessible field net/minecraft/screen/ScreenHandler trackedSlots Lnet/minecraft/util/collection/DefaultedList;
 
 accessible class net/minecraft/server/network/PrepareSpawnTask$PlayerSpawn
+
+accessible method net/minecraft/block/AbstractRailBlock shouldDropRail (Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/World;Lnet/minecraft/block/enums/RailShape;)Z

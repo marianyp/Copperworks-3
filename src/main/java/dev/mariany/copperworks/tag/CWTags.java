@@ -18,6 +18,7 @@ public class CWTags {
     }
 
     public static final class Blocks {
+        public static final TagKey<Block> LOUD = createTag("loud");
         public static final TagKey<Block> STICKY = createTag("sticky");
         public static final TagKey<Block> EXTENDS_BATTERY_PULSE = createTag("extends_battery_pulse");
         public static final TagKey<Block> WRENCH_BLACKLIST = createTag("wrench_blacklist");

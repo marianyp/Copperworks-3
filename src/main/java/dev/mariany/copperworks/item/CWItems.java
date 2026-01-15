@@ -12,6 +12,7 @@ import dev.mariany.copperworks.item.equipment.CWArmorMaterials;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.EquippableComponent;
+import net.minecraft.component.type.WeaponComponent;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
@@ -53,7 +54,11 @@ public class CWItems {
     public static final WrenchItem WRENCH = register(
             "wrench",
             WrenchItem::new,
-            new Item.Settings().maxDamage(256).repairable(Items.COPPER_INGOT)
+            new Item.Settings()
+                    .maxDamage(512)
+                    .repairable(Items.COPPER_INGOT)
+                    .attributeModifiers(WrenchItem.createAttributeModifiers())
+                    .component(DataComponentTypes.WEAPON, new WeaponComponent(1))
     );
 
     private static Item.Settings createRocketBootsSettings() {

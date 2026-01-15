@@ -59,6 +59,8 @@ public class CWBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 CWBlocks.COPPER_RAIL
         );
 
+        valueLookupBuilder(CWTags.Blocks.LOUD).addOptionalTag(BlockTags.ANVIL).add(Blocks.BELL);
+
         valueLookupBuilder(CWTags.Blocks.STICKY).add(
                 CWBlocks.STICKY_COPPER,
                 CWBlocks.STICKY_COPPER_HONEY

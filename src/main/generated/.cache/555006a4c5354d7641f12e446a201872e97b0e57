@@ -1,6 +1,7 @@
 // 1.21.10	-999999999-01-01T00:00:00	Copperworks/Tags for minecraft:block
 dea398f27fba8e2cbcbb39bb07e69a9d1b1f61e0 data/copperworks/tags/block/extends_battery_pulse.json
 ed669b33bf8da0d4d006567681adc9ba3794c9ad data/copperworks/tags/block/extends_battery_pulse_same_axis.json
+6173ad07b5591c3d9e9487dd487d1c4ccc9c0f6a data/copperworks/tags/block/loud.json
 acfb35dc512c1b2e7bbc16016fbc8ee62d9ebb91 data/copperworks/tags/block/sticky.json
 aafdeb39f3be20c0def8d226c81e5f255f65500c data/copperworks/tags/block/wrench_blacklist.json
 35e634887d3e279af5e5b4301e39aed1e23d0589 data/minecraft/tags/block/mineable/axe.json

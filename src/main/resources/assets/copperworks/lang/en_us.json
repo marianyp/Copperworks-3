@@ -38,5 +38,13 @@
   "subtitles.block.copperworks.copper_barrel.lid_moved": "Copper Barrel lid moved",
   "subtitles.block.copperworks.ender_relay.bind": "Ender Relay bound",
   "subtitles.item.armor.equip.copperworks.rocket_boots": "Rocket boots clank",
-  "subtitles.item.copperworks.radio": "Radio used"
+  "subtitles.item.copperworks.radio": "Radio used",
+  "tag.block.copperworks.extends_battery_pulse": "Extends Battery Pulse",
+  "tag.block.copperworks.extends_battery_pulse_same_axis": "Extends Battery Pulse on Same Axis",
+  "tag.block.copperworks.loud": "Loud",
+  "tag.block.copperworks.sticky": "Sticky",
+  "tag.block.copperworks.wrench_blacklist": "Wrench Blacklist",
+  "tag.entity_type.copperworks.sticky_immune": "Sticky Immune",
+  "tag.item.copperworks.binds_ender_relay": "Binds Ender Relay",
+  "tag.item.copperworks.repairs_rocket_boots": "Repairs Rocket Boots"
 }
