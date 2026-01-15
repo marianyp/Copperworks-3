@@ -1,6 +1,5 @@
 package dev.mariany.copperworks.client.gl;
 
-import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.DepthTestFunction;
 import com.mojang.blaze3d.vertex.VertexFormat;
@@ -16,8 +15,7 @@ public class CWRenderPipelines {
             RenderPipeline.builder(RenderPipelines.POSITION_COLOR_SNIPPET)
                           .withLocation(Copperworks.id("pipeline/highlighted_block"))
                           .withVertexFormat(VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.TRIANGLE_STRIP)
-                          .withCull(true)
-                          .withBlend(BlendFunction.TRANSLUCENT)
+                          .withCull(false)
                           .withDepthWrite(false)
                           .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
                           .build()

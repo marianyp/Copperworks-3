@@ -1,26 +1,33 @@
 package dev.mariany.copperworks.client.render.block.entity;
 
 import dev.mariany.copperworks.block.custom.relay.bound.BoundRelayBlockEntity;
+import dev.mariany.copperworks.client.render.block.entity.state.BoundRelayBlockEntityRenderState;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
+import net.minecraft.client.render.command.ModelCommandRenderer;
+import net.minecraft.client.render.command.OrderedRenderCommandQueue;
+import net.minecraft.client.render.state.CameraRenderState;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
-public class BoundRelayBlockEntityRenderer extends HighlightedBlockEntityRenderer<BoundRelayBlockEntity> {
+public class BoundRelayBlockEntityRenderer
+        extends AbstractHighlightedBlockEntityRenderer<BoundRelayBlockEntity, BoundRelayBlockEntityRenderState> {
     public BoundRelayBlockEntityRenderer(BlockEntityRendererFactory.Context context) {
         super(context);
     }
 
-    @Override
-    protected Optional<BlockPos> getBoundPosition(BoundRelayBlockEntity blockEntity) {
-        return blockEntity.getBoundPos().map(boundPos -> {
+    protected static Optional<BlockPos> getBoundPosition(BoundRelayBlockEntity boundRelayBlockEntity) {
+        return boundRelayBlockEntity.getBoundPos().map(boundPos -> {
             RegistryKey<World> dimension = boundPos.dimension();
             ClientWorld world = MinecraftClient.getInstance().world;
 
@@ -32,5 +39,38 @@ public class BoundRelayBlockEntityRenderer extends HighlightedBlockEntityRendere
 
             return null;
         });
+    }
+
+    @Override
+    public BoundRelayBlockEntityRenderState createRenderState() {
+        return new BoundRelayBlockEntityRenderState();
+    }
+
+    @Override
+    public void updateRenderState(
+            BoundRelayBlockEntity boundRelayBlockEntity,
+            BoundRelayBlockEntityRenderState state,
+            float tickProgress,
+            Vec3d cameraPos,
+            @Nullable ModelCommandRenderer.CrumblingOverlayCommand crumblingOverlay
+    ) {
+        super.updateRenderState(boundRelayBlockEntity, state, tickProgress, cameraPos, crumblingOverlay);
+        state.boundPos = getBoundPosition(boundRelayBlockEntity).orElse(null);
+    }
+
+    @Override
+    public void render(
+            BoundRelayBlockEntityRenderState state,
+            MatrixStack matrices,
+            OrderedRenderCommandQueue queue,
+            CameraRenderState cameraState
+    ) {
+        super.render(state, matrices, queue, cameraState);
+
+        BlockPos boundPos = state.boundPos;
+
+        if (boundPos != null) {
+            renderHighlight(state, matrices, queue, cameraState, boundPos);
+        }
     }
 }
