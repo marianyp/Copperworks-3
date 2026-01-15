@@ -3,7 +3,7 @@ package dev.mariany.copperworks.client;
 import dev.mariany.copperworks.block.CWBlockEntities;
 import dev.mariany.copperworks.block.CWBlocks;
 import dev.mariany.copperworks.client.gui.screen.ingame.InventoryNetworkScreen;
-import dev.mariany.copperworks.client.muffler.MuffledNotifier;
+import dev.mariany.copperworks.client.muffler.MufflerNotifier;
 import dev.mariany.copperworks.client.muffler.MufflerHandler;
 import dev.mariany.copperworks.client.render.block.entity.BoundRelayBlockEntityRenderer;
 import dev.mariany.copperworks.client.render.block.entity.HighlightedBlockEntityRenderer;
@@ -23,6 +23,8 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 
 @Environment(EnvType.CLIENT)
 public class CopperworksClient implements ClientModInitializer {
+    private final MufflerNotifier mufflerNotifier = new MufflerNotifier();
+
     @Override
     public void onInitializeClient() {
         ClientboundPackets.bootstrap();
@@ -33,7 +35,7 @@ public class CopperworksClient implements ClientModInitializer {
         registerBlockEntityRenderers();
 
         ClientTickEvents.END_CLIENT_TICK.register(RadioHandler::onTick);
-        ClientTickEvents.END_CLIENT_TICK.register(MuffledNotifier::onTick);
+        ClientTickEvents.END_CLIENT_TICK.register(this.mufflerNotifier::onTick);
 
         ClientChunkEvents.CHUNK_LOAD.register(MufflerHandler::onChunkLoad);
         ClientChunkEvents.CHUNK_UNLOAD.register(MufflerHandler::onChunkUnload);

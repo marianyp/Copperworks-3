@@ -5,7 +5,10 @@ import dev.mariany.copperworks.registry.CWRegistryKeys;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.registry.*;
+import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.Registerable;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
 
@@ -14,8 +17,27 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public interface CopperUpgrades {
-    static void boostrap(Registerable<CopperUpgrade> registry) {
+public final class CopperUpgrades {
+    private CopperUpgrades() {
+    }
+    
+    public static Optional<CopperUpgrade> getCopperUpgrade(DynamicRegistryManager wrapperLookup, BlockState state) {
+        Optional<RegistryKey<Block>> optionalBlockKey = state.getRegistryEntry().getKey();
+
+        Optional<Registry<CopperUpgrade>> optionalCopperUpgradesRegistry = wrapperLookup.getOptional(
+                CWRegistryKeys.COPPER_UPGRADE
+        );
+
+        if (optionalBlockKey.isPresent() && optionalCopperUpgradesRegistry.isPresent()) {
+            RegistryKey<Block> blockKey = optionalBlockKey.get();
+            Registry<CopperUpgrade> copperUpgradesRegistry = optionalCopperUpgradesRegistry.get();
+            return Optional.ofNullable(copperUpgradesRegistry.get(blockKey.getValue()));
+        }
+
+        return Optional.empty();
+    }
+
+    public static void boostrap(Registerable<CopperUpgrade> registry) {
         register(registry, CWBlocks.WOODEN_RAIL, CWBlocks.COPPER_RAIL, Properties.RAIL_SHAPE, Properties.WATERLOGGED);
         register(registry, Blocks.LEVER, CWBlocks.COPPER_LEVER, Properties.FACING, Properties.BLOCK_FACE);
         register(registry, Blocks.SCAFFOLDING, CWBlocks.COPPER_SCAFFOLDING);
@@ -61,21 +83,5 @@ public interface CopperUpgrades {
 
                 registry.register(key, new CopperUpgrade(to, propertyNames, mergeInventories));
             });
-    }
-
-    static Optional<CopperUpgrade> getCopperUpgrade(DynamicRegistryManager wrapperLookup, BlockState state) {
-        Optional<RegistryKey<Block>> optionalBlockKey = state.getRegistryEntry().getKey();
-
-        Optional<Registry<CopperUpgrade>> optionalCopperUpgradesRegistry = wrapperLookup.getOptional(
-                CWRegistryKeys.COPPER_UPGRADE
-        );
-
-        if (optionalBlockKey.isPresent() && optionalCopperUpgradesRegistry.isPresent()) {
-            RegistryKey<Block> blockKey = optionalBlockKey.get();
-            Registry<CopperUpgrade> copperUpgradesRegistry = optionalCopperUpgradesRegistry.get();
-            return Optional.ofNullable(copperUpgradesRegistry.get(blockKey.getValue()));
-        }
-
-        return Optional.empty();
     }
 }

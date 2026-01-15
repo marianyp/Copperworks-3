@@ -8,8 +8,11 @@ import net.minecraft.client.render.item.property.bool.BooleanProperties;
 import net.minecraft.client.render.item.property.bool.BooleanProperty;
 
 @Environment(EnvType.CLIENT)
-public interface CWBooleanProperties {
-    static void bootstrap() {
+public final class CWBooleanProperties {
+    private CWBooleanProperties() {
+    }
+
+    public static void bootstrap() {
         register("bound", BoundProperty.CODEC);
     }
 

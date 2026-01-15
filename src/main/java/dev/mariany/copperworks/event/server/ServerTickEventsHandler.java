@@ -1,6 +1,6 @@
 package dev.mariany.copperworks.event.server;
 
-import dev.mariany.copperworks.block.StickyHelper;
+import dev.mariany.copperworks.block.StickyHandler;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.TypeFilter;
@@ -20,6 +20,6 @@ public class ServerTickEventsHandler {
     }
 
     private static void onLivingEntityTick(LivingEntity livingEntity) {
-        StickyHelper.applyModifiers(livingEntity);
+        StickyHandler.onLivingEntityTick(livingEntity);
     }
 }

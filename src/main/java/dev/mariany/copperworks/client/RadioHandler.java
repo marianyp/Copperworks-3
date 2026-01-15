@@ -18,10 +18,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Environment(EnvType.CLIENT)
-public interface RadioHandler {
-    Map<Hand, BlockPos> RADIO_MAPPING = new HashMap<>();
+public final class RadioHandler {
+    private static final Map<Hand, BlockPos> RADIO_MAPPING = new HashMap<>();
 
-    static void onTick(MinecraftClient client) {
+    private RadioHandler() {
+    }
+
+    public static void onTick(MinecraftClient client) {
         ClientPlayerEntity player = client.player;
 
         boolean newRadio = false;

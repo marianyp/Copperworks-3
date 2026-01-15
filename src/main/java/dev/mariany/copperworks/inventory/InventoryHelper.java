@@ -12,8 +12,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public interface InventoryHelper {
-    static List<ItemStack> copy(World world, BlockPos pos, boolean unset) {
+public final class InventoryHelper {
+    private InventoryHelper() {}
+
+    public static List<ItemStack> copy(World world, BlockPos pos, boolean unset) {
         List<ItemStack> stacks = new ArrayList<>();
 
         if (world.getBlockEntity(pos) instanceof Inventory inventory) {
@@ -30,7 +32,7 @@ public interface InventoryHelper {
         return stacks;
     }
 
-    static List<ItemStack> addAll(World world, BlockPos pos, List<ItemStack> stacks) {
+    public static List<ItemStack> addAll(World world, BlockPos pos, List<ItemStack> stacks) {
         List<ItemStack> overflow = new ArrayList<>();
 
         if (world.getBlockEntity(pos) instanceof Inventory inventory) {
@@ -68,7 +70,7 @@ public interface InventoryHelper {
         return overflow;
     }
 
-    static void scatterItems(World world, BlockPos pos, List<ItemStack> stacks) {
+    public static void scatterItems(World world, BlockPos pos, List<ItemStack> stacks) {
         stacks.forEach(stack -> ItemScatterer.spawn(
                 world,
                 pos.getX(),
@@ -78,7 +80,7 @@ public interface InventoryHelper {
         ));
     }
 
-    static int shiftLeft(InventoryNetwork network, int slot) {
+    public static int shiftLeft(InventoryNetwork network, int slot) {
         if (slot <= 0) {
             return slot;
         }
@@ -114,7 +116,7 @@ public interface InventoryHelper {
         return slot;
     }
 
-    static boolean canCombine(ItemStack firstStack, ItemStack secondStack, boolean allowOverflow) {
+    public static boolean canCombine(ItemStack firstStack, ItemStack secondStack, boolean allowOverflow) {
         if (canCombine(firstStack, secondStack)) {
             return secondStack.getCount() + (allowOverflow ? 0 : firstStack.getCount()) <= firstStack.getMaxCount();
         }
@@ -122,14 +124,14 @@ public interface InventoryHelper {
         return false;
     }
 
-    static boolean didStackChange(ItemStack previousStack, ItemStack newStack) {
+    public static boolean didStackChange(ItemStack previousStack, ItemStack newStack) {
         boolean sameCount = previousStack.getCount() == newStack.getCount();
         boolean sameItems = ItemStack.areItemsAndComponentsEqual(previousStack, newStack);
 
         return !sameCount || !sameItems;
     }
 
-    static boolean didStacksChange(List<ItemStack> first, List<ItemStack> second) {
+    public static boolean didStacksChange(List<ItemStack> first, List<ItemStack> second) {
         if (first.size() != second.size()) {
             return true;
         }

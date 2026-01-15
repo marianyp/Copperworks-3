@@ -20,26 +20,28 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
-public interface MufflerHandler {
-    static void onDisconnect(ClientPlayNetworkHandler clientPlayNetworkHandler, MinecraftClient client) {
-        Copperworks.LOGGER.info("Clearing Muffler Storage");
+public final class MufflerHandler {
+    private MufflerHandler() {}
+
+    public static void onDisconnect(ClientPlayNetworkHandler clientPlayNetworkHandler, MinecraftClient client) {
+        Copperworks.infoLog("Clearing Muffler Storage");
         MufflerStorage.clear();
     }
 
-    static void onChunkLoad(ClientWorld world, WorldChunk worldChunk) {
+    public static void onChunkLoad(ClientWorld world, WorldChunk worldChunk) {
         ClientPlayNetworking.send(new RequestMufflersPacket(worldChunk.getPos()));
     }
 
-    static void onChunkUnload(ClientWorld world, WorldChunk worldChunk) {
+    public static void onChunkUnload(ClientWorld world, WorldChunk worldChunk) {
         MufflerStorage.remove(worldChunk.getPos());
     }
 
-    static boolean shouldMuffle(SoundInstance soundInstance) {
+    public static boolean shouldMuffle(SoundInstance soundInstance) {
         Vec3d soundPos = new Vec3d(soundInstance.getX(), soundInstance.getY(), soundInstance.getZ());
         return shouldMuffle(soundPos);
     }
 
-    static boolean shouldMuffle(Vec3d soundPos) {
+    public static boolean shouldMuffle(Vec3d soundPos) {
         BlockPos pos = BlockPos.ofFloored(soundPos);
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
@@ -53,7 +55,7 @@ public interface MufflerHandler {
         return isMufflerNearby(pos, pos);
     }
 
-    static boolean isMufflerNearPlayer(PlayerEntity player, @Nullable BlockPos ignorePos) {
+    public static boolean isMufflerNearPlayer(PlayerEntity player, @Nullable BlockPos ignorePos) {
         if (player != null) {
             BlockPos playerPos = player.getBlockPos();
             return isMufflerNearby(playerPos, ignorePos);
@@ -62,7 +64,7 @@ public interface MufflerHandler {
         return false;
     }
 
-    static boolean isMufflerNearby(BlockPos pos, @Nullable BlockPos ignorePos) {
+    private static boolean isMufflerNearby(BlockPos pos, @Nullable BlockPos ignorePos) {
         List<MuffledArea> muffledAreas = MufflerStorage.getMuffledAreas();
 
         for (MuffledArea muffledArea : muffledAreas) {

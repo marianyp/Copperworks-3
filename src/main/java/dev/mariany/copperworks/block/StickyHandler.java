@@ -12,22 +12,15 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.entry.RegistryEntry;
 
-public interface StickyHelper {
-    static boolean isStuck(Entity entity) {
-        if (entity.getType().isIn(CWTags.Entities.STICKY_IMMUNE)) {
-            return false;
-        }
-
-        if (entity instanceof PlayerEntity player) {
-            if (player.isSneaking() || player.isSpectator() || player.getAbilities().allowFlying) {
-                return false;
-            }
-        }
-
-        return entity.getSteppingBlockState().isIn(CWTags.Blocks.STICKY);
+public final class StickyHandler {
+    private StickyHandler() {
     }
 
-    static void applyModifiers(LivingEntity livingEntity) {
+    public static void onLivingEntityTick(LivingEntity livingEntity) {
+        applyModifiers(livingEntity);
+    }
+
+    private static void applyModifiers(LivingEntity livingEntity) {
         AttributeContainer attributeContainer = livingEntity.getAttributes();
         HashMultimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> modifiers = getModifiers();
 
@@ -36,6 +29,20 @@ public interface StickyHelper {
         } else {
             attributeContainer.removeModifiers(modifiers);
         }
+    }
+
+    public static boolean isStuck(Entity entity) {
+        if (entity.getType().isIn(CWTags.Entities.STICKY_IMMUNE)) {
+            return false;
+        }
+
+        if (entity instanceof PlayerEntity player) {
+            if (player.isSneaking() || player.isSpectator()) {
+                return false;
+            }
+        }
+
+        return entity.getSteppingBlockState().isIn(CWTags.Blocks.STICKY);
     }
 
     private static HashMultimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> getModifiers() {

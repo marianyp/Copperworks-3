@@ -16,8 +16,11 @@ import net.minecraft.world.World;
 
 import java.util.Optional;
 
-public interface PotionDegradation {
-    static void onPotionCollision(PotionEntity potionEntity) {
+public final class PotionDegradationHandler {
+    private PotionDegradationHandler() {
+    }
+
+    public static void onPotionCollision(PotionEntity potionEntity) {
         if (potionEntity.getEntityWorld() instanceof ServerWorld world) {
             if (!world.getGameRules().getBoolean(CWGamerules.WATER_POTIONS_DEGRADE_BLOCKS)) {
                 return;

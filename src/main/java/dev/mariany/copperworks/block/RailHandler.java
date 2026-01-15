@@ -17,15 +17,18 @@ import net.minecraft.world.World;
 
 import java.util.Map;
 
-public interface DynamicRails {
-    Map<Block, RailProperties> MOMENTUM_RAILS = Map.of(
+public final class RailHandler {
+    private final static Map<Block, RailProperties> MOMENTUM_RAILS = Map.of(
             CWBlocks.WOODEN_RAIL, new RailProperties(0.3F, 0.3F),
             CWBlocks.COPPER_RAIL, new RailProperties(0.4F, 0.1F)
     );
 
-    Map<Block, Float> FRAGILE_RAILS = Map.of(CWBlocks.WOODEN_RAIL, 0.03F);
+    private final static Map<Block, Float> FRAGILE_RAILS = Map.of(CWBlocks.WOODEN_RAIL, 0.03F);
 
-    static void onMinecartTravel(AbstractMinecartEntity abstractMinecart) {
+    private RailHandler() {
+    }
+
+    public static void onMinecartTravel(AbstractMinecartEntity abstractMinecart) {
         if (!abstractMinecart.getEntityWorld().isClient()) {
             BlockPos previousPosition = abstractMinecart.getBlockPos();
 

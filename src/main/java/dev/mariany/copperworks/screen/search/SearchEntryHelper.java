@@ -11,7 +11,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class SearchEntryHelper {
+public final class SearchEntryHelper {
+    private SearchEntryHelper() {
+    }
+
     public static List<SearchEntry> getEntries(@Nullable World world, Collection<StackWithSlot> stacksWithSlot) {
         List<SearchEntry> searchEntries = new ArrayList<>();
 

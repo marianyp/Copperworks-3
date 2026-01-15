@@ -4,5 +4,5 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.screen.slot.Slot;
 
 public interface SlotSupplier {
-    Slot apply(Inventory i, int index, int x, int y);
+    Slot apply(Inventory inventory, int index, int x, int y);
 }

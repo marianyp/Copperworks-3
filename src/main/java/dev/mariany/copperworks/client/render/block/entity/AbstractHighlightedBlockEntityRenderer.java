@@ -23,7 +23,14 @@ public abstract class AbstractHighlightedBlockEntityRenderer<
         T extends HighlightedBlockEntity,
         S extends HighlightedBlockEntityRenderState
         > implements BlockEntityRenderer<T, S> {
+    protected final float maxOpacity;
+
     public AbstractHighlightedBlockEntityRenderer(BlockEntityRendererFactory.Context context) {
+        this(context, 0.5F);
+    }
+
+    public AbstractHighlightedBlockEntityRenderer(BlockEntityRendererFactory.Context context, float maxOpacity) {
+        this.maxOpacity = maxOpacity;
     }
 
     @Override
@@ -96,7 +103,7 @@ public abstract class AbstractHighlightedBlockEntityRenderer<
                                                 (float) color.getX(),
                                                 (float) color.getY(),
                                                 (float) color.getZ(),
-                                                progress * 0.4F
+                                                progress * this.maxOpacity
                                         )
                         )
         );
