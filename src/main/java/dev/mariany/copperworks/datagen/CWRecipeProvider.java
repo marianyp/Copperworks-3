@@ -3,10 +3,12 @@ package dev.mariany.copperworks.datagen;
 import dev.mariany.copperworks.Copperworks;
 import dev.mariany.copperworks.block.CWBlocks;
 import dev.mariany.copperworks.item.CWItems;
+import dev.mariany.copperworks.recipe.RadioCloningRecipe;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.data.recipe.ComplexRecipeJsonBuilder;
 import net.minecraft.data.recipe.RecipeExporter;
 import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.data.recipe.SmithingTransformRecipeJsonBuilder;
@@ -37,6 +39,8 @@ public class CWRecipeProvider extends FabricRecipeProvider {
         return new RecipeGenerator(wrapperLookup, recipeExporter) {
             @Override
             public void generate() {
+                ComplexRecipeJsonBuilder.create(RadioCloningRecipe::new).offerTo(this.exporter, "radio_cloning");
+
                 this.createPlateRecipe(CWItems.COPPER_PLATE, Items.COPPER_INGOT);
                 this.createPlateRecipe(CWItems.IRON_PLATE, Items.IRON_INGOT);
                 this.createWoodenRailRecipe();

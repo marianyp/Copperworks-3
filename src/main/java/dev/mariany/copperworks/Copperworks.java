@@ -14,6 +14,7 @@ import dev.mariany.copperworks.item.custom.copperupgrade.CopperUpgrade;
 import dev.mariany.copperworks.loot.LootTableModifiers;
 import dev.mariany.copperworks.packet.CWPackets;
 import dev.mariany.copperworks.packet.serverbound.ServerboundPackets;
+import dev.mariany.copperworks.recipe.CWRecipeSerializers;
 import dev.mariany.copperworks.registry.CWRegistryKeys;
 import dev.mariany.copperworks.screen.CWScreenHandlers;
 import dev.mariany.copperworks.server.world.CWChunkTickets;
@@ -61,6 +62,7 @@ public class Copperworks implements ModInitializer {
         CWPackets.bootstrap();
         ServerboundPackets.bootstrap();
 
+        CWRecipeSerializers.bootstrap();
         CWChunkTickets.bootstrap();
         CWGamerules.bootstrap();
         CWSoundEvents.bootstrap();
