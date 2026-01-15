@@ -6,6 +6,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Optional;
 
@@ -23,5 +26,10 @@ public class PlayerEntityMixin implements InventoryNetworkState {
     @Override
     public void copperworks2$setNetwork(@Nullable InventoryNetwork network) {
         this.network = network;
+    }
+
+    @Inject(method = "closeHandledScreen", at = @At(value = "TAIL"))
+    public void injectCloseHandledScreen(CallbackInfo ci) {
+        this.network = null;
     }
 }

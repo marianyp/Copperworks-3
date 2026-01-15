@@ -29,6 +29,7 @@
     "EquipmentRendererMixin",
     "HandledScreenMixin",
     "LivingEntityRendererMixin",
+    "MouseTweaksMainMixin",
     "SoundSystemMixin"
   ]
 }

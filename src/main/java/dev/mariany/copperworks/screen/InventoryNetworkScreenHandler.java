@@ -1,6 +1,5 @@
 package dev.mariany.copperworks.screen;
 
-import dev.mariany.copperworks.Copperworks;
 import dev.mariany.copperworks.block.custom.InventoryNetworkBlockEntity;
 import dev.mariany.copperworks.inventory.*;
 import dev.mariany.copperworks.mixin.accessor.ScreenHandlerAccessor;
@@ -296,8 +295,6 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
 
             this.setCursorStack(cursorStack);
             ((ScreenHandlerAccessor) this).copperworks$setRevision(revision);
-        } else {
-            Copperworks.LOGGER.warn("Not validated in updateSlotStacks");
         }
     }
 
@@ -311,8 +308,6 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
             }
 
             ((ScreenHandlerAccessor) this).copperworks$setRevision(revision);
-        } else {
-            Copperworks.LOGGER.warn("Not validated in setStackInSlot");
         }
     }
 
@@ -494,7 +489,7 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
                 } else {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItemToNetwork(slotStack)) {
+            } else if (!this.insertIntoNetwork(slotStack)) {
                 return ItemStack.EMPTY;
             }
 
@@ -510,7 +505,7 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
         return resultStack;
     }
 
-    protected boolean insertItemToNetwork(ItemStack stack) {
+    protected boolean insertIntoNetwork(ItemStack stack) {
         return this.getNetwork().map(network -> {
             final int networkSize = network.size();
             boolean changed = false;
@@ -603,10 +598,6 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
             network.removeListener(this);
             network.markDirty();
         });
-
-        if (player instanceof InventoryNetworkState networkState) {
-            networkState.copperworks2$setNetwork(null);
-        }
 
         if (this.inventoryNetworkBlockEntity != null) {
             this.inventoryNetworkBlockEntity.onClose(this.player);
