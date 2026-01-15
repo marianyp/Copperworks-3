@@ -1,7 +1,7 @@
 package dev.mariany.copperworks.mixin;
 
 import dev.mariany.copperworks.client.gui.screen.ingame.InventoryNetworkScreen;
-import dev.mariany.copperworks.inventory.SearchVirtualNetworkInventory;
+import dev.mariany.copperworks.inventory.SearchVirtualInventoryNetwork;
 import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.item.ItemStack;
@@ -35,20 +35,23 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> {
     public void injectMouseReleased(Click click, CallbackInfoReturnable<Boolean> cir) {
         HandledScreen<?> screen = (HandledScreen<?>) (Object) this;
 
-        boolean shiftDoubleClick = this.doubleClicking && click.hasShift();
         Slot slot = this.getSlotAt(click.x(), click.y());
 
-        if (slot == null || click.button() != 0 || !shiftDoubleClick) {
+        if (slot == null) {
             return;
         }
 
-        // Prevents unintended repeated quick moves when searching
-        if (slot.inventory instanceof SearchVirtualNetworkInventory) {
+        if (slot.inventory instanceof SearchVirtualInventoryNetwork) {
+            // Prevents unintended quick moves when searching inventory
             this.doubleClicking = false;
             return;
         }
 
-        if (this.handler.canInsertIntoSlot(ItemStack.EMPTY, slot) && !this.quickMovingStack.isEmpty()) {
+        if (click.button() != 0 || !this.doubleClicking || !click.hasShift()) {
+            return;
+        }
+
+        if (!this.quickMovingStack.isEmpty() && this.handler.canInsertIntoSlot(ItemStack.EMPTY, slot)) {
             if (screen instanceof InventoryNetworkScreen inventoryNetworkScreen) {
                 inventoryNetworkScreen.handleQuickMoveAll(this.quickMovingStack);
             }

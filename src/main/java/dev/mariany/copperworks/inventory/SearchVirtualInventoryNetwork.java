@@ -6,8 +6,8 @@ import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
-public class SearchVirtualNetworkInventory extends VirtualNetworkInventory {
-    public SearchVirtualNetworkInventory(InventoryNetworkScreenHandler handler) {
+public class SearchVirtualInventoryNetwork extends VirtualInventoryNetwork {
+    public SearchVirtualInventoryNetwork(InventoryNetworkScreenHandler handler) {
         super(handler);
     }
 

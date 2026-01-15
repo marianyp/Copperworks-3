@@ -42,7 +42,7 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
     @Nullable
     protected final InventoryNetworkBlockEntity inventoryNetworkBlockEntity;
 
-    protected VirtualNetworkInventory virtualNetworkInventory;
+    protected VirtualInventoryNetwork virtualInventoryNetwork;
 
     protected float scrollPosition;
 
@@ -83,7 +83,7 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
         this.columns = columns;
         this.maxRows = maxRows;
         this.player = playerInventory.player;
-        this.virtualNetworkInventory = new ScrollVirtualNetworkInventory(this);
+        this.virtualInventoryNetwork = new ScrollVirtualInventoryNetwork(this);
         this.inventoryNetworkBlockEntity = inventoryNetworkBlockEntity;
 
         this.getNetwork().ifPresent(network -> network.addListener(this));
@@ -139,12 +139,12 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
         return this.player.getInventory().size();
     }
 
-    public int getVirtualNetworkInventorySize() {
-        return this.virtualNetworkInventory.size();
+    public int getVirtualInventoryNetworkSize() {
+        return this.virtualInventoryNetwork.size();
     }
 
-    public VirtualNetworkInventory getVirtualNetworkInventory() {
-        return this.virtualNetworkInventory;
+    public VirtualInventoryNetwork getVirtualInventoryNetwork() {
+        return this.virtualInventoryNetwork;
     }
 
     public int getNetworkSize() {
@@ -184,7 +184,7 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
 
     public void updateScrollPosition(float scrollPosition) {
         this.scrollPosition = scrollPosition;
-        this.virtualNetworkInventory.scrollItems(scrollPosition);
+        this.virtualInventoryNetwork.scrollItems(scrollPosition);
     }
 
     public float calculateScrollPosition(float current, double amount) {
@@ -213,12 +213,12 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
         this.getNetwork().ifPresent(InventoryNetwork::markDirty);
 
         if (this.isSearching()) {
-            this.virtualNetworkInventory = new SearchVirtualNetworkInventory(this);
+            this.virtualInventoryNetwork = new SearchVirtualInventoryNetwork(this);
         } else {
-            this.virtualNetworkInventory = new ScrollVirtualNetworkInventory(this);
+            this.virtualInventoryNetwork = new ScrollVirtualInventoryNetwork(this);
         }
 
-        SlotSupplier slotSupplier = this.virtualNetworkInventory instanceof SearchVirtualNetworkInventory ?
+        SlotSupplier slotSupplier = this.virtualInventoryNetwork instanceof SearchVirtualInventoryNetwork ?
                 SearchSlot::new :
                 Slot::new;
 
@@ -228,12 +228,12 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
                 int slotX = (SLOT_SIZE / 2) + x * SLOT_BOX_SIZE;
                 int slotY = INVENTORY_Y_OFFSET + SLOT_BOX_SIZE + y * SLOT_BOX_SIZE;
 
-                this.addSlot(slotSupplier.apply(this.virtualNetworkInventory, index, slotX, slotY));
+                this.addSlot(slotSupplier.apply(this.virtualInventoryNetwork, index, slotX, slotY));
             }
         }
 
         this.updateScrollPosition(scrollPosition);
-        this.virtualNetworkInventory.setPrepared();
+        this.virtualInventoryNetwork.setPrepared();
 
         this.addPlayerSlots(
                 this.player.getInventory(),
@@ -312,7 +312,7 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
     }
 
     protected boolean interceptSetSlotStack(Slot slot, ItemStack stack) {
-        if (slot.inventory instanceof VirtualNetworkInventory slotInventory) {
+        if (slot.inventory instanceof VirtualInventoryNetwork slotInventory) {
             slotInventory.setStackNoCallbacks(slot.getIndex(), stack);
             return false;
         }
@@ -349,7 +349,7 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
 
     public boolean handlePickupAll(int clickedSlotIndex, int button, SlotActionType actionType) {
         int networkSize = this.getNetworkSize();
-        int virtualNetworkInventorySize = this.getVirtualNetworkInventorySize();
+        int virtualNetworkInventorySize = this.getVirtualInventoryNetworkSize();
         int playerInventorySize = this.getPlayerInventorySize();
         int slotCount = this.slots.size();
 
@@ -448,7 +448,7 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
 
     public void quickMoveAll(ItemStack quickMovingStack) {
         this.getNetwork().ifPresent(network -> {
-            int virtualNetworkSize = this.getVirtualNetworkInventorySize();
+            int virtualNetworkSize = this.getVirtualInventoryNetworkSize();
             boolean changed = false;
 
             for (StackWithSlot stackWithSlot : network.getHeldStacks()) {
@@ -469,7 +469,7 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
 
     @Override
     public ItemStack quickMove(PlayerEntity player, int slotIndex) {
-        int virtualNetworkSize = this.getVirtualNetworkInventorySize();
+        int virtualNetworkSize = this.getVirtualInventoryNetworkSize();
 
         ItemStack resultStack;
         Slot slot = this.slots.get(slotIndex);
@@ -480,8 +480,8 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
 
             if (slotIndex < virtualNetworkSize) {
                 if (this.insertItem(slotStack, virtualNetworkSize, this.slots.size(), true)) {
-                    // Prevents unintended repeated quick moves when searching
-                    if (this.virtualNetworkInventory instanceof SearchVirtualNetworkInventory) {
+                    // Prevents unintended quick moves when searching inventory
+                    if (this.virtualInventoryNetwork instanceof SearchVirtualInventoryNetwork) {
                         resultStack = ItemStack.EMPTY;
                     }
 
@@ -576,7 +576,7 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
             }
         }
 
-        this.virtualNetworkInventory.scrollItems(this.scrollPosition);
+        this.virtualInventoryNetwork.scrollItems(this.scrollPosition);
     }
 
     protected void sendNetworkUpdates() {

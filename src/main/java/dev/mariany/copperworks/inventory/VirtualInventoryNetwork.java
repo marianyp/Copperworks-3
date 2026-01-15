@@ -6,11 +6,11 @@ import net.minecraft.inventory.InventoryChangedListener;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 
-public abstract class VirtualNetworkInventory extends SimpleInventory implements InventoryChangedListener {
+public abstract class VirtualInventoryNetwork extends SimpleInventory implements InventoryChangedListener {
     protected final InventoryNetworkScreenHandler handler;
     protected boolean prepared = false;
 
-    public VirtualNetworkInventory(InventoryNetworkScreenHandler handler) {
+    public VirtualInventoryNetwork(InventoryNetworkScreenHandler handler) {
         super(handler.getColumns() * handler.getRows());
         this.handler = handler;
         this.addListener(this);

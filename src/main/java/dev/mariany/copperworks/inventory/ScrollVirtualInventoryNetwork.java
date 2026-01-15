@@ -3,8 +3,8 @@ package dev.mariany.copperworks.inventory;
 import dev.mariany.copperworks.screen.InventoryNetworkScreenHandler;
 import net.minecraft.item.ItemStack;
 
-public class ScrollVirtualNetworkInventory extends VirtualNetworkInventory {
-    public ScrollVirtualNetworkInventory(InventoryNetworkScreenHandler handler) {
+public class ScrollVirtualInventoryNetwork extends VirtualInventoryNetwork {
+    public ScrollVirtualInventoryNetwork(InventoryNetworkScreenHandler handler) {
         super(handler);
     }
 

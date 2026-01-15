@@ -349,7 +349,7 @@ public class InventoryNetworkScreen extends HandledScreen<InventoryNetworkScreen
     }
 
     protected boolean isInventorySlot(@Nullable Slot slot) {
-        return slot != null && slot.inventory == this.handler.getVirtualNetworkInventory();
+        return slot != null && slot.inventory == this.handler.getVirtualInventoryNetwork();
     }
 
     protected void search() {
