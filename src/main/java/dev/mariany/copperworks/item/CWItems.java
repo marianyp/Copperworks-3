@@ -8,7 +8,8 @@ import dev.mariany.copperworks.item.custom.RocketBootsItem;
 import dev.mariany.copperworks.item.custom.WrenchItem;
 import dev.mariany.copperworks.item.custom.copperupgrade.CopperUpgradeItem;
 import dev.mariany.copperworks.item.custom.radio.RadioItem;
-import dev.mariany.copperworks.item.equipment.CWArmorMaterials;
+import dev.mariany.copperworks.item.equipment.CWEquipmentAssetKeys;
+import dev.mariany.copperworks.sound.CWSoundEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.EquippableComponent;
@@ -17,8 +18,6 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.Items;
-import net.minecraft.item.equipment.ArmorMaterial;
-import net.minecraft.item.equipment.EquipmentType;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -46,7 +45,28 @@ public class CWItems {
     public static final Item ROCKET_BOOTS = register(
             "rocket_boots",
             RocketBootsItem::new,
-            createRocketBootsSettings()
+            new Item.Settings()
+                    .fireproof()
+                    .maxDamage(2400)
+                    .repairable(Items.BLAZE_POWDER)
+                    .enchantable(15)
+                    .component(
+                            DataComponentTypes.EQUIPPABLE,
+                            EquippableComponent.builder(EquipmentSlot.FEET)
+                                               .equipSound(CWSoundEvents.ITEM_ARMOR_EQUIP_ROCKET_BOOTS)
+                                               .model(CWEquipmentAssetKeys.ROCKET_BOOTS)
+                                               .damageOnHurt(false)
+                                               .build()
+                    )
+                    .component(
+                            CWComponents.FLYING_EQUIPPABLE,
+                            new FlyingEquippableComponent(
+                                    ParticleTypes.FLAME,
+                                    1.8F,
+                                    0.06F,
+                                    20
+                            )
+                    )
     );
 
     public static final PatinaItem PATINA = register("patina", PatinaItem::new);
@@ -60,34 +80,6 @@ public class CWItems {
                     .attributeModifiers(WrenchItem.createAttributeModifiers())
                     .component(DataComponentTypes.WEAPON, new WeaponComponent(1))
     );
-
-    private static Item.Settings createRocketBootsSettings() {
-        ArmorMaterial material = CWArmorMaterials.ROCKET_BOOTS;
-
-        return new Item.Settings()
-                .fireproof()
-                .maxDamage(2400)
-                .repairable(material.repairIngredient())
-                .enchantable(material.enchantmentValue())
-                .attributeModifiers(material.createAttributeModifiers(EquipmentType.BOOTS))
-                .component(
-                        DataComponentTypes.EQUIPPABLE,
-                        EquippableComponent.builder(EquipmentSlot.FEET)
-                                           .equipSound(material.equipSound())
-                                           .model(material.assetId())
-                                           .damageOnHurt(false)
-                                           .build()
-                )
-                .component(
-                        CWComponents.FLYING_EQUIPPABLE,
-                        new FlyingEquippableComponent(
-                                ParticleTypes.FLAME,
-                                1.8F,
-                                0.06F,
-                                20
-                        )
-                );
-    }
 
     private static Item register(String name) {
         return register(name, Item::new, new Item.Settings());
@@ -134,8 +126,5 @@ public class CWItems {
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.REDSTONE)
                        .register(entries -> entries.addBefore(Items.LEVER, RADIO));
-
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT)
-                       .register(entries -> entries.addAfter(Items.NETHERITE_BOOTS, ROCKET_BOOTS));
     }
 }
