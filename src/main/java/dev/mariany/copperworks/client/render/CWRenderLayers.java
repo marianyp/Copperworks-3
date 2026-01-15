@@ -7,7 +7,7 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderPhase;
 
 @Environment(EnvType.CLIENT)
-public class CWRenderLayers {
+public final class CWRenderLayers {
     public static final RenderLayer.MultiPhase HIGHLIGHTED_BLOCK = RenderLayer.of(
             "highlighted_block",
             1536,
@@ -18,4 +18,7 @@ public class CWRenderLayers {
                     .target(RenderPhase.Target.OUTLINE_TARGET)
                     .build(false)
     );
+
+    private CWRenderLayers() {
+    }
 }

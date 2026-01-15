@@ -42,6 +42,22 @@ public class BoundRelayBlockEntityRenderer
     }
 
     @Override
+    public boolean rendersOutsideBoundingBox() {
+        return true;
+    }
+
+    @Override
+    public boolean isInRenderDistance(BoundRelayBlockEntity boundRelayBlockEntity, Vec3d cameraPos) {
+        return getBoundPosition(boundRelayBlockEntity)
+                .map(pos -> isInRenderDistance(pos, cameraPos))
+                .orElse(super.isInRenderDistance(boundRelayBlockEntity, cameraPos));
+    }
+
+    public boolean isInRenderDistance(BlockPos pos, Vec3d cameraPos) {
+        return Vec3d.ofCenter(pos).isInRange(cameraPos, this.getRenderDistance());
+    }
+
+    @Override
     public BoundRelayBlockEntityRenderState createRenderState() {
         return new BoundRelayBlockEntityRenderState();
     }

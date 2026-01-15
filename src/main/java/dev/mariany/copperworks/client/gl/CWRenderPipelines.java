@@ -10,7 +10,7 @@ import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.render.VertexFormats;
 
 @Environment(EnvType.CLIENT)
-public class CWRenderPipelines {
+public final class CWRenderPipelines {
     public static final RenderPipeline HIGHLIGHTED_BLOCK = RenderPipelines.register(
             RenderPipeline.builder(RenderPipelines.POSITION_COLOR_SNIPPET)
                           .withLocation(Copperworks.id("pipeline/highlighted_block"))
@@ -20,4 +20,7 @@ public class CWRenderPipelines {
                           .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
                           .build()
     );
+
+    private CWRenderPipelines() {
+    }
 }
