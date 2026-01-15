@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public final class CopperUpgrades {
     private CopperUpgrades() {
     }
-    
+
     public static Optional<CopperUpgrade> getCopperUpgrade(DynamicRegistryManager wrapperLookup, BlockState state) {
         Optional<RegistryKey<Block>> optionalBlockKey = state.getRegistryEntry().getKey();
 
@@ -42,6 +42,7 @@ public final class CopperUpgrades {
         register(registry, Blocks.LEVER, CWBlocks.COPPER_LEVER, Properties.FACING, Properties.BLOCK_FACE);
         register(registry, Blocks.SCAFFOLDING, CWBlocks.COPPER_SCAFFOLDING);
         register(registry, Blocks.BARREL, CWBlocks.COPPER_BARREL, true, Properties.FACING);
+        register(registry, Blocks.REDSTONE_LAMP, Blocks.COPPER_BULB);
         register(
                 registry,
                 Blocks.CHEST,
