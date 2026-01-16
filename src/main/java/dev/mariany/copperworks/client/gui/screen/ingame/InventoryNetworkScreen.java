@@ -2,6 +2,8 @@ package dev.mariany.copperworks.client.gui.screen.ingame;
 
 import dev.mariany.copperworks.Copperworks;
 import dev.mariany.copperworks.client.gui.widget.ClickableTextFieldWidget;
+import dev.mariany.copperworks.inventory.SearchVirtualInventoryNetwork;
+import dev.mariany.copperworks.mixin.accessor.HandledScreenAccessor;
 import dev.mariany.copperworks.packet.serverbound.InventoryScrollPacket;
 import dev.mariany.copperworks.packet.serverbound.QuickMoveAllPacket;
 import dev.mariany.copperworks.packet.serverbound.UpdateSearchEntriesPacket;
@@ -290,12 +292,47 @@ public class InventoryNetworkScreen extends HandledScreen<InventoryNetworkScreen
 
     @Override
     public boolean mouseReleased(Click click) {
+        this.handleQuickMove(click);
+
         if (click.button() == 0 && this.scrolling) {
             this.scrolling = false;
             this.scroll(this.getScrollPosition());
         }
 
         return super.mouseReleased(click);
+    }
+
+    protected void handleQuickMove(Click click) {
+        HandledScreenAccessor screen = (HandledScreenAccessor) this;
+
+        double x = click.x();
+        double y = click.y();
+
+        Slot slot = screen.copperworks$getSlotAt(x, y);
+
+        if (slot == null) {
+            return;
+        }
+
+        if (slot.inventory instanceof SearchVirtualInventoryNetwork) {
+            // Prevents unintended quick moves when searching
+            screen.copperworks$setDoubleClicking(false);
+            return;
+        }
+
+        boolean leftClick = click.button() == 0;
+        boolean shift = click.hasShift();
+        boolean doubleClicking = screen.copperworks$isDoubleClicking();
+
+        if (!leftClick || !shift || !doubleClicking) {
+            return;
+        }
+
+        ItemStack quickMovingStack = screen.copperworks$getQuickMovingStack();
+
+        if (!quickMovingStack.isEmpty() && this.handler.canInsertIntoSlot(ItemStack.EMPTY, slot)) {
+            this.handleQuickMoveAll(quickMovingStack);
+        }
     }
 
     @Override

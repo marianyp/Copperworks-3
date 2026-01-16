@@ -168,7 +168,7 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
 
     public Optional<InventoryNetwork> getNetwork() {
         if (this.player instanceof InventoryNetworkState networkState) {
-            return networkState.copperworks2$getNetwork();
+            return networkState.copperworks$getNetwork();
         }
 
         return Optional.empty();
@@ -480,7 +480,7 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
 
             if (slotIndex < virtualNetworkSize) {
                 if (this.insertItem(slotStack, virtualNetworkSize, this.slots.size(), true)) {
-                    // Prevents unintended quick moves when searching inventory
+                    // Prevents unintended quick moves when searching
                     if (this.virtualInventoryNetwork instanceof SearchVirtualInventoryNetwork) {
                         resultStack = ItemStack.EMPTY;
                     }
@@ -588,6 +588,10 @@ public class InventoryNetworkScreenHandler extends ScreenHandler implements Scro
                 );
             }
         });
+    }
+
+    public static void onClosed(InventoryNetworkState inventoryNetworkState) {
+        inventoryNetworkState.copperworks$setNetwork(null);
     }
 
     @Override

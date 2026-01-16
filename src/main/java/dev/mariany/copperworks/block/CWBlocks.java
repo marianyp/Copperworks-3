@@ -12,7 +12,10 @@ import dev.mariany.copperworks.block.custom.relay.bound.BoundRelayBlock;
 import dev.mariany.copperworks.block.custom.relay.ender.EnderRelayBlock;
 import dev.mariany.copperworks.block.custom.relay.radio.RadioRelayBlock;
 import dev.mariany.copperworks.block.custom.sensor.SensorBlock;
+import dev.mariany.copperworks.event.block.BlockEvents;
 import dev.mariany.copperworks.item.custom.AlternativeScaffoldingBlockItem;
+import dev.mariany.copperworks.item.custom.WrenchItem;
+import dev.mariany.copperworks.item.custom.copperupgrade.CopperUpgradeItem;
 import dev.mariany.copperworks.sound.CWSoundEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.*;
@@ -159,6 +162,9 @@ public class CWBlocks {
 
     public static void bootstrap() {
         Copperworks.bootstrapLog("Blocks");
+
+        BlockEvents.OVERRIDE_BLOCK_INTERACTION.register(CopperUpgradeItem::shouldOverrideInteraction);
+        BlockEvents.OVERRIDE_BLOCK_INTERACTION.register(WrenchItem::shouldOverrideInteraction);
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.REDSTONE).register(entries -> {
             entries.addBefore(Items.RAIL, WOODEN_RAIL);

@@ -23,7 +23,7 @@ public class ClientboundPackets {
                     GlobalPos connectionPos = payload.connectionPos();
 
                     if (player instanceof InventoryNetworkState networkState) {
-                        networkState.copperworks2$setNetwork(payload.network());
+                        networkState.copperworks$setNetwork(payload.network());
                         context.responseSender().sendPacket(new InventoryNetworkHandshakePacket(connectionPos));
                     }
                 }

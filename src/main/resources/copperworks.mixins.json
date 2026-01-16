@@ -27,9 +27,9 @@
   "client": [
     "ClientPlayerInteractionManagerMixin",
     "EquipmentRendererMixin",
-    "HandledScreenMixin",
     "LivingEntityRendererMixin",
     "MouseTweaksMainMixin",
-    "SoundSystemMixin"
+    "SoundSystemMixin",
+    "accessor.HandledScreenAccessor"
   ]
 }

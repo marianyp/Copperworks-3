@@ -67,7 +67,7 @@ public abstract class InventoryNetworkBlockEntity extends BlockEntity
     public void interact(PlayerEntity player, BlockPos pos) {
         if (player.getEntityWorld() instanceof ServerWorld serverWorld) {
             if (player instanceof InventoryNetworkState networkState) {
-                networkState.copperworks2$setNetwork(this.network);
+                networkState.copperworks$setNetwork(this.network);
             }
 
             if (player instanceof ServerPlayerEntity serverPlayer) {
@@ -398,6 +398,7 @@ public abstract class InventoryNetworkBlockEntity extends BlockEntity
         return new InventoryNetwork(this.world, this.pos, this.slotsPerConnection);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void removeFromCopiedStackData(WriteView view) {
         view.remove(NETWORK_KEY);

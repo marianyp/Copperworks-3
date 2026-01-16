@@ -7,6 +7,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
+import net.minecraft.client.render.entity.state.LivingEntityRenderState;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.EquippableComponent;
 import net.minecraft.entity.EquipmentSlot;
@@ -17,6 +18,15 @@ import net.minecraft.world.World;
 
 @Environment(EnvType.CLIENT)
 public class FlyingEquippableRenderer {
+    public static void updateRenderState(LivingEntity livingEntity, LivingEntityRenderState state) {
+        if (FlyingEquippableComponent.canFly(livingEntity)) {
+            if (FlyingEquippableComponent.shouldShowParticles(livingEntity)) {
+                float limbSwingAmplitude = state.limbSwingAmplitude;
+                state.limbSwingAmplitude = limbSwingAmplitude > 0 ? limbSwingAmplitude / 4 : 0;
+            }
+        }
+    }
+
     public static void render(ItemStack stack, BipedEntityModel<?> model) {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;

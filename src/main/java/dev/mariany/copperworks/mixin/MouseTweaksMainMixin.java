@@ -8,12 +8,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-/**
- * Prevent MouseTweak mouse scrolling in InventoryNetworkScreen to prevent weird interactions while scrolling the GUI
- */
 @Pseudo
 @Mixin(targets = {"yalter.mousetweaks.Main"})
 public class MouseTweaksMainMixin {
+    /**
+     * Prevent MouseTweak scrolling in InventoryNetworkScreen to avoid weird interactions
+     */
     @Inject(method = "onMouseScrolled", at = @At(value = "HEAD"), cancellable = true)
     private static void copperworks$injectionMouseScrolled(
             Screen screen,

@@ -2,6 +2,7 @@ package dev.mariany.copperworks.mixin;
 
 import dev.mariany.copperworks.inventory.InventoryNetwork;
 import dev.mariany.copperworks.inventory.InventoryNetworkState;
+import dev.mariany.copperworks.screen.InventoryNetworkScreenHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,17 +20,17 @@ public class PlayerEntityMixin implements InventoryNetworkState {
     private InventoryNetwork network;
 
     @Override
-    public Optional<InventoryNetwork> copperworks2$getNetwork() {
+    public Optional<InventoryNetwork> copperworks$getNetwork() {
         return Optional.ofNullable(this.network);
     }
 
     @Override
-    public void copperworks2$setNetwork(@Nullable InventoryNetwork network) {
+    public void copperworks$setNetwork(@Nullable InventoryNetwork network) {
         this.network = network;
     }
 
     @Inject(method = "closeHandledScreen", at = @At(value = "TAIL"))
     public void injectCloseHandledScreen(CallbackInfo ci) {
-        this.network = null;
+        InventoryNetworkScreenHandler.onClosed(this);
     }
 }

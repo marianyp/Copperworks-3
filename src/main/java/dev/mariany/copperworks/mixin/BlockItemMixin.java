@@ -14,6 +14,9 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(BlockItem.class)
 public class BlockItemMixin {
+    /**
+     * Patch to fix AlternativeScaffoldingBlock placement sound not playing on the client for the block placer
+     */
     @WrapOperation(
             method = "place(Lnet/minecraft/item/ItemPlacementContext;)Lnet/minecraft/util/ActionResult;",
             at = @At(

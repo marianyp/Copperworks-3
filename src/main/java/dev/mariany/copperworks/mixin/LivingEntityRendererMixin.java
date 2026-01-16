@@ -1,6 +1,6 @@
 package dev.mariany.copperworks.mixin;
 
-import dev.mariany.copperworks.component.FlyingEquippableComponent;
+import dev.mariany.copperworks.client.render.armor.FlyingEquippableRenderer;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.state.LivingEntityRenderState;
 import net.minecraft.entity.LivingEntity;
@@ -21,11 +21,6 @@ public class LivingEntityRendererMixin {
             float tickProgress,
             CallbackInfo ci
     ) {
-        if (FlyingEquippableComponent.canFly(livingEntity)) {
-            if (FlyingEquippableComponent.shouldShowParticles(livingEntity)) {
-                float limbSwingAmplitude = state.limbSwingAmplitude;
-                state.limbSwingAmplitude = limbSwingAmplitude > 0 ? limbSwingAmplitude / 4 : 0;
-            }
-        }
+        FlyingEquippableRenderer.updateRenderState(livingEntity, state);
     }
 }
