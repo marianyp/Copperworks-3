@@ -73,6 +73,7 @@ public class CopperUpgradeItem extends Item {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void appendTooltip(
             ItemStack stack,
             Item.TooltipContext context,

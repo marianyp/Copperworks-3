@@ -28,6 +28,7 @@
   "item.copperworks.patina": "Patina",
   "item.copperworks.radio": "Radio",
   "item.copperworks.rocket_boots": "Rocket Boots",
+  "item.copperworks.rocket_boots.out_of_fuel": "Out of Fuel",
   "item.copperworks.wrench": "Wrench",
   "item.radio.unavailable": "Relay is unavailable",
   "stat.copperworks.interact_with_copper_clock": "Interactions with Copper Clock",
