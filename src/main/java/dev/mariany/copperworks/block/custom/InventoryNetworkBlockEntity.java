@@ -430,7 +430,7 @@ public abstract class InventoryNetworkBlockEntity extends BlockEntity
 
         if (this.isController()) {
             view.read(NETWORK_KEY, InventoryNetwork.CODEC).ifPresent(network -> {
-                network.setWorld(world);
+                network.setWorld(this.world);
                 this.network = network;
             });
         }
