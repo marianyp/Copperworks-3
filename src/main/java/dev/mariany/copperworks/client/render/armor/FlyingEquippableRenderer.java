@@ -18,6 +18,9 @@ import net.minecraft.world.World;
 
 @Environment(EnvType.CLIENT)
 public class FlyingEquippableRenderer {
+    private FlyingEquippableRenderer() {
+    }
+
     public static void updateRenderState(LivingEntity livingEntity, LivingEntityRenderState state) {
         if (FlyingEquippableComponent.canFly(livingEntity)) {
             if (FlyingEquippableComponent.shouldShowParticles(livingEntity)) {
