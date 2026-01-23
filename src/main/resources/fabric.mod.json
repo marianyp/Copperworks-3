@@ -12,7 +12,7 @@
     "sources": "${mod_git_url}"
   },
   "license": "${mod_license}",
-  "icon": "assets/copperworks/icon.gif",
+  "icon": "assets/copperworks/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
