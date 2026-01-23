@@ -2,12 +2,14 @@ package dev.mariany.copperworks.client.render.armor;
 
 import dev.mariany.copperworks.component.CWComponents;
 import dev.mariany.copperworks.component.FlyingEquippableComponent;
+import dev.mariany.copperworks.component.FlyingEquippableStateComponent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
+import net.minecraft.client.render.entity.state.BipedEntityRenderState;
 import net.minecraft.client.render.entity.state.LivingEntityRenderState;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.EquippableComponent;
 import net.minecraft.entity.EquipmentSlot;
@@ -22,35 +24,28 @@ public class FlyingEquippableRenderer {
     }
 
     public static void updateRenderState(LivingEntity livingEntity, LivingEntityRenderState state) {
-        if (FlyingEquippableComponent.canFly(livingEntity)) {
-            if (FlyingEquippableComponent.shouldShowParticles(livingEntity)) {
-                float limbSwingAmplitude = state.limbSwingAmplitude;
-                state.limbSwingAmplitude = limbSwingAmplitude > 0 ? limbSwingAmplitude / 4 : 0;
-            }
+        if (FlyingEquippableStateComponent.hasVisibleParticles(livingEntity)) {
+            float limbSwingAmplitude = state.limbSwingAmplitude;
+            state.limbSwingAmplitude = limbSwingAmplitude > 0 ? limbSwingAmplitude / 4 : 0;
         }
     }
 
-    public static void render(ItemStack stack, BipedEntityModel<?> model) {
+    public static void render(BipedEntityModel<?> model, BipedEntityRenderState state, ItemStack stack) {
         MinecraftClient client = MinecraftClient.getInstance();
-        ClientPlayerEntity player = client.player;
+        ClientWorld world = client.world;
 
-        if (player != null) {
-            render(player, model, stack);
-        }
-    }
-
-    public static void render(
-            LivingEntity livingEntity,
-            BipedEntityModel<?> model,
-            ItemStack stack
-    ) {
-        if (!FlyingEquippableComponent.shouldShowParticles(livingEntity)) {
+        if (world == null) {
             return;
         }
 
         FlyingEquippableComponent flyingEquippableComponent = stack.get(CWComponents.FLYING_EQUIPPABLE);
+        FlyingEquippableStateComponent flyingEquippableStateComponent = stack.get(CWComponents.FLYING_EQUIPPABLE_STATE);
 
-        if (flyingEquippableComponent == null) {
+        if (flyingEquippableComponent == null || flyingEquippableStateComponent == null) {
+            return;
+        }
+
+        if (!flyingEquippableStateComponent.areParticlesVisible()) {
             return;
         }
 
@@ -60,33 +55,36 @@ public class FlyingEquippableRenderer {
             return;
         }
 
-        render(livingEntity, model, flyingEquippableComponent.getParticleEffect(), equippableComponent.slot());
+        render(world, model, state, flyingEquippableComponent.particleEffect(), equippableComponent.slot());
     }
 
     private static void render(
-            LivingEntity livingEntity,
+            World world,
             BipedEntityModel<?> model,
+            BipedEntityRenderState state,
             ParticleEffect particleEffect,
             EquipmentSlot slot
     ) {
         if (slot == EquipmentSlot.FEET) {
-            renderFeet(livingEntity, model, particleEffect);
+            renderFeet(world, model, state, particleEffect);
         }
     }
 
     private static void renderFeet(
-            LivingEntity livingEntity,
+            World world,
             BipedEntityModel<?> model,
+            BipedEntityRenderState state,
             ParticleEffect particleEffect
     ) {
         double pitchOffset = 0.05;
         double yOffsetFactor = -0.15;
         double zOffset = 0.1;
 
-        double yOffset = (livingEntity.isGliding() ? 0.1 : 0) + yOffsetFactor;
+        double yOffset = (state.isGliding ? 0.1 : 0) + yOffsetFactor;
 
         renderFoot(
-                livingEntity,
+                world,
+                state,
                 particleEffect,
                 model.rightLeg.pitch + pitchOffset,
                 yOffset,
@@ -94,7 +92,8 @@ public class FlyingEquippableRenderer {
         );
 
         renderFoot(
-                livingEntity,
+                world,
+                state,
                 particleEffect,
                 model.leftLeg.pitch + pitchOffset,
                 yOffset,
@@ -103,14 +102,14 @@ public class FlyingEquippableRenderer {
     }
 
     private static void renderFoot(
-            LivingEntity livingEntity,
+            World world,
+            BipedEntityRenderState state,
             ParticleEffect particleEffect,
             double pitch,
             double yOffset,
             double zOffset
     ) {
-        World world = livingEntity.getEntityWorld();
-        double bodyYaw = livingEntity.bodyYaw;
+        double bodyYaw = state.bodyYaw;
         double forwardOffsetX = Math.cos(bodyYaw * Math.PI / 180) * zOffset;
         double forwardOffsetZ = Math.sin(bodyYaw * Math.PI / 180) * zOffset;
         double sideOffsetX = Math.cos((bodyYaw - 90) * Math.PI / 180) * pitch;
@@ -119,9 +118,9 @@ public class FlyingEquippableRenderer {
         world.addImportantParticleClient(
                 particleEffect,
                 true,
-                livingEntity.getX() + forwardOffsetX + sideOffsetX,
-                livingEntity.getY() + yOffset,
-                livingEntity.getZ() + sideOffsetZ + forwardOffsetZ,
+                state.x + forwardOffsetX + sideOffsetX,
+                state.y + yOffset,
+                state.z + sideOffsetZ + forwardOffsetZ,
                 0,
                 -0.025,
                 0

@@ -6,6 +6,7 @@ import net.minecraft.client.render.command.OrderedRenderCommandQueue;
 import net.minecraft.client.render.entity.equipment.EquipmentModel;
 import net.minecraft.client.render.entity.equipment.EquipmentRenderer;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
+import net.minecraft.client.render.entity.state.BipedEntityRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.equipment.EquipmentAsset;
@@ -38,7 +39,9 @@ public class EquipmentRendererMixin {
             CallbackInfo ci
     ) {
         if (model instanceof BipedEntityModel<?> bipedModel) {
-            FlyingEquippableRenderer.render(stack, bipedModel);
+            if (state instanceof BipedEntityRenderState bipedEntityRenderState) {
+                FlyingEquippableRenderer.render(bipedModel, bipedEntityRenderState, stack);
+            }
         }
     }
 }

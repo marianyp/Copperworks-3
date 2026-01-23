@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.mariany.copperworks.block.StickyHandler;
 import dev.mariany.copperworks.component.CWComponents;
 import dev.mariany.copperworks.component.FlyingEquippableComponent;
+import dev.mariany.copperworks.component.FlyingEquippableStateComponent;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -31,11 +32,12 @@ public class LivingEntityMixin {
     public void injectOnEquipStack(EquipmentSlot slot, ItemStack oldStack, ItemStack newStack, CallbackInfo ci) {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
 
-        FlyingEquippableComponent flyingEquippableComponent = oldStack.get(CWComponents.FLYING_EQUIPPABLE);
-        FlyingEquippableComponent newFlyingEquippableComponent = newStack.get(CWComponents.FLYING_EQUIPPABLE);
+        FlyingEquippableStateComponent newFlyingEquippableStateComponent = newStack.get(
+                CWComponents.FLYING_EQUIPPABLE_STATE
+        );
 
-        if (flyingEquippableComponent != null) {
-            flyingEquippableComponent.onRemoveStack(livingEntity, slot, newFlyingEquippableComponent);
+        if (oldStack.contains(CWComponents.FLYING_EQUIPPABLE)) {
+            FlyingEquippableComponent.onRemoveStack(livingEntity, slot, newFlyingEquippableStateComponent);
         }
     }
 
@@ -52,7 +54,7 @@ public class LivingEntityMixin {
             float damage,
             Operation<Void> original
     ) {
-        if (!FlyingEquippableComponent.canFly(livingEntity)) {
+        if (!FlyingEquippableStateComponent.canFly(livingEntity)) {
             original.call(livingEntity, damageSource, damage);
         }
     }
