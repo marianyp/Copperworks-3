@@ -8,9 +8,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
 public class PatinaItem extends Item {
@@ -18,8 +20,8 @@ public class PatinaItem extends Item {
         super(settings);
     }
 
-    public static void tryStrip(World world, BlockPos pos, BlockState state) {
-        if (!world.isClient()) {
+    public static void tryStrip(ServerWorld world, BlockPos pos, BlockState state) {
+        if (world.getGameRules().getBoolean(GameRules.DO_TILE_DROPS)) {
             Oxidizable.getDecreasedOxidationState(state)
                       .ifPresent(strippedState -> Block.dropStack(
                               world,

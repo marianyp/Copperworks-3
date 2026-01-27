@@ -49,7 +49,7 @@ public final class PotionDegradationHandler {
 
     private static void degradeArea(PotionEntity potionEntity) {
         World world = potionEntity.getEntityWorld();
-        Box box = potionEntity.getBoundingBox().expand(4, 2, 4);
+        Box box = potionEntity.getBoundingBox().expand(2, 0.5, 2);
 
         BlockPos.iterate(box).forEach(pos -> {
             BlockState state = world.getBlockState(pos);

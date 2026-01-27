@@ -4,6 +4,7 @@ import dev.mariany.copperworks.item.custom.PatinaItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.AxeItem;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -24,6 +25,8 @@ public abstract class AxeItemMixin {
             BlockState state,
             CallbackInfoReturnable<Optional<BlockState>> cir
     ) {
-        PatinaItem.tryStrip(world, pos, state);
+        if (world instanceof ServerWorld serverWorld) {
+            PatinaItem.tryStrip(serverWorld, pos, state);
+        }
     }
 }
