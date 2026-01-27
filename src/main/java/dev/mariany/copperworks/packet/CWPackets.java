@@ -6,6 +6,8 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.network.RegistryByteBuf;
 
 public class CWPackets {
+    private CWPackets() {}
+
     public static void bootstrap() {
         clientbound(PayloadTypeRegistry.playS2C());
         serverbound(PayloadTypeRegistry.playC2S());

@@ -28,6 +28,8 @@ public class CWComponents {
                     .packetCodec(FlyingEquippableStateComponent.PACKET_CODEC)
     );
 
+    private CWComponents() {}
+
     private static <T> ComponentType<T> register(String id, UnaryOperator<ComponentType.Builder<T>> builderOperator) {
         return Registry.register(
                 Registries.DATA_COMPONENT_TYPE,

@@ -14,6 +14,8 @@ public class CWStats {
             StatFormatter.DEFAULT
     );
 
+    private CWStats() {}
+
     private static Identifier register(String id, StatFormatter formatter) {
         Identifier identifier = Copperworks.id(id);
         Registry.register(Registries.CUSTOM_STAT, id, identifier);

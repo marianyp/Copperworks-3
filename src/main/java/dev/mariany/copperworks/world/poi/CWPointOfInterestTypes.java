@@ -21,6 +21,8 @@ public class CWPointOfInterestTypes {
             CWBlocks.MUFFLER
     );
 
+    private CWPointOfInterestTypes() {}
+
     private static RegistryKey<PointOfInterestType> of(
             String name,
             int ticketCount,

@@ -13,6 +13,8 @@ public class CWScreenHandlers {
             InventoryNetworkScreenHandler::new
     );
 
+    private CWScreenHandlers() {}
+
     private static <T extends ScreenHandler> ScreenHandlerType<T> register(
             String id,
             ScreenHandlerType.Factory<T> factory

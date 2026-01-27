@@ -81,6 +81,8 @@ public class CWItems {
                     .component(DataComponentTypes.WEAPON, new WeaponComponent(1))
     );
 
+    private CWItems() {}
+
     private static Item register(String name) {
         return register(name, Item::new, new Item.Settings());
     }

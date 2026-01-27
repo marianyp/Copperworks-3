@@ -13,6 +13,7 @@ public final class CWBooleanProperties {
     }
 
     public static void bootstrap() {
+        Copperworks.bootstrapLog("Boolean Properties");
         register("bound", BoundProperty.CODEC);
     }
 

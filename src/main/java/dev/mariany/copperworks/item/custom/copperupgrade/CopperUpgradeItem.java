@@ -1,7 +1,6 @@
 package dev.mariany.copperworks.item.custom.copperupgrade;
 
 import dev.mariany.copperworks.Copperworks;
-import dev.mariany.copperworks.advancement.criterion.CWCriterion;
 import dev.mariany.copperworks.inventory.InventoryHelper;
 import dev.mariany.copperworks.registry.CWRegistryKeys;
 import net.minecraft.block.Block;
@@ -17,7 +16,6 @@ import net.minecraft.item.Items;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.registry.*;
 import net.minecraft.screen.ScreenTexts;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
 import net.minecraft.text.Text;
@@ -181,10 +179,6 @@ public class CopperUpgradeItem extends Item {
                     );
                 }
             }
-        }
-
-        if (player instanceof ServerPlayerEntity serverPlayer) {
-            CWCriterion.USE_COPPER_UPGRADE_KIT.trigger(serverPlayer);
         }
 
         return ActionResult.SUCCESS;

@@ -1,12 +1,11 @@
 package dev.mariany.copperworks;
 
-import dev.mariany.copperworks.advancement.criterion.CWCriterion;
 import dev.mariany.copperworks.block.CWBlockEntities;
 import dev.mariany.copperworks.block.CWBlocks;
-import dev.mariany.copperworks.component.CWComponents;
 import dev.mariany.copperworks.block.PotionDegradationHandler;
-import dev.mariany.copperworks.event.entity.EntityEvents;
 import dev.mariany.copperworks.block.RailHandler;
+import dev.mariany.copperworks.component.CWComponents;
+import dev.mariany.copperworks.event.entity.EntityEvents;
 import dev.mariany.copperworks.event.server.ServerTickEventsHandler;
 import dev.mariany.copperworks.gamerule.CWGamerules;
 import dev.mariany.copperworks.item.CWItems;
@@ -66,7 +65,6 @@ public class Copperworks implements ModInitializer {
         CWChunkTickets.bootstrap();
         CWGamerules.bootstrap();
         CWSoundEvents.bootstrap();
-        CWCriterion.bootstrap();
         CWStats.bootstrap();
         CWScreenHandlers.bootstrap();
         CWComponents.bootstrap();

@@ -8,6 +8,8 @@ import net.minecraft.util.TypeFilter;
 import java.util.List;
 
 public class ServerTickEventsHandler {
+    private ServerTickEventsHandler() {}
+
     public static void onWorldTick(ServerWorld world) {
         List<? extends LivingEntity> livingEntities = world.getEntitiesByType(
                 TypeFilter.instanceOf(LivingEntity.class),

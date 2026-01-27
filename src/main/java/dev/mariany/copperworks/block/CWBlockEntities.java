@@ -43,6 +43,8 @@ public class CWBlockEntities {
             FabricBlockEntityTypeBuilder.create(SensorBlockEntity::new, CWBlocks.COPPER_SENSOR).build()
     );
 
+    private CWBlockEntities() {}
+
     public static <T extends BlockEntityType<?>> T register(String path, T blockEntityType) {
         return Registry.register(Registries.BLOCK_ENTITY_TYPE, Copperworks.id(path), blockEntityType);
     }

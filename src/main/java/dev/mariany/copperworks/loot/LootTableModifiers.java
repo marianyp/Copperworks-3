@@ -22,6 +22,8 @@ public class LootTableModifiers {
             LootTables.VILLAGE_WEAPONSMITH_CHEST
     );
 
+    private LootTableModifiers() {}
+
     public static void modifyLootTables() {
         LootTableEvents.MODIFY.register(
                 (key, tableBuilder, source, registries) -> {

@@ -20,6 +20,8 @@ public class CWSoundEvents {
             "item.armor.equip.rocket_boots"
     );
 
+    private CWSoundEvents() {}
+
     private static SoundEvent register(String id) {
         return register(Copperworks.id(id));
     }

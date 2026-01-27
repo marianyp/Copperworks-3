@@ -1,6 +1,5 @@
 package dev.mariany.copperworks.block.custom.relay;
 
-import dev.mariany.copperworks.advancement.criterion.CWCriterion;
 import dev.mariany.copperworks.block.CWBlocks;
 import dev.mariany.copperworks.block.custom.relay.bound.BoundRelayBlockEntity;
 import dev.mariany.copperworks.block.custom.relay.ender.EnderRelayBlock;
@@ -115,7 +114,6 @@ public class RelayBlock extends Block {
         if (state.getBlock() instanceof RelayBlock) {
             createBoundRelay(thisWorld, thisPos, otherGlobalPos);
             createBoundRelay(otherWorld, otherPos, globalPos);
-            CWCriterion.BOUND_RELAY.trigger(player);
             return true;
         }
 

@@ -128,6 +128,8 @@ public class CWBlocks {
             genericCopperSettings().solidBlock(Blocks::never)
     );
 
+    private CWBlocks() {}
+
     private static AbstractBlock.Settings genericCopperSettings() {
         return AbstractBlock.Settings.create()
                                      .mapColor(MapColor.ORANGE)

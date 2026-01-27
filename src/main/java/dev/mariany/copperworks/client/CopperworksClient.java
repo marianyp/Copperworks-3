@@ -34,8 +34,8 @@ public class CopperworksClient implements ClientModInitializer {
         registerScreenHandlers();
         registerBlockEntityRenderers();
 
-        ClientTickEvents.END_CLIENT_TICK.register(RadioHandler::onTick);
         ClientTickEvents.END_CLIENT_TICK.register(this.mufflerNotifier::onTick);
+        ClientTickEvents.END_CLIENT_TICK.register(RadioHandler::onTick);
 
         ClientChunkEvents.CHUNK_LOAD.register(MufflerHandler::onChunkLoad);
         ClientChunkEvents.CHUNK_UNLOAD.register(MufflerHandler::onChunkUnload);
