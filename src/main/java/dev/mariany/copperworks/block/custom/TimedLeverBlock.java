@@ -25,11 +25,13 @@ import java.util.function.BiConsumer;
 
 public class TimedLeverBlock extends LeverBlock {
     protected final SoundEvent soundEvent;
+    protected final int pressTicks;
 
-    public TimedLeverBlock(SoundEvent soundEvent, Settings settings) {
+    public TimedLeverBlock(SoundEvent soundEvent, Settings settings, int pressTicks) {
         super(settings);
 
         this.soundEvent = soundEvent;
+        this.pressTicks = pressTicks;
 
         this.setDefaultState(
                 this.stateManager.getDefaultState()
@@ -37,10 +39,6 @@ public class TimedLeverBlock extends LeverBlock {
                                  .with(POWERED, false)
                                  .with(FACE, BlockFace.WALL)
         );
-    }
-
-    protected int getPressTicks() {
-        return 60;
     }
 
     @Override
@@ -54,7 +52,7 @@ public class TimedLeverBlock extends LeverBlock {
 
     protected void scheduleTick(World world, BlockPos pos) {
         if (!world.isClient() && !world.getBlockTickScheduler().isQueued(pos, this)) {
-            world.scheduleBlockTick(pos, this, this.getPressTicks());
+            world.scheduleBlockTick(pos, this, this.pressTicks);
         }
     }
 
@@ -69,10 +67,11 @@ public class TimedLeverBlock extends LeverBlock {
     protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (state.get(POWERED)) {
             return ActionResult.CONSUME;
-        } else {
-            this.powerOn(state, world, pos, player);
-            return ActionResult.SUCCESS;
         }
+
+        this.powerOn(state, world, pos, player);
+
+        return ActionResult.SUCCESS;
     }
 
     public void powerOn(BlockState state, World world, BlockPos pos, @Nullable PlayerEntity player) {

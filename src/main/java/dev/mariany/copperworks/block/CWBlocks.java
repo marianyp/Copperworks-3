@@ -48,7 +48,7 @@ public class CWBlocks {
 
     public static final Block COPPER_LEVER = register(
             "copper_lever",
-            settings -> new TimedLeverBlock(CWSoundEvents.BLOCK_COPPER_LEVER_CLICK, settings),
+            settings -> new TimedLeverBlock(CWSoundEvents.BLOCK_COPPER_LEVER_CLICK, settings, 60),
             AbstractBlock.Settings
                     .create()
                     .noCollision()
