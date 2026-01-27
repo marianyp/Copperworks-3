@@ -1,5 +1,6 @@
 package dev.mariany.copperworks.client.muffler;
 
+import dev.mariany.copperworks.client.CopperworksClient;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
@@ -13,7 +14,7 @@ public class MufflerNotifier {
     public void onTick(MinecraftClient client) {
         ClientPlayerEntity player = client.player;
 
-        if (player == null) {
+        if (player == null || !CopperworksClient.getConfig().enableMufflerNotifier) {
             this.inMuffledArea = false;
             return;
         }
