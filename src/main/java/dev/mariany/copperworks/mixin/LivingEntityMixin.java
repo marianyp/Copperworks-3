@@ -8,6 +8,7 @@ import dev.mariany.copperworks.component.FlyingEquippableComponent;
 import dev.mariany.copperworks.component.FlyingEquippableStateComponent;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -28,9 +29,16 @@ public class LivingEntityMixin {
         }
     }
 
-    @Inject(method = "onEquipStack", at = @At(value = "HEAD"))
-    public void injectOnEquipStack(EquipmentSlot slot, ItemStack oldStack, ItemStack newStack, CallbackInfo ci) {
+    @Inject(method = "onEquipmentRemoved", at = @At(value = "HEAD"))
+    public void injectOnEquipmentRemoved(
+            ItemStack oldStack,
+            EquipmentSlot slot,
+            AttributeContainer container,
+            CallbackInfo ci
+    ) {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
+
+        ItemStack newStack = livingEntity.getEquippedStack(slot);
 
         FlyingEquippableStateComponent newFlyingEquippableStateComponent = newStack.get(
                 CWComponents.FLYING_EQUIPPABLE_STATE

@@ -122,6 +122,8 @@ public class FlyingEquippableStateComponent {
             } else {
                 updateAbilities(player);
             }
+
+            player.sendAbilitiesUpdate();
         }
     }
 
