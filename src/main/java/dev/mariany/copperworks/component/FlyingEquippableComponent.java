@@ -52,23 +52,25 @@ public record FlyingEquippableComponent(
     ) {
         ItemStack stack = livingEntity.getEquippedStack(slot);
 
-        FlyingEquippableStateComponent flyingEquippableStateComponent = stack.get(CWComponents.FLYING_EQUIPPABLE_STATE);
+        FlyingEquippableStateComponent flyingEquippableStateComponent = getOrCreateFlyingEquippableState(stack);
+        flyingEquippableStateComponent.onRemoveStack(livingEntity, slot, newFlyingEquippableStateComponent);
 
-        if (flyingEquippableStateComponent != null) {
-            flyingEquippableStateComponent.onRemoveStack(livingEntity, slot, newFlyingEquippableStateComponent);
+        if (!stack.contains(CWComponents.FLYING_EQUIPPABLE_STATE)) {
+            stack.set(CWComponents.FLYING_EQUIPPABLE_STATE, flyingEquippableStateComponent);
         }
     }
 
     public void inventoryTick(Entity entity, ItemStack stack, @Nullable EquipmentSlot slot) {
-        FlyingEquippableStateComponent flyingEquippableStateComponent = stack.getOrDefault(
-                CWComponents.FLYING_EQUIPPABLE_STATE,
-                new FlyingEquippableStateComponent()
-        );
+        FlyingEquippableStateComponent flyingEquippableStateComponent = getOrCreateFlyingEquippableState(stack);
 
         flyingEquippableStateComponent.inventoryTick(this, entity, stack, slot);
 
         if (!stack.contains(CWComponents.FLYING_EQUIPPABLE_STATE)) {
             stack.set(CWComponents.FLYING_EQUIPPABLE_STATE, flyingEquippableStateComponent);
         }
+    }
+
+    private static FlyingEquippableStateComponent getOrCreateFlyingEquippableState(ItemStack stack) {
+        return stack.getOrDefault(CWComponents.FLYING_EQUIPPABLE_STATE, new FlyingEquippableStateComponent());
     }
 }

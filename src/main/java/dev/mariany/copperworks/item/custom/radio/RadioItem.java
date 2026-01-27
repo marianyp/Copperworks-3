@@ -75,7 +75,7 @@ public class RadioItem extends Item {
         if (otherWorld != null) {
             ChunkPos otherChunkPos = new ChunkPos(otherPos);
 
-            if (otherWorld.isTickingFutureReady(otherChunkPos.toLong())) {
+            if (otherWorld.isChunkLoaded(otherChunkPos.toLong())) {
                 BlockState state = otherWorld.getBlockState(otherPos);
 
                 if (state.getBlock() instanceof RadioRelayBlock radioRelayBlock) {

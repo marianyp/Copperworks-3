@@ -14,6 +14,7 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
@@ -76,8 +77,7 @@ public class BatteryBlock extends WallMountedBlock {
     @Override
     protected void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         if (state.get(POWERED) && !world.isReceivingRedstonePower(pos)) {
-            setPowered(world, pos, false);
-            this.updateNeighbors(world, pos, state);
+            this.powerOff(world, pos, state);
         }
     }
 
@@ -113,16 +113,27 @@ public class BatteryBlock extends WallMountedBlock {
 
                 this.emitPulse(world, pos);
             } else {
-                this.scheduleTick(world, pos);
+                this.powerOff(world, pos, state);
             }
         }
     }
 
-    protected void sendPulse(World world, BlockPos pos, BlockPos origin, Direction direction) {
+    protected void powerOff(World world, BlockPos pos, BlockState state) {
+        this.setPowered(world, pos, false);
+        this.updateNeighbors(world, pos, state);
+    }
+
+    protected void sendPulse(ServerWorld world, BlockPos pos, BlockPos origin, Direction direction) {
         BlockPos iterationPosition = pos.offset(direction, 1);
 
         while (true) {
             if (iterationPosition.equals(origin)) {
+                return;
+            }
+
+            ChunkPos chunkPos = new ChunkPos(iterationPosition);
+
+            if (!world.isChunkLoaded(chunkPos.toLong())) {
                 return;
             }
 
