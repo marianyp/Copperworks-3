@@ -8,6 +8,8 @@ import dev.mariany.copperworks.client.muffler.MufflerHandler;
 import dev.mariany.copperworks.client.render.block.entity.BoundRelayBlockEntityRenderer;
 import dev.mariany.copperworks.client.render.block.entity.HighlightedBlockEntityRenderer;
 import dev.mariany.copperworks.client.render.item.property.bool.CWBooleanProperties;
+import dev.mariany.copperworks.config.ConfigHandler;
+import dev.mariany.copperworks.config.CopperworksClientConfig;
 import dev.mariany.copperworks.packet.clientbound.ClientboundPackets;
 import dev.mariany.copperworks.screen.CWScreenHandlers;
 import net.fabricmc.api.ClientModInitializer;
@@ -23,10 +25,17 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 
 @Environment(EnvType.CLIENT)
 public class CopperworksClient implements ClientModInitializer {
+    private static final ConfigHandler<CopperworksClientConfig> CONFIG = new ConfigHandler<>(
+            "copperworks-client",
+            new CopperworksClientConfig()
+    );
+
     private final MufflerNotifier mufflerNotifier = new MufflerNotifier();
 
     @Override
     public void onInitializeClient() {
+        CONFIG.loadConfig();
+
         ClientboundPackets.bootstrap();
 
         registerItemProperties();
@@ -40,6 +49,10 @@ public class CopperworksClient implements ClientModInitializer {
         ClientChunkEvents.CHUNK_LOAD.register(MufflerHandler::onChunkLoad);
         ClientChunkEvents.CHUNK_UNLOAD.register(MufflerHandler::onChunkUnload);
         ClientPlayConnectionEvents.DISCONNECT.register(MufflerHandler::onDisconnect);
+    }
+
+    public static CopperworksClientConfig getConfig() {
+        return CONFIG.getConfig();
     }
 
     private static void registerItemProperties() {

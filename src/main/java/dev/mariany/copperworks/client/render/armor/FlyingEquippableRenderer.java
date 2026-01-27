@@ -1,5 +1,6 @@
 package dev.mariany.copperworks.client.render.armor;
 
+import dev.mariany.copperworks.client.CopperworksClient;
 import dev.mariany.copperworks.component.CWComponents;
 import dev.mariany.copperworks.component.FlyingEquippableComponent;
 import dev.mariany.copperworks.component.FlyingEquippableStateComponent;
@@ -24,13 +25,19 @@ public class FlyingEquippableRenderer {
     }
 
     public static void updateRenderState(LivingEntity livingEntity, LivingEntityRenderState state) {
-        if (FlyingEquippableStateComponent.hasVisibleParticles(livingEntity)) {
+        boolean dampenLimbAmplitude = CopperworksClient.getConfig().flyingEquippableDampensLimbAmplitude;
+
+        if (dampenLimbAmplitude && FlyingEquippableStateComponent.hasVisibleParticles(livingEntity)) {
             float limbSwingAmplitude = state.limbSwingAmplitude;
             state.limbSwingAmplitude = limbSwingAmplitude > 0 ? limbSwingAmplitude / 4 : 0;
         }
     }
 
     public static void render(BipedEntityModel<?> model, BipedEntityRenderState state, ItemStack stack) {
+        if (!CopperworksClient.getConfig().flyingEquippableParticles) {
+            return;
+        }
+
         MinecraftClient client = MinecraftClient.getInstance();
         ClientWorld world = client.world;
 
