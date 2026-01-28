@@ -12,6 +12,7 @@ public class CWSoundEvents {
     public static final SoundEvent BLOCK_COPPER_LEVER_CLICK = register("block.copper_lever.click");
     public static final SoundEvent BLOCK_COPPER_BARREL_LID_MOVED = register("block.copper_barrel.lid_moved");
     public static final SoundEvent BLOCK_CLOCK_INTERACT = register("block.clock.interact");
+    public static final SoundEvent BLOCK_SENSOR_INTERACT = register("block.sensor.interact");
     public static final SoundEvent BLOCK_RELAY_INSERT = register("block.relay.insert");
     public static final SoundEvent BLOCK_BOUND_RELAY_DISCONNECT = register("block.bound_relay.disconnect");
     public static final SoundEvent BLOCK_ENDER_RELAY_BIND = register("block.ender_relay.bind");

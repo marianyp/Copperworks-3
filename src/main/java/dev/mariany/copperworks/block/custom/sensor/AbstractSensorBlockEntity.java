@@ -1,31 +1,70 @@
 package dev.mariany.copperworks.block.custom.sensor;
 
+import dev.mariany.copperworks.sound.CWSoundEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.text.Text;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 
 import java.util.List;
 
 public abstract class AbstractSensorBlockEntity extends BlockEntity {
-    protected final int range;
+    protected final int maxRange;
+    protected int range;
 
-    public AbstractSensorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, int range) {
+    public AbstractSensorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, int maxRange) {
         super(type, pos, state);
-        this.range = range;
+
+        if (maxRange <= 0) {
+            throw new IllegalStateException("maxRange must be > 0");
+        }
+
+        this.maxRange = maxRange;
+        this.range = maxRange;
     }
 
     @Override
     public void onBlockReplaced(BlockPos pos, BlockState oldState) {
         if (this.world != null) {
             updateNeighbors(this.world, pos, oldState);
+        }
+    }
+
+    public void interact(PlayerEntity player, BlockPos pos) {
+        if (player.getEntityWorld() instanceof ServerWorld serverWorld) {
+            this.cycleRange(!player.isSneaking());
+
+            player.sendMessage(Text.translatable("block.copperworks.sensor.cycled", this.range), true);
+
+            serverWorld.playSound(
+                    null,
+                    pos.getX(),
+                    pos.getY(),
+                    pos.getZ(),
+                    CWSoundEvents.BLOCK_SENSOR_INTERACT,
+                    SoundCategory.BLOCKS,
+                    0.5F,
+                    (float) (1.6 - (this.range - 1) * 0.1)
+            );
+        }
+    }
+
+    protected void cycleRange(boolean increment) {
+        if (increment) {
+            if (++this.range > this.maxRange) {
+                this.range = 1;
+            }
+        } else {
+            if (--this.range <= 0) {
+                this.range = this.maxRange;
+            }
         }
     }
 
@@ -52,7 +91,7 @@ public abstract class AbstractSensorBlockEntity extends BlockEntity {
         List<Entity> visibleEntities = world.getEntitiesByClass(
                 Entity.class,
                 visibleArea,
-                entity -> !entity.isRemoved() && !entity.isInvisible()
+                entity -> !entity.isSpectator() && !entity.isInvisible() && entity.isLiving()
         );
 
         int power = Math.clamp(visibleEntities.size(), 0, 15);

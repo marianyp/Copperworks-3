@@ -13,6 +13,10 @@ public class CWStats {
             "interact_with_copper_clock",
             StatFormatter.DEFAULT
     );
+    public static final Identifier INTERACT_WITH_SENSOR = register(
+            "interact_with_sensor",
+            StatFormatter.DEFAULT
+    );
 
     private CWStats() {}
 

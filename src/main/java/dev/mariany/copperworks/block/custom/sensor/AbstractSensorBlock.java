@@ -5,10 +5,15 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.stat.Stat;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
@@ -33,6 +38,8 @@ public abstract class AbstractSensorBlock extends WallMountedBlock implements Bl
     @Nullable
     public abstract AbstractSensorBlockEntity createBlockEntity(BlockPos pos, BlockState state);
 
+    protected abstract Stat<Identifier> getInteractStat();
+
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(POWER, FACE, FACING);
@@ -51,6 +58,16 @@ public abstract class AbstractSensorBlock extends WallMountedBlock implements Bl
     @Override
     protected int getStrongRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
         return getDirection(state) == direction ? state.get(POWER) : 0;
+    }
+
+    @Override
+    protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+        if (world.getBlockEntity(pos) instanceof AbstractSensorBlockEntity abstractSensorBlockEntity) {
+            player.incrementStat(this.getInteractStat());
+            abstractSensorBlockEntity.interact(player, pos);
+        }
+
+        return ActionResult.SUCCESS;
     }
 
     @Nullable

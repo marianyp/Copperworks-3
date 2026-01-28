@@ -36,8 +36,9 @@ public class ClockBlockEntity extends BlockEntity {
 
     public void interact(PlayerEntity player, BlockPos pos) {
         if (player.getEntityWorld() instanceof ServerWorld serverWorld) {
-            int targetProgress = this.cycleTargetProgress(serverWorld, pos, player.isSneaking());
-            int targetProgressSeconds = targetProgress == 0 ? 0 :
+            int targetProgress = this.cycleTargetProgress(serverWorld, pos, !player.isSneaking());
+            int targetProgressSeconds = targetProgress == 0 ?
+                    0 :
                     MathHelper.floor((float) targetProgress / SECOND_IN_TICKS);
 
             player.sendMessage(
@@ -49,23 +50,23 @@ public class ClockBlockEntity extends BlockEntity {
         }
     }
 
-    protected int cycleTargetProgress(World world, BlockPos pos, boolean shrink) {
+    protected int cycleTargetProgress(World world, BlockPos pos, boolean increment) {
         this.resetProgress(world, pos);
 
         int maxSeconds = this.getMaxSeconds();
         int target = this.target;
 
-        if (shrink) {
-            target = target - SECOND_IN_TICKS;
-
-            if (target <= 0) {
-                target = maxSeconds * SECOND_IN_TICKS; // Wrap to maximum if below minimum
-            }
-        } else {
+        if (increment) {
             target = target + SECOND_IN_TICKS;
 
             if (target > maxSeconds * SECOND_IN_TICKS) {
                 target = SECOND_IN_TICKS; // Wrap to minimum if above maximum
+            }
+        } else {
+            target = target - SECOND_IN_TICKS;
+
+            if (target <= 0) {
+                target = maxSeconds * SECOND_IN_TICKS; // Wrap to maximum if below minimum
             }
         }
 
@@ -95,7 +96,7 @@ public class ClockBlockEntity extends BlockEntity {
                 CWSoundEvents.BLOCK_CLOCK_INTERACT,
                 SoundCategory.NEUTRAL,
                 0.5F,
-                (float) (1.6 - (Math.min(12, targetProgressSeconds) - 1) * 0.1)
+                (float) (1.6 - (targetProgressSeconds - 1) * 0.1)
         );
     }
 

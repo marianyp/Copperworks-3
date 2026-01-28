@@ -65,7 +65,7 @@ public abstract class AbstractClockBlock extends BlockWithEntity {
         return ActionResult.SUCCESS;
     }
 
-    abstract protected Stat<Identifier> getInteractStat();
+    protected abstract Stat<Identifier> getInteractStat();
 
     @Override
     @Nullable

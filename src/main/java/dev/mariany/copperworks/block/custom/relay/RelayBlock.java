@@ -80,7 +80,11 @@ public class RelayBlock extends Block {
             return ActionResult.SUCCESS;
         }
 
-        return ActionResult.CONSUME;
+        if (isAmethystPiece) {
+            return ActionResult.CONSUME;
+        }
+
+        return ActionResult.PASS;
     }
 
     protected static ItemStack initiateBinding(World world, BlockPos pos) {

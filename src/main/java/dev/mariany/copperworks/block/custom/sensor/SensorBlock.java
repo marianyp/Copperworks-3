@@ -1,6 +1,7 @@
 package dev.mariany.copperworks.block.custom.sensor;
 
 import com.mojang.serialization.MapCodec;
+import dev.mariany.copperworks.stat.CWStats;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -8,9 +9,12 @@ import net.minecraft.block.enums.BlockFace;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.stat.Stat;
+import net.minecraft.stat.Stats;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
@@ -51,6 +55,11 @@ public class SensorBlock extends AbstractSensorBlock {
     @Override
     public SensorBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new SensorBlockEntity(pos, state);
+    }
+
+    @Override
+    protected Stat<Identifier> getInteractStat() {
+        return Stats.CUSTOM.getOrCreateStat(CWStats.INTERACT_WITH_SENSOR);
     }
 
     @Override
