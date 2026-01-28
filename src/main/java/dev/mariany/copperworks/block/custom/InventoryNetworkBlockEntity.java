@@ -222,6 +222,24 @@ public abstract class InventoryNetworkBlockEntity extends BlockEntity
     }
 
     @Override
+    public void markDirty() {
+        if (!this.isController()) {
+            super.markDirty();
+            return;
+        }
+
+        if (this.world != null) {
+            this.world.getWorldChunk(this.pos).markNeedsSaving();
+
+            BlockState state = this.getCachedState();
+
+            if (!state.isAir()) {
+                this.world.updateComparators(this.pos, state.getBlock());
+            }
+        }
+    }
+
+    @Override
     public void markRemoved() {
         super.markRemoved();
         this.onRemoved();
