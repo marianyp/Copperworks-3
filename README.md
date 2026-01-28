@@ -1,8 +1,9 @@
-[![Donate](https://img.shields.io/static/v1?label=&message=Donate&color=white&labelColor=C15A36&style=for-the-badge&logo=kofi&logoColor=white)](https://ko-fi.com/uhmbye)
+[![Discord](https://img.shields.io/static/v1?label=&message=Discord&color=white&labelColor=C15A36&style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/mZMYRj93)
 [![X](https://img.shields.io/static/v1?label=&message=Twitter&color=white&labelColor=C15A36&style=for-the-badge&logo=x&logoColor=white)](https://x.com/uhmbyemc)
 [![GitHub](https://img.shields.io/static/v1?label=&message=GitHub&color=white&labelColor=C15A36&style=for-the-badge&logo=github&logoColor=white)](https://github.com/marianyp)
 [![CurseForge](https://img.shields.io/static/v1?label=&message=CurseForge&color=white&labelColor=C15A36&style=for-the-badge&logo=curseforge&logoColor=white)](https://www.curseforge.com/members/uhmbyee/projects)
 [![Modrinth](https://img.shields.io/static/v1?label=&message=Modrinth&color=white&labelColor=C15A36&style=for-the-badge&logo=modrinth&logoColor=white)](https://modrinth.com/user/uhmbyee)
+[![Donate](https://img.shields.io/static/v1?label=&message=Donate&color=white&labelColor=C15A36&style=for-the-badge&logo=kofi&logoColor=white)](https://ko-fi.com/uhmbye)
 
 ---
 
@@ -15,7 +16,7 @@ Copperworks adds new uses for copper while also aiming to improve vanilla gamepl
 - A new vanilla-friendly block that allows for potentially infinite storage, introducing a unique approach to inventory management.
 - New redstone components, varying from entity detection to wireless redstone!
 - New functional blocks that can be used to aid in mob farms.
-- A new endgame armor item, which gives creative mode-like flight. Useful for building!
+- A new endgame armor item, which gives creative mode-like flight.
 - And more! [Visit the wiki](https://github.com/marianyp/Copperworks-3/wiki) for a detailed overview of all the new items, blocks, and features.
 
 ### ✨ A Quick Look
