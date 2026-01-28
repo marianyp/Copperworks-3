@@ -7,6 +7,8 @@ import dev.mariany.copperworks.block.custom.TimedLeverBlock;
 import dev.mariany.copperworks.block.custom.barrel.CopperBarrelBlock;
 import dev.mariany.copperworks.block.custom.clock.CopperClockBlock;
 import dev.mariany.copperworks.block.custom.muffler.MufflerBlock;
+import dev.mariany.copperworks.block.custom.rail.CopperRailBlock;
+import dev.mariany.copperworks.block.custom.rail.WoodenRailBlock;
 import dev.mariany.copperworks.block.custom.relay.RelayBlock;
 import dev.mariany.copperworks.block.custom.relay.bound.BoundRelayBlock;
 import dev.mariany.copperworks.block.custom.relay.ender.EnderRelayBlock;
@@ -31,7 +33,7 @@ import java.util.function.Function;
 public class CWBlocks {
     public static final Block WOODEN_RAIL = register(
             "wooden_rail",
-            RailBlock::new,
+            WoodenRailBlock::new,
             AbstractBlock.Settings
                     .create()
                     .noCollision()
@@ -42,7 +44,7 @@ public class CWBlocks {
 
     public static final Block COPPER_RAIL = register(
             "copper_rail",
-            RailBlock::new,
+            CopperRailBlock::new,
             AbstractBlock.Settings.copy(Blocks.RAIL).sounds(BlockSoundGroup.COPPER)
     );
 

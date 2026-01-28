@@ -1,66 +1,53 @@
 package dev.mariany.copperworks.block;
 
+import dev.mariany.copperworks.block.custom.rail.FragileRail;
+import dev.mariany.copperworks.block.custom.rail.SpeedRail;
 import dev.mariany.copperworks.sound.CWSoundEvents;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.RailShape;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 
-import java.util.Map;
-
 public final class RailHandler {
-    private final static Map<Block, RailProperties> MOMENTUM_RAILS = Map.of(
-            CWBlocks.WOODEN_RAIL, new RailProperties(0.3F, 0.3F),
-            CWBlocks.COPPER_RAIL, new RailProperties(0.4F, 0.1F)
-    );
-
-    private final static Map<Block, Float> FRAGILE_RAILS = Map.of(CWBlocks.WOODEN_RAIL, 0.03F);
-
     private RailHandler() {
     }
 
-    public static void onMinecartTravel(AbstractMinecartEntity abstractMinecart) {
-        if (!abstractMinecart.getEntityWorld().isClient()) {
-            BlockPos previousPosition = abstractMinecart.getBlockPos();
+    public static void onMinecartTravel(AbstractMinecartEntity minecart) {
+        if (!minecart.getEntityWorld().isClient()) {
+            BlockPos previousPosition = minecart.getBlockPos();
+            boolean moving = minecart.getVelocity().lengthSquared() > 0.01;
 
-            handleMomentumRails(abstractMinecart);
-            handleFragileRails(abstractMinecart, previousPosition);
+            handleMomentumRails(minecart);
+            handleFragileRails(minecart, previousPosition, moving);
         }
     }
 
     private static void handleMomentumRails(AbstractMinecartEntity abstractMinecart) {
         World world = abstractMinecart.getEntityWorld();
-        BlockPos railPos = abstractMinecart.getBlockPos();
-        BlockState railBlockState = world.getBlockState(railPos);
-        Block railBlock = railBlockState.getBlock();
-        Entity passenger = abstractMinecart.getFirstPassenger();
-        RailProperties railProperties = MOMENTUM_RAILS.get(railBlock);
+        BlockPos pos = abstractMinecart.getBlockPos();
+        BlockState state = world.getBlockState(pos);
 
-        if (railProperties != null && passenger != null && !isCurvedRail(railBlockState)) {
-            boolean shouldMove;
+        if (state.getBlock() instanceof SpeedRail speedRail) {
+            if (!isCurvedRail(state)) {
+                if (abstractMinecart.getFirstPassenger() instanceof PlayerEntity player) {
+                    HungerManager hungerManager = player.getHungerManager();
 
-            if (passenger instanceof PlayerEntity player) {
-                HungerManager hungerManager = player.getHungerManager();
-                shouldMove = hungerManager.getFoodLevel() > 6;
+                    if (hungerManager.getFoodLevel() <= 6) {
+                        return;
+                    }
 
-                if (shouldMove && player.age % 10 == 0) {
-                    hungerManager.addExhaustion(railProperties.exhaustion);
+                    if (player.age % 10 == 0) {
+                        hungerManager.addExhaustion(speedRail.getExhaustion());
+                    }
                 }
-            } else {
-                shouldMove = false;
-            }
 
-            if (shouldMove) {
-                moveMinecart(abstractMinecart, railProperties.additionalSpeed);
+                moveMinecart(abstractMinecart, speedRail.getSpeed());
             }
         }
     }
@@ -73,28 +60,18 @@ public final class RailHandler {
     }
 
     private static void moveMinecart(AbstractMinecartEntity minecart, float speed) {
-        Vec3d currentVelocity = minecart.getVelocity();
-        Vec3d newVelocity = currentVelocity.normalize().multiply(speed);
-        minecart.setVelocity(newVelocity);
+        minecart.setVelocity(minecart.getVelocity().normalize().multiply(minecart.getFinalGravity() + speed));
         minecart.velocityModified = true;
     }
 
-    private static void handleFragileRails(AbstractMinecartEntity abstractMinecart, BlockPos previousPosition) {
-        World world = abstractMinecart.getEntityWorld();
+    private static void handleFragileRails(AbstractMinecartEntity minecart, BlockPos previousPosition, boolean moving) {
+        World world = minecart.getEntityWorld();
         Random random = world.getRandom();
-        BlockState railBlockState = world.getBlockState(previousPosition);
-        Block railBlock = railBlockState.getBlock();
-        Entity passenger = abstractMinecart.getFirstPassenger();
-        Float breakChance = FRAGILE_RAILS.get(railBlock);
+        BlockState state = world.getBlockState(previousPosition);
 
-        if (breakChance != null && passenger != null) {
-            Vec3d currentVelocity = abstractMinecart.getVelocity();
-            double currentSpeed = currentVelocity.length();
-
-            if (currentSpeed > 0 && passenger.age % 20 == 0) {
-                if (random.nextFloat() < breakChance) {
-                    breakWoodenRail(world, previousPosition);
-                }
+        if (moving && minecart.hasPassengers() && state.getBlock() instanceof FragileRail fragileRail) {
+            if (minecart.age % 20 == 0 && random.nextFloat() < fragileRail.getBreakChance()) {
+                breakWoodenRail(world, previousPosition);
             }
         }
     }
@@ -110,8 +87,5 @@ public final class RailHandler {
         );
 
         world.breakBlock(blockPos, false);
-    }
-
-    record RailProperties(float additionalSpeed, float exhaustion) {
     }
 }
