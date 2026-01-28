@@ -61,7 +61,6 @@ public final class RailHandler {
 
     private static void moveMinecart(AbstractMinecartEntity minecart, float speed) {
         minecart.setVelocity(minecart.getVelocity().normalize().multiply(minecart.getFinalGravity() + speed));
-        minecart.velocityModified = true;
     }
 
     private static void handleFragileRails(AbstractMinecartEntity minecart, BlockPos previousPosition, boolean moving) {

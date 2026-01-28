@@ -1,18 +1,18 @@
 package dev.mariany.copperworks.gamerule;
 
 import dev.mariany.copperworks.Copperworks;
-import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
-import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
-import net.minecraft.world.GameRules;
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleBuilder;
+import net.minecraft.world.rule.GameRule;
+import net.minecraft.world.rule.GameRuleCategory;
 
 public class CWGamerules {
-    public static final GameRules.Key<GameRules.BooleanRule> WATER_POTIONS_DEGRADE_BLOCKS = GameRuleRegistry.register(
-            "waterPotionsDegradeBlocks",
-            GameRules.Category.MISC,
-            GameRuleFactory.createBooleanRule(true)
-    );
+    public static final GameRule<Boolean> WATER_POTIONS_DEGRADE_BLOCKS = GameRuleBuilder
+            .forBoolean(true)
+            .category(GameRuleCategory.MISC)
+            .buildAndRegister(Copperworks.id("water_potions_degrade_blocks"));
 
-    private CWGamerules() {}
+    private CWGamerules() {
+    }
 
     public static void bootstrap() {
         Copperworks.bootstrapLog("Gamerules");

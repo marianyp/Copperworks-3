@@ -12,8 +12,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
+import net.minecraft.world.rule.GameRules;
 
 public class PatinaItem extends Item {
     public PatinaItem(Settings settings) {
@@ -21,7 +21,7 @@ public class PatinaItem extends Item {
     }
 
     public static void tryStrip(ServerWorld world, BlockPos pos, BlockState state) {
-        if (world.getGameRules().getBoolean(GameRules.DO_TILE_DROPS)) {
+        if (world.getGameRules().getValue(GameRules.DO_TILE_DROPS)) {
             Oxidizable.getDecreasedOxidationState(state)
                       .ifPresent(strippedState -> Block.dropStack(
                               world,

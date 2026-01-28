@@ -9,6 +9,7 @@ import net.minecraft.registry.entry.RegistryEntry;
 import java.util.*;
 
 public record CopperUpgrade(Block to, Set<String> copiedProperties, boolean mergeInventories) {
+    @SuppressWarnings("deprecation")
     public static final Codec<CopperUpgrade> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
                                         Registries.BLOCK

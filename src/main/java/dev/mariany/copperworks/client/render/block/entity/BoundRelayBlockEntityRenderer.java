@@ -86,7 +86,7 @@ public class BoundRelayBlockEntityRenderer
         BlockPos boundPos = state.boundPos;
 
         if (boundPos != null) {
-            renderHighlight(state, matrices, queue, cameraState, boundPos);
+            this.renderHighlight(state, matrices, queue, cameraState, boundPos);
         }
     }
 }

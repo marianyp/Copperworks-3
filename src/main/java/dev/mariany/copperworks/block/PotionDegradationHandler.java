@@ -22,7 +22,7 @@ public final class PotionDegradationHandler {
 
     public static void onPotionCollision(PotionEntity potionEntity) {
         if (potionEntity.getEntityWorld() instanceof ServerWorld world) {
-            if (!world.getGameRules().getBoolean(CWGamerules.WATER_POTIONS_DEGRADE_BLOCKS)) {
+            if (!world.getGameRules().getValue(CWGamerules.WATER_POTIONS_DEGRADE_BLOCKS)) {
                 return;
             }
 
