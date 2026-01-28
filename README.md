@@ -1,0 +1,23 @@
+![The below information only applies to Copperworks version 3.0.0 and above](https://i.imgur.com/ys9G4S1.png)
+
+### 📖 About
+
+Copperworks adds new uses for copper while also aiming to improve vanilla gameplay. The mod adds around **8 items** and over **10 new blocks** to the game, with various methods for obtaining them. Some features include:
+
+- A new vanilla-friendly block that allows for potentially infinite storage, introducing a unique approach to inventory management.
+- New redstone components, varying from entity detection to wireless redstone!
+- New functional blocks that can be used to aid in mob farms.
+- A new endgame armor item, which gives creative mode-like flight. Useful for building!
+- And more! Visit the wiki for a detailed overview of all the new items, blocks, and features.
+
+### ✨ A Quick Look
+
+![copper barrel. connect more barrels for more storage. scroll and search through the inventory!](https://i.imgur.com/FQKlbED.jpeg)
+
+![muffler. mutes nearby sounds. perfect for mob farms!](https://i.imgur.com/BJ7krlz.jpeg)
+
+![relay. radio powered redstone. trigger redstone from your inventory! teleports owner when powered. wireless redstone!](https://i.imgur.com/UOxZhAO.jpeg)
+
+![rocket boots. gives you the ability to fly! gives speed boost when used with an elytra. say goodbye to firework rockets!](https://i.imgur.com/BCyg8CY.jpeg)
+
+![visit the wiki for more info!](https://i.imgur.com/1uv0bnK.png)
