@@ -8,7 +8,7 @@ Copperworks adds new uses for copper while also aiming to improve vanilla gamepl
 - New redstone components, varying from entity detection to wireless redstone!
 - New functional blocks that can be used to aid in mob farms.
 - A new endgame armor item, which gives creative mode-like flight. Useful for building!
-- And more! Visit the wiki for a detailed overview of all the new items, blocks, and features.
+- And more! [Visit the wiki](https://github.com/marianyp/Copperworks-3/wiki) for a detailed overview of all the new items, blocks, and features.
 
 ### ✨ A Quick Look
 
@@ -20,4 +20,4 @@ Copperworks adds new uses for copper while also aiming to improve vanilla gamepl
 
 ![rocket boots. gives you the ability to fly! gives speed boost when used with an elytra. say goodbye to firework rockets!](https://i.imgur.com/BCyg8CY.jpeg)
 
-![visit the wiki for more info!](https://i.imgur.com/1uv0bnK.png)
+[![visit the wiki for more info!](https://i.imgur.com/1uv0bnK.png)](https://github.com/marianyp/Copperworks-3/wiki)
