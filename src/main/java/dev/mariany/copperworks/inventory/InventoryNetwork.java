@@ -120,6 +120,7 @@ public class InventoryNetwork implements Inventory {
         this.connections.add(this.controllerPos);
     }
 
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public InventoryNetwork(
             Optional<World> world,
             Optional<BlockPos> pos,
