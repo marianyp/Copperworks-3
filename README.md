@@ -1,3 +1,10 @@
+[![X](https://img.shields.io/static/v1?label=&message=Twitter&color=white&labelColor=C15A36&style=for-the-badge&logo=x&logoColor=white)](https://x.com/uhmbyemc)
+[![GitHub](https://img.shields.io/static/v1?label=&message=GitHub&color=white&labelColor=C15A36&style=for-the-badge&logo=github&logoColor=white)](https://github.com/marianyp)
+[![CurseForge](https://img.shields.io/static/v1?label=&message=CurseForge&color=white&labelColor=C15A36&style=for-the-badge&logo=curseforge&logoColor=white)](https://www.curseforge.com/members/uhmbyee/projects)
+[![Modrinth](https://img.shields.io/static/v1?label=&message=Modrinth&color=white&labelColor=C15A36&style=for-the-badge&logo=modrinth&logoColor=white)](https://modrinth.com/user/uhmbyee)
+
+---
+
 ![The below information only applies to Copperworks version 3.0.0 and above](https://i.imgur.com/ys9G4S1.png)
 
 ### 📖 About
