@@ -58,7 +58,7 @@ public abstract class AbstractHighlightedBlockEntityRenderer<
             OrderedRenderCommandQueue queue,
             CameraRenderState cameraState
     ) {
-        renderHighlight(state, matrices, queue, cameraState, state.pos);
+        this.renderHighlight(state, matrices, queue, cameraState, state.pos);
     }
 
     protected void renderHighlight(
@@ -73,7 +73,7 @@ public abstract class AbstractHighlightedBlockEntityRenderer<
         if (progress > 0) {
             Box box = Box.from(Vec3d.of(pos)).offset(cameraState.pos.negate());
 
-            renderHighlight(queue, matrices, state.color, box, progress);
+            this.renderHighlight(queue, matrices, state.color, box, progress);
         }
     }
 

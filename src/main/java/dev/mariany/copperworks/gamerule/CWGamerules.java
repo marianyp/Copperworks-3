@@ -12,7 +12,8 @@ public class CWGamerules {
             GameRuleFactory.createBooleanRule(true)
     );
 
-    private CWGamerules() {}
+    private CWGamerules() {
+    }
 
     public static void bootstrap() {
         Copperworks.bootstrapLog("Gamerules");
