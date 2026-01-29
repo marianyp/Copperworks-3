@@ -21,7 +21,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.GlobalPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
 public class RadioItem extends Item {
     public RadioItem(Settings settings) {
@@ -35,78 +34,77 @@ public class RadioItem extends Item {
 
     @Override
     public ActionResult use(World world, PlayerEntity player, Hand hand) {
+        ItemStack stack = player.getStackInHand(hand);
+        GlobalPos globalPos = stack.get(CWComponents.RELAY_POSITION);
+
+        if (globalPos == null) {
+            return ActionResult.PASS;
+        }
+
         if (player instanceof ServerPlayerEntity serverPlayer) {
-            RadioState radioState = useRadio(serverPlayer, hand);
+            RelayStatus relayStatus = powerRelay(serverPlayer, globalPos);
 
-            if (radioState != null) {
-                if (!radioState.isBusy()) {
-                    playSound(serverPlayer, radioState);
+            if (relayStatus != null) {
+                if (!relayStatus.isBusy()) {
+                    playSound(serverPlayer, relayStatus);
 
-                    if (!radioState.isAvailable()) {
+                    if (!relayStatus.isAvailable()) {
                         notifyUnavailable(serverPlayer);
                     }
                 }
 
-                if (radioState.isAvailable()) {
+                if (relayStatus.isAvailable()) {
                     return ActionResult.SUCCESS_SERVER;
                 }
             }
         }
 
-        return ActionResult.PASS;
+        return ActionResult.CONSUME;
     }
 
-    @Nullable
-    protected static RadioState useRadio(ServerPlayerEntity player, Hand hand) {
+    protected static RelayStatus powerRelay(ServerPlayerEntity player, GlobalPos relayGlobalPos) {
         ServerWorld serverWorld = player.getEntityWorld();
         MinecraftServer server = serverWorld.getServer();
-        ItemStack stack = player.getStackInHand(hand);
 
-        GlobalPos globalPos = stack.get(CWComponents.RELAY_POSITION);
+        BlockPos relayPos = relayGlobalPos.pos();
+        RegistryKey<World> relayDimension = relayGlobalPos.dimension();
+        ServerWorld relayWorld = server.getWorld(relayDimension);
 
-        if (globalPos == null) {
-            return null;
-        }
+        if (relayWorld != null) {
+            ChunkPos otherChunkPos = new ChunkPos(relayPos);
 
-        BlockPos otherPos = globalPos.pos();
-        RegistryKey<World> otherDimension = globalPos.dimension();
-        ServerWorld otherWorld = server.getWorld(otherDimension);
-
-        if (otherWorld != null) {
-            ChunkPos otherChunkPos = new ChunkPos(otherPos);
-
-            if (otherWorld.isChunkLoaded(otherChunkPos.toLong())) {
-                BlockState state = otherWorld.getBlockState(otherPos);
+            if (relayWorld.isChunkLoaded(otherChunkPos.toLong())) {
+                BlockState state = relayWorld.getBlockState(relayPos);
 
                 if (state.getBlock() instanceof RadioRelayBlock radioRelayBlock) {
                     if (state.get(RadioRelayBlock.POWERED, false)) {
-                        return RadioState.BUSY;
+                        return RelayStatus.BUSY;
                     }
 
-                    otherWorld.setBlockState(
-                            otherPos,
+                    relayWorld.setBlockState(
+                            relayPos,
                             state.withIfExists(RadioRelayBlock.POWERED, true)
                     );
 
-                    otherWorld.scheduleBlockTick(
-                            otherPos,
+                    relayWorld.scheduleBlockTick(
+                            relayPos,
                             radioRelayBlock,
                             radioRelayBlock.getPulseDuration()
                     );
 
-                    return RadioState.AVAILABLE;
+                    return RelayStatus.AVAILABLE;
                 }
             }
         }
 
-        return RadioState.UNAVAILABLE;
+        return RelayStatus.UNAVAILABLE;
     }
 
     protected static void notifyUnavailable(PlayerEntity player) {
         player.sendMessage(Text.translatable("item.radio.unavailable"), true);
     }
 
-    protected static void playSound(ServerPlayerEntity player, RadioState radioState) {
+    protected static void playSound(ServerPlayerEntity player, RelayStatus relayStatus) {
         player.networkHandler
                 .sendPacket(
                         new PlaySoundS2CPacket(
@@ -116,7 +114,7 @@ public class RadioItem extends Item {
                                 player.getY(),
                                 player.getZ(),
                                 1,
-                                radioState.isAvailable() ? 1 : 0.7F,
+                                relayStatus.isAvailable() ? 1 : 0.7F,
                                 player.getRandom().nextLong()
                         )
                 );
