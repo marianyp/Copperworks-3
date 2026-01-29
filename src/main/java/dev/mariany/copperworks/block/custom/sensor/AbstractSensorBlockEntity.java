@@ -1,6 +1,5 @@
 package dev.mariany.copperworks.block.custom.sensor;
 
-import dev.mariany.copperworks.sound.CWSoundEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -8,9 +7,11 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -30,6 +31,8 @@ public abstract class AbstractSensorBlockEntity extends BlockEntity {
         this.range = maxRange;
     }
 
+    protected abstract void playSound(ServerWorld serverWorld, BlockPos pos);
+
     @Override
     public void onBlockReplaced(BlockPos pos, BlockState oldState) {
         if (this.world != null) {
@@ -43,16 +46,7 @@ public abstract class AbstractSensorBlockEntity extends BlockEntity {
 
             player.sendMessage(Text.translatable("block.copperworks.sensor.cycled", this.range), true);
 
-            serverWorld.playSound(
-                    null,
-                    pos.getX(),
-                    pos.getY(),
-                    pos.getZ(),
-                    CWSoundEvents.BLOCK_SENSOR_INTERACT,
-                    SoundCategory.BLOCKS,
-                    0.5F,
-                    (float) (1.6 - (this.range - 1) * 0.1)
-            );
+            this.playSound(serverWorld, pos);
         }
     }
 
