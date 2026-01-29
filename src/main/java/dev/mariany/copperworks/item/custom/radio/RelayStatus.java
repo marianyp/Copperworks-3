@@ -1,6 +1,6 @@
 package dev.mariany.copperworks.item.custom.radio;
 
-public enum RadioState {
+public enum RelayStatus {
     AVAILABLE,
     UNAVAILABLE,
     BUSY;
