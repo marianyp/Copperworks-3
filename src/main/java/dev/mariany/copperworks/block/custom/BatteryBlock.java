@@ -77,14 +77,14 @@ public class BatteryBlock extends WallMountedBlock {
     @Override
     protected void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         if (state.get(POWERED) && !world.isReceivingRedstonePower(pos)) {
-            this.powerOff(world, pos, state);
+            powerOff(world, pos, state);
         }
     }
 
     @Override
     protected void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
         if (oldState.getBlock() != state.getBlock() && world instanceof ServerWorld serverWorld) {
-            this.update(serverWorld, pos, state);
+            update(serverWorld, pos, state);
         }
     }
 
@@ -98,32 +98,32 @@ public class BatteryBlock extends WallMountedBlock {
             boolean notify
     ) {
         if (world instanceof ServerWorld serverWorld) {
-            this.update(serverWorld, pos, state);
+            update(serverWorld, pos, state);
         }
     }
 
-    protected void update(ServerWorld world, BlockPos pos, BlockState state) {
+    protected static void update(ServerWorld world, BlockPos pos, BlockState state) {
         boolean receivingPower = world.isReceivingRedstonePower(pos);
 
         if (receivingPower != state.get(POWERED)) {
             if (receivingPower) {
                 for (Direction axisDirection : getDirection(state).getAxis().getDirections()) {
-                    this.sendPulse(world, pos, pos, axisDirection);
+                    sendPulse(world, pos, pos, axisDirection);
                 }
 
-                this.emitPulse(world, pos);
+                emitPulse(world, pos);
             } else {
-                this.powerOff(world, pos, state);
+                scheduleTick(world, pos);
             }
         }
     }
 
-    protected void powerOff(World world, BlockPos pos, BlockState state) {
-        this.setPowered(world, pos, false);
-        this.updateNeighbors(world, pos, state);
+    protected static void powerOff(World world, BlockPos pos, BlockState state) {
+        setPowered(world, pos, false);
+        updateNeighbors(world, pos, state);
     }
 
-    protected void sendPulse(ServerWorld world, BlockPos pos, BlockPos origin, Direction direction) {
+    protected static void sendPulse(ServerWorld world, BlockPos pos, BlockPos origin, Direction direction) {
         BlockPos iterationPosition = pos.offset(direction, 1);
 
         while (true) {
@@ -160,47 +160,50 @@ public class BatteryBlock extends WallMountedBlock {
         }
     }
 
-    protected void handleInteraction(World world, BlockPos pos) {
+    protected static void handleInteraction(World world, BlockPos pos) {
         if (!handleBattery(world, pos)) {
             handleClockBlockEntity(world, pos);
         }
     }
 
-    protected boolean handleBattery(World world, BlockPos pos) {
+    protected static boolean handleBattery(World world, BlockPos pos) {
         if (world.getBlockState(pos).getBlock() instanceof BatteryBlock) {
-            this.emitPulse(world, pos);
+            emitPulse(world, pos);
             return true;
         }
 
         return false;
     }
 
-    protected void handleClockBlockEntity(World world, BlockPos pos) {
+    protected static void handleClockBlockEntity(World world, BlockPos pos) {
         if (world.getBlockEntity(pos) instanceof ClockBlockEntity clockBlockEntity) {
-            clockBlockEntity.resetProgress(world, pos);
+            clockBlockEntity.resetProgress(world, pos, false);
             clockBlockEntity.playSound(world, pos);
         }
     }
 
-    protected void emitPulse(World world, BlockPos pos) {
-        this.setPowered(world, pos, true);
-        this.scheduleTick(world, pos);
+    protected static void emitPulse(World world, BlockPos pos) {
+        setPowered(world, pos, true);
+        scheduleTick(world, pos);
     }
 
-    protected void scheduleTick(World world, BlockPos pos) {
-        if (!world.isClient() && !world.getBlockTickScheduler().isQueued(pos, this)) {
-            world.scheduleBlockTick(pos, this, 4);
+    protected static void scheduleTick(World world, BlockPos pos) {
+        Block block = world.getBlockState(pos).getBlock();
+
+        if (!world.isClient() && !world.getBlockTickScheduler().isQueued(pos, block)) {
+            world.scheduleBlockTick(pos, block, 4);
         }
     }
 
-    protected void setPowered(World world, BlockPos pos, boolean powered) {
+    protected static void setPowered(World world, BlockPos pos, boolean powered) {
         BlockState state = world.getBlockState(pos).withIfExists(POWERED, powered);
         world.setBlockState(pos, state);
-        this.updateNeighbors(world, pos, state);
+        updateNeighbors(world, pos, state);
     }
 
-    protected void updateNeighbors(World world, BlockPos pos, BlockState state) {
+    protected static void updateNeighbors(World world, BlockPos pos, BlockState state) {
         Direction direction = getDirection(state);
+        Block block = state.getBlock();
 
         for (Direction axisDirection : direction.getAxis().getDirections()) {
             BlockPos blockPos = pos.offset(axisDirection.getOpposite());
@@ -209,8 +212,9 @@ public class BatteryBlock extends WallMountedBlock {
                     axisDirection.getOpposite(),
                     null
             );
-            world.updateNeighbor(blockPos, this, wireOrientation);
-            world.updateNeighborsExcept(blockPos, this, axisDirection, wireOrientation);
+
+            world.updateNeighbor(blockPos, block, wireOrientation);
+            world.updateNeighborsExcept(blockPos, block, axisDirection, wireOrientation);
         }
     }
 }

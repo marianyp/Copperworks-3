@@ -51,7 +51,7 @@ public class ClockBlockEntity extends BlockEntity {
     }
 
     protected int cycleTargetProgress(World world, BlockPos pos, boolean increment) {
-        this.resetProgress(world, pos);
+        this.resetProgress(world, pos, false);
 
         int maxSeconds = this.getMaxSeconds();
         int target = this.target;
@@ -110,8 +110,7 @@ public class ClockBlockEntity extends BlockEntity {
             this.poweredTicks = poweredTicks - 1;
             setPowered(world, pos, true);
         } else if (nextProgress >= target) {
-            this.resetProgress(world, pos);
-            setPowered(world, pos, true);
+            this.resetProgress(world, pos, true);
             this.poweredTicks = Math.max(0, this.getPoweredTicks());
         } else {
             if (state.get(AbstractClockBlock.POWERED, false)) {
@@ -122,10 +121,10 @@ public class ClockBlockEntity extends BlockEntity {
         }
     }
 
-    public void resetProgress(World world, BlockPos pos) {
+    public void resetProgress(World world, BlockPos pos, boolean powered) {
         if (this.progress > 0) {
             this.progress = 0;
-            update(world, pos);
+            setPowered(world, pos, powered);
         }
     }
 
