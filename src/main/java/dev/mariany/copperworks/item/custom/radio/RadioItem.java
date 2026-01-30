@@ -4,11 +4,11 @@ import dev.mariany.copperworks.block.CWBlocks;
 import dev.mariany.copperworks.block.custom.relay.radio.RadioRelayBlock;
 import dev.mariany.copperworks.component.CWComponents;
 import dev.mariany.copperworks.sound.CWSoundEvents;
+import dev.mariany.copperworks.sound.SoundHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -100,18 +100,12 @@ public class RadioItem extends Item {
     }
 
     protected static void playSound(ServerPlayerEntity player, RelayStatus relayStatus) {
-        player.networkHandler
-                .sendPacket(
-                        new PlaySoundS2CPacket(
-                                CWSoundEvents.ITEM_RADIO,
-                                SoundCategory.PLAYERS,
-                                player.getX(),
-                                player.getY(),
-                                player.getZ(),
-                                1,
-                                relayStatus.isAvailable() ? 1 : 0.7F,
-                                player.getRandom().nextLong()
-                        )
-                );
+        SoundHelper.playSoundToPlayer(
+                player,
+                CWSoundEvents.ITEM_RADIO,
+                SoundCategory.PLAYERS,
+                1,
+                relayStatus.isAvailable() ? 1 : 0.7F
+        );
     }
 }

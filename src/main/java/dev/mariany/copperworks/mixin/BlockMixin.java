@@ -29,7 +29,7 @@ public class BlockMixin {
             )
     )
     private static void wrapDropStacks(
-            List<?> instance,
+            List<ItemStack> stacks,
             Consumer<?> consumer,
             Operation<Void> original,
             @Local(index = 0, argsOnly = true) BlockState state,
@@ -41,11 +41,11 @@ public class BlockMixin {
     ) {
         if (entity instanceof PlayerEntity player) {
             if (state.getBlock() instanceof SelfInserting) {
-                SelfInserting.insert(world, player, pos, state, blockEntity, tool);
+                SelfInserting.insert(world, player, pos, stacks);
                 return;
             }
         }
 
-        original.call(instance, consumer);
+        original.call(stacks, consumer);
     }
 }
