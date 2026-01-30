@@ -9,7 +9,10 @@ public final class CWChunkTickets {
     public static final ChunkTicketType ENDER_RELAY = register(
             "ender_relay",
             40,
-            ChunkTicketType.FOR_LOADING | ChunkTicketType.FOR_SIMULATION | ChunkTicketType.RESETS_IDLE_TIMEOUT
+            ChunkTicketType.SERIALIZE |
+                    ChunkTicketType.FOR_LOADING |
+                    ChunkTicketType.FOR_SIMULATION |
+                    ChunkTicketType.RESETS_IDLE_TIMEOUT
     );
 
     private CWChunkTickets() {
