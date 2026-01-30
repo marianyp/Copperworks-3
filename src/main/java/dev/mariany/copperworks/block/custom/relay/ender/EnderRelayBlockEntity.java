@@ -101,7 +101,7 @@ public class EnderRelayBlockEntity extends BlockEntity {
 
     public void tick(World world) {
         if (world instanceof ServerWorld serverWorld) {
-            Entity entity = this.owner != null ? getPlayer(serverWorld, this.owner.getUuid()) : null;
+            Entity entity = this.owner == null ? null : getPlayer(serverWorld, this.owner.getUuid());
 
             if (--this.chunkTicketExpiryTicks <= 0 && entity instanceof EnderRelayTracker enderRelayTracker) {
                 this.chunkTicketExpiryTicks = this.getGlobalPos()

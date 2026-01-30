@@ -48,7 +48,6 @@ public class ServerPlayerEntityMixin implements EnderRelayTracker {
         BlockPos pos = globalPos.pos();
 
         ServerWorld world = player.getEntityWorld();
-
         MinecraftServer server = world.getServer();
 
         ServerWorld enderRelayWorld = server.getWorld(dimension);

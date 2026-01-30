@@ -16,7 +16,6 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.GlobalPos;
 import net.minecraft.world.BlockView;
@@ -111,9 +110,8 @@ public class BoundRelayBlock extends HighlightedRelayBlock<BoundRelayBlockEntity
         MinecraftServer server = world.getServer();
         ServerWorld otherWorld = server.getWorld(globalPos.dimension());
         BlockPos pos = globalPos.pos();
-        ChunkPos chunkPos = new ChunkPos(pos);
 
-        if (otherWorld != null && otherWorld.isChunkLoaded(chunkPos.toLong())) {
+        if (otherWorld != null && otherWorld.isPosLoaded(pos)) {
             BlockState state = otherWorld.getBlockState(pos);
             boolean changed = state.get(POWER, 0) != power;
 
