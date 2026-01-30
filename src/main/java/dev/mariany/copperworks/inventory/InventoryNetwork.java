@@ -17,7 +17,6 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TextCodecs;
 import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -351,9 +350,7 @@ public class InventoryNetwork implements Inventory {
     private void reassignController() {
         if (this.world != null) {
             for (BlockPos pos : this.connections) {
-                ChunkPos chunkPos = new ChunkPos(pos);
-
-                if (this.world.isChunkLoaded(chunkPos.x, chunkPos.z)) {
+                if (this.world.isPosLoaded(pos)) {
                     this.controllerPos = pos;
                     return;
                 }

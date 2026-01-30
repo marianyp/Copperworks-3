@@ -18,7 +18,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.GlobalPos;
 import net.minecraft.world.World;
 
@@ -47,14 +46,12 @@ public class RadioItem extends Item {
             if (relayStatus != null) {
                 if (!relayStatus.isBusy()) {
                     playSound(serverPlayer, relayStatus);
-
-                    if (!relayStatus.isAvailable()) {
-                        notifyUnavailable(serverPlayer);
-                    }
                 }
 
                 if (relayStatus.isAvailable()) {
                     return ActionResult.SUCCESS_SERVER;
+                } else {
+                    notifyUnavailable(serverPlayer);
                 }
             }
         }
@@ -71,9 +68,7 @@ public class RadioItem extends Item {
         ServerWorld relayWorld = server.getWorld(relayDimension);
 
         if (relayWorld != null) {
-            ChunkPos otherChunkPos = new ChunkPos(relayPos);
-
-            if (relayWorld.isChunkLoaded(otherChunkPos.toLong())) {
+            if (relayWorld.isPosLoaded(relayPos)) {
                 BlockState state = relayWorld.getBlockState(relayPos);
 
                 if (state.getBlock() instanceof RadioRelayBlock radioRelayBlock) {
