@@ -62,6 +62,10 @@ public abstract class AbstractSensorBlock extends WallMountedBlock implements Bl
 
     @Override
     protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+        if (!player.getMainHandStack().isEmpty() || !player.getOffHandStack().isEmpty()) {
+            return ActionResult.PASS;
+        }
+
         if (world.getBlockEntity(pos) instanceof AbstractSensorBlockEntity abstractSensorBlockEntity) {
             player.incrementStat(this.getInteractStat());
             abstractSensorBlockEntity.interact(player, pos);

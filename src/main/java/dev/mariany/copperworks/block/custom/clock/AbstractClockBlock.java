@@ -57,6 +57,10 @@ public abstract class AbstractClockBlock extends BlockWithEntity {
 
     @Override
     protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+        if (!player.getMainHandStack().isEmpty() || !player.getOffHandStack().isEmpty()) {
+            return ActionResult.PASS;
+        }
+
         if (world.getBlockEntity(pos) instanceof ClockBlockEntity clockBlockEntity) {
             player.incrementStat(this.getInteractStat());
             clockBlockEntity.interact(player, pos);
