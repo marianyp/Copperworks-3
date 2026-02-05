@@ -173,9 +173,9 @@ public class CWRecipeProvider extends FabricRecipeProvider {
 
             private void createCopperClockRecipe() {
                 this.createShaped(RecipeCategory.REDSTONE, CWBlocks.COPPER_CLOCK)
-                    .pattern("PPP")
+                    .pattern(" P ")
                     .pattern("PCP")
-                    .pattern("PPP")
+                    .pattern(" P ")
                     .input('P', CWItems.COPPER_PLATE)
                     .input('C', Items.CLOCK)
                     .criterion(hasItem(Items.CLOCK), this.conditionsFromItem(Items.CLOCK))
@@ -184,9 +184,9 @@ public class CWRecipeProvider extends FabricRecipeProvider {
 
             private void createStickyCopperRecipe(Item input, Block output) {
                 this.createShaped(RecipeCategory.MISC, output)
-                    .pattern("PPP")
-                    .pattern("CIC")
-                    .pattern("PPP")
+                    .pattern("CCC")
+                    .pattern("PIP")
+                    .pattern("CCC")
                     .input('P', CWItems.COPPER_PLATE)
                     .input('C', Items.COPPER_INGOT)
                     .input('I', input)

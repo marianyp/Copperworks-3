@@ -18,6 +18,10 @@ public final class StickyHandler {
 
     public static void onLivingEntityTick(LivingEntity livingEntity) {
         applyModifiers(livingEntity);
+
+        if (isStuck(livingEntity)) {
+            livingEntity.setOnGround(true);
+        }
     }
 
     private static void applyModifiers(LivingEntity livingEntity) {

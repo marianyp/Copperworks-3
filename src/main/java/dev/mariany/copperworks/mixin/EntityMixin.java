@@ -28,9 +28,9 @@ public class EntityMixin {
 
     @Inject(method = "canMoveVoluntarily", at = @At(value = "HEAD"), cancellable = true)
     protected void injectIsImmobile(CallbackInfoReturnable<Boolean> cir) {
-        Entity livingEntity = (Entity) (Object) this;
+        Entity entity = (Entity) (Object) this;
 
-        if (StickyHandler.isStuck(livingEntity)) {
+        if (StickyHandler.isStuck(entity)) {
             cir.setReturnValue(false);
         }
     }

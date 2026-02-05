@@ -8,9 +8,9 @@
     "P": "copperworks:copper_plate"
   },
   "pattern": [
-    "PPP",
-    "CIC",
-    "PPP"
+    "CCC",
+    "PIP",
+    "CCC"
   ],
   "result": {
     "count": 1,
