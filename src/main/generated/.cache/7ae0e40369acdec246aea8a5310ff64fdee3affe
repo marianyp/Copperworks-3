@@ -1,4 +1,4 @@
-// 1.21.10	-999999999-01-01T00:00:00	Copperworks/Copperworks Recipes
+// 1.21.11	-999999999-01-01T00:00:00	Copperworks/Copperworks Recipes
 496ae9844b246d8be1fe10ad056ff90a1ca0d1a3 data/copperworks/advancement/recipes/building_blocks/copper_scaffolding.json
 3450584062d6dedd60686c9b72479006e3572326 data/copperworks/advancement/recipes/combat/rocket_boots_smithing.json
 7d5bf932e9b75b40bc5f363571516bb231677fc0 data/copperworks/advancement/recipes/misc/copper_plate.json
@@ -16,7 +16,7 @@ dbf7924cbdf29cc40a09054361ce0cced6ea5749 data/copperworks/advancement/recipes/re
 eec8ca624d62221b23b3a818e68ec8f1ac0fc9cd data/copperworks/advancement/recipes/tools/wrench.json
 332dec9826338e771d5ed25b4ce9a0f06dde892d data/copperworks/advancement/recipes/transportation/wooden_rail.json
 2070abb42b2e5d329bf0068cc25c0ba62a80b05f data/copperworks/recipe/battery.json
-cd404407e408405c3f5b0d5f6d9e142dc14dafef data/copperworks/recipe/copper_clock.json
+d6dd55b9c3260770ceea57d258b981ce487df7b8 data/copperworks/recipe/copper_clock.json
 bed9f1f04ff7aae9be7bfa373eb98bb996c5df5e data/copperworks/recipe/copper_lever.json
 68e109db6d82b5f03ac5417217ab0a513af058f8 data/copperworks/recipe/copper_plate.json
 bad278fe521498ac1c626d296582eff8e39326d0 data/copperworks/recipe/copper_scaffolding.json
@@ -28,7 +28,7 @@ facdd13003f40331b53829628bdda35b5dc475ea data/copperworks/recipe/radio_cloning.j
 896369a7ac5f0b32a9cec25b6eb26da2a79c721e data/copperworks/recipe/relay.json
 1f01f7dabd3bef19f8fddcd1f83f3783d0b566a4 data/copperworks/recipe/reset_radio.json
 58ba953b18b29bec380da1f0539847e40bbc06ed data/copperworks/recipe/rocket_boots_smithing.json
-984be16c2ce07c77eeff298a0b55f36d311636e6 data/copperworks/recipe/sticky_copper.json
-e0750b2af6cba5d1a974ebddd5ee27171ffc0c4b data/copperworks/recipe/sticky_copper_honey.json
+f25f35ef3802787111d8fb2f69ee56a3488cd0c3 data/copperworks/recipe/sticky_copper.json
+676acfe62647e07c5db0b9677c3ac380f93e915b data/copperworks/recipe/sticky_copper_honey.json
 b3d57c80ea3e3b364188989cbbe37ba28aab85cc data/copperworks/recipe/wooden_rail.json
 950add11712c6a2588769af85d7208d9ae0c4fdd data/copperworks/recipe/wrench.json

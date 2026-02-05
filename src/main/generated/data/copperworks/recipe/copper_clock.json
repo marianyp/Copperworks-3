@@ -6,9 +6,9 @@
     "P": "copperworks:copper_plate"
   },
   "pattern": [
-    "PPP",
+    " P ",
     "PCP",
-    "PPP"
+    " P "
   ],
   "result": {
     "count": 1,
