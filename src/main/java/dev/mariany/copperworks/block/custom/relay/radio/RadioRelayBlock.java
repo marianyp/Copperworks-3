@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import dev.mariany.copperworks.block.CWBlockEntities;
 import dev.mariany.copperworks.block.CWBlocks;
 import dev.mariany.copperworks.block.custom.relay.HighlightedRelayBlock;
+import dev.mariany.copperworks.component.CWComponents;
 import dev.mariany.copperworks.item.custom.radio.RadioItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -18,6 +19,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.GlobalPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
@@ -32,6 +34,11 @@ public class RadioRelayBlock extends HighlightedRelayBlock<RadioRelayBlockEntity
     public RadioRelayBlock(Settings settings) {
         super(settings, () -> CWBlockEntities.RADIO_RELAY);
         this.setDefaultState(this.getDefaultState().with(POWERED, false));
+    }
+
+    public static void completeBinding(World world, BlockPos pos, ItemStack stack) {
+        stack.set(CWComponents.RELAY_POSITION, new GlobalPos(world.getRegistryKey(), pos));
+        world.setBlockState(pos, CWBlocks.RADIO_RELAY.getDefaultState());
     }
 
     public int getPulseDuration() {
@@ -85,7 +92,7 @@ public class RadioRelayBlock extends HighlightedRelayBlock<RadioRelayBlockEntity
             BlockHitResult hit
     ) {
         if (stack.getItem() instanceof RadioItem) {
-            RadioItem.completeBinding(world, pos, stack);
+            completeBinding(world, pos, stack);
             return ActionResult.SUCCESS;
         }
 

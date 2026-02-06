@@ -120,7 +120,7 @@ public class EnderRelayBlock extends BlockWithEntity {
         }
     }
 
-    protected void update(ServerWorld world, BlockPos pos, BlockState state) {
+    public void update(ServerWorld world, BlockPos pos, BlockState state) {
         boolean receivingPower = world.isReceivingRedstonePower(pos);
 
         if (receivingPower != state.get(POWERED)) {

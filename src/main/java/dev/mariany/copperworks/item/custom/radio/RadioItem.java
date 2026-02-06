@@ -1,6 +1,5 @@
 package dev.mariany.copperworks.item.custom.radio;
 
-import dev.mariany.copperworks.block.CWBlocks;
 import dev.mariany.copperworks.block.custom.relay.radio.RadioRelayBlock;
 import dev.mariany.copperworks.component.CWComponents;
 import dev.mariany.copperworks.sound.CWSoundEvents;
@@ -24,11 +23,6 @@ import net.minecraft.world.World;
 public class RadioItem extends Item {
     public RadioItem(Settings settings) {
         super(settings);
-    }
-
-    public static void completeBinding(World world, BlockPos pos, ItemStack stack) {
-        stack.set(CWComponents.RELAY_POSITION, new GlobalPos(world.getRegistryKey(), pos));
-        world.setBlockState(pos, CWBlocks.RADIO_RELAY.getDefaultState());
     }
 
     @Override

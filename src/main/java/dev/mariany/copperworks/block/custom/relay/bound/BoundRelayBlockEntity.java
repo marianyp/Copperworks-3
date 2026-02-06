@@ -77,9 +77,25 @@ public class BoundRelayBlockEntity extends HighlightedBlockEntity {
         return this.isFocused();
     }
 
-    public void bind(GlobalPos pos) {
-        this.bound = pos;
+    public void bind(GlobalPos globalPos) {
+        this.bound = globalPos;
+
+        if (this.world instanceof ServerWorld serverWorld) {
+            update(serverWorld, this.pos);
+            update(serverWorld, globalPos);
+        }
+
         this.markDirty();
+    }
+
+    protected static void update(ServerWorld serverWorld, GlobalPos globalPos) {
+        MinecraftServer server = serverWorld.getServer();
+        ServerWorld otherWorld = server.getWorld(globalPos.dimension());
+        update(otherWorld, globalPos.pos());
+    }
+
+    protected static void update(ServerWorld serverWorld, BlockPos pos) {
+        BoundRelayBlock.update(serverWorld, pos);
     }
 
     protected static void disconnect(ServerWorld world, BlockPos pos) {
