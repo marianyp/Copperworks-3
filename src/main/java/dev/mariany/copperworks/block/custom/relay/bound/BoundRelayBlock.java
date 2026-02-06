@@ -4,16 +4,24 @@ import com.mojang.serialization.MapCodec;
 import dev.mariany.copperworks.block.CWBlockEntities;
 import dev.mariany.copperworks.block.CWBlocks;
 import dev.mariany.copperworks.block.custom.relay.HighlightedRelayBlock;
+import dev.mariany.copperworks.block.custom.relay.RelayBlock;
+import dev.mariany.copperworks.component.CWComponents;
+import dev.mariany.copperworks.item.CWItems;
+import dev.mariany.copperworks.sound.CWSoundEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUsage;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -32,6 +40,81 @@ public class BoundRelayBlock extends HighlightedRelayBlock<BoundRelayBlockEntity
     public BoundRelayBlock(Settings settings) {
         super(settings, () -> CWBlockEntities.BOUND_RELAY);
         this.setDefaultState(this.stateManager.getDefaultState().with(POWER, 0));
+    }
+
+    public static void initiateBinding(PlayerEntity player, ItemStack stack, BlockPos pos, Hand hand) {
+        World world = player.getEntityWorld();
+
+        ItemStack piece = ItemUsage.exchangeStack(
+                stack,
+                player,
+                createAmethystPiece(world, pos),
+                false
+        );
+
+        player.setStackInHand(hand, piece);
+
+        playInsertSound(world, pos, false);
+    }
+
+    protected static ItemStack createAmethystPiece(World world, BlockPos pos) {
+        ItemStack stack = CWItems.AMETHYST_PIECE.getDefaultStack();
+        stack.set(CWComponents.RELAY_POSITION, GlobalPos.create(world.getRegistryKey(), pos));
+        return stack;
+    }
+
+    public static boolean completeBinding(ServerPlayerEntity player, ItemStack stack, GlobalPos globalPos) {
+        ServerWorld world = player.getEntityWorld();
+        MinecraftServer server = world.getServer();
+
+        GlobalPos otherGlobalPos = stack.get(CWComponents.RELAY_POSITION);
+
+        if (otherGlobalPos == null || otherGlobalPos.equals(globalPos)) {
+            return false;
+        }
+
+        BlockPos thisPos = globalPos.pos();
+        ServerWorld thisWorld = server.getWorld(globalPos.dimension());
+
+        BlockPos otherPos = otherGlobalPos.pos();
+        ServerWorld otherWorld = server.getWorld(otherGlobalPos.dimension());
+
+        if (thisWorld == null || otherWorld == null) {
+            return false;
+        }
+
+        BlockState state = otherWorld.getBlockState(otherPos);
+
+        if (state.getBlock() instanceof RelayBlock) {
+            createBoundRelay(thisWorld, thisPos, otherGlobalPos);
+            createBoundRelay(otherWorld, otherPos, globalPos);
+
+            stack.decrement(1);
+            playInsertSound(world, thisPos, true);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    protected static void createBoundRelay(ServerWorld world, BlockPos pos, GlobalPos boundPos) {
+        world.setBlockState(pos, CWBlocks.BOUND_RELAY.getDefaultState());
+
+        if (world.getBlockEntity(pos) instanceof BoundRelayBlockEntity boundRelayBlockEntity) {
+            boundRelayBlockEntity.bind(boundPos);
+        }
+    }
+
+    protected static void playInsertSound(World world, BlockPos pos, boolean completed) {
+        world.playSound(
+                null,
+                pos,
+                CWSoundEvents.BLOCK_RELAY_INSERT,
+                SoundCategory.BLOCKS,
+                1,
+                completed ? 1 : 1.6F
+        );
     }
 
     @Override
@@ -66,13 +149,6 @@ public class BoundRelayBlock extends HighlightedRelayBlock<BoundRelayBlockEntity
     }
 
     @Override
-    protected void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
-        if (oldState.getBlock() != state.getBlock() && world instanceof ServerWorld serverWorld) {
-            update(serverWorld, pos);
-        }
-    }
-
-    @Override
     protected void neighborUpdate(
             BlockState state,
             World world,
@@ -86,7 +162,7 @@ public class BoundRelayBlock extends HighlightedRelayBlock<BoundRelayBlockEntity
         }
     }
 
-    protected static void update(ServerWorld world, BlockPos pos) {
+    public static void update(ServerWorld world, BlockPos pos) {
         if (canRelay(world, pos) && world.getBlockEntity(pos) instanceof BoundRelayBlockEntity boundRelayBlockEntity) {
             boundRelayBlockEntity.getBoundPos().ifPresent(
                     boundPos -> updateRelay(

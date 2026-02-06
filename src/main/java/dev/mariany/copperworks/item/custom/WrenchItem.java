@@ -181,6 +181,10 @@ public class WrenchItem extends Item {
             return false;
         }
 
+        if (state.get(Properties.EXTENDED, false)) {
+            return false;
+        }
+
         return state.get(Properties.CHEST_TYPE, ChestType.SINGLE).equals(ChestType.SINGLE);
     }
 

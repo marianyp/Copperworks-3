@@ -76,6 +76,14 @@ public class EnderRelayBlockEntity extends BlockEntity {
         this.removeFromOwner();
         this.owner = owner;
         this.addToOwner();
+
+        if (this.world instanceof ServerWorld serverWorld) {
+            BlockState state = serverWorld.getBlockState(this.pos);
+
+            if (state.getBlock() instanceof EnderRelayBlock enderRelayBlock) {
+                enderRelayBlock.update(serverWorld, this.pos, state);
+            }
+        }
     }
 
     protected void removeFromOwner() {
