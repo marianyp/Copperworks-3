@@ -50,6 +50,7 @@ public class CWItems {
                     .maxDamage(2400)
                     .repairable(Items.BLAZE_POWDER)
                     .enchantable(15)
+                    .attributeModifiers(RocketBootsItem.createAttributeModifiers())
                     .component(
                             DataComponentTypes.EQUIPPABLE,
                             EquippableComponent.builder(EquipmentSlot.FEET)
@@ -81,7 +82,8 @@ public class CWItems {
                     .component(DataComponentTypes.WEAPON, new WeaponComponent(1))
     );
 
-    private CWItems() {}
+    private CWItems() {
+    }
 
     private static Item register(String name) {
         return register(name, Item::new, new Item.Settings());
@@ -128,5 +130,8 @@ public class CWItems {
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.REDSTONE)
                        .register(entries -> entries.addBefore(Items.LEVER, RADIO));
+
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT)
+                       .register(entries -> entries.addBefore(Items.TURTLE_HELMET, ROCKET_BOOTS));
     }
 }
