@@ -45,6 +45,10 @@ public record FlyingEquippableComponent(
             FlyingEquippableComponent::new
     );
 
+    public static boolean areAttributeModifiersDisabled(ItemStack stack) {
+        return stack.contains(CWComponents.FLYING_EQUIPPABLE) && stack.willBreakNextUse();
+    }
+
     public static void onRemoveStack(
             LivingEntity livingEntity,
             EquipmentSlot slot,

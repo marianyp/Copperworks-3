@@ -9,6 +9,7 @@
     "BlockMixin",
     "EntityEquipmentMixin",
     "EntityMixin",
+    "ItemStackMixin",
     "LivingEntityMixin",
     "PistonBlockEntityMixin",
     "PlayerEntityMixin",
