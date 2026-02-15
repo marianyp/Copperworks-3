@@ -19,6 +19,7 @@ public class CopperworksDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(CWItemTagProviders::new);
         pack.addProvider(CWModelProvider::new);
         pack.addProvider(CWRecipeProvider::new);
+        pack.addProvider(CWVanillaRecipeOverrideProvider::new);
 
         DataGenerator.Pack secondPack = fabricDataGenerator.createPack();
         secondPack.addProvider(CWEquipmentAssetProvider::new);
