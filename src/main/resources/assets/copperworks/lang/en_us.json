@@ -42,6 +42,7 @@
   "subtitles.block.copperworks.ender_relay.bind": "Ender Relay bound",
   "subtitles.item.armor.equip.copperworks.rocket_boots": "Rocket boots clank",
   "subtitles.item.copperworks.radio": "Radio used",
+  "subtitles.entity.minecraft.copper_golem.oxidize": "Copper Golem oxidized",
   "tag.block.copperworks.extends_battery_pulse": "Extends Battery Pulse",
   "tag.block.copperworks.extends_battery_pulse_same_axis": "Extends Battery Pulse on Same Axis",
   "tag.block.copperworks.loud": "Loud",

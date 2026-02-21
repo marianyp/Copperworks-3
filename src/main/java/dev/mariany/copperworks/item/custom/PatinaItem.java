@@ -1,9 +1,12 @@
 package dev.mariany.copperworks.item.custom;
 
 import dev.mariany.copperworks.item.CWItems;
+import dev.mariany.copperworks.sound.CWSoundEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Oxidizable;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.CopperGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -11,6 +14,7 @@ import net.minecraft.item.ItemUsageContext;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
@@ -52,5 +56,29 @@ public class PatinaItem extends Item {
                              return (ActionResult) ActionResult.SUCCESS;
                          })
                          .orElse(ActionResult.PASS);
+    }
+
+    @Override
+    public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
+        if (entity instanceof CopperGolemEntity copperGolemEntity) {
+            Oxidizable.OxidationLevel oxidationLevel = copperGolemEntity.getOxidationLevel();
+            Oxidizable.OxidationLevel nextOxidationLevel = oxidationLevel.getIncreased();
+
+            if (oxidationLevel != nextOxidationLevel) {
+                copperGolemEntity.setOxidationLevel(oxidationLevel.getIncreased());
+
+                stack.decrementUnlessCreative(1, user);
+
+                entity.playSound(
+                        CWSoundEvents.ENTITY_COPPER_GOLEM_OXIDIZE,
+                        1,
+                        1
+                );
+
+                return ActionResult.SUCCESS;
+            }
+        }
+
+        return ActionResult.PASS;
     }
 }
