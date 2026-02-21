@@ -206,5 +206,14 @@
         "volume": 0.3
       }
     ]
+  },
+  "entity.copper_golem.oxidize": {
+    "subtitle": "subtitles.entity.minecraft.copper_golem.oxidize",
+    "sounds": [
+      "minecraft:block/copper/break1",
+      "minecraft:block/copper/break2",
+      "minecraft:block/copper/break3",
+      "minecraft:block/copper/break4"
+    ]
   }
 }
