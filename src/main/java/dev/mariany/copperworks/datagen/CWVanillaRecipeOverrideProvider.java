@@ -2,9 +2,9 @@ package dev.mariany.copperworks.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
-import net.minecraft.block.Blocks;
 import net.minecraft.data.recipe.RecipeExporter;
 import net.minecraft.data.recipe.RecipeGenerator;
+import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.RegistryWrapper;
@@ -28,26 +28,24 @@ public class CWVanillaRecipeOverrideProvider extends FabricRecipeProvider {
         return new RecipeGenerator(wrapperLookup, recipeExporter) {
             @Override
             public void generate() {
-                this.alternativeIronTrapdoor();
-                this.alternativeIronBars();
+                this.resolvePlateConflicts(Items.IRON_INGOT, Items.IRON_BARS, Items.IRON_TRAPDOOR);
+                this.resolvePlateConflicts(Items.COPPER_INGOT, Items.COPPER_BARS.unaffected(), Items.COPPER_TRAPDOOR);
             }
 
-            private void alternativeIronTrapdoor() {
-                this.createShaped(RecipeCategory.REDSTONE, Blocks.IRON_TRAPDOOR, 2)
-                    .input('I', Items.IRON_INGOT)
-                    .pattern("III")
-                    .pattern("III")
-                    .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
+            private void resolvePlateConflicts(Item ingot, Item bars, Item trapdoor) {
+                this.createShaped(RecipeCategory.DECORATIONS, bars, 16)
+                    .input('I', ingot)
+                    .pattern("I I")
+                    .pattern("I I")
+                    .pattern("I I")
+                    .criterion(hasItem(ingot), conditionsFromItem(ingot))
                     .offerTo(exporter);
-            }
 
-            private void alternativeIronBars() {
-                this.createShaped(RecipeCategory.DECORATIONS, Blocks.IRON_BARS, 16)
-                    .input('I', Items.IRON_INGOT)
-                    .pattern("I I")
-                    .pattern("I I")
-                    .pattern("I I")
-                    .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
+                this.createShaped(RecipeCategory.REDSTONE, trapdoor, 2)
+                    .input('I', ingot)
+                    .pattern("III")
+                    .pattern("III")
+                    .criterion(hasItem(ingot), conditionsFromItem(ingot))
                     .offerTo(exporter);
             }
         };
