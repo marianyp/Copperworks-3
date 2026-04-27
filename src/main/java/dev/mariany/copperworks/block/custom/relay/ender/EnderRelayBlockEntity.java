@@ -1,6 +1,7 @@
 package dev.mariany.copperworks.block.custom.relay.ender;
 
 import dev.mariany.copperworks.block.CWBlockEntities;
+import dev.mariany.copperworks.stat.CWStats;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -8,6 +9,7 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LazyEntityReference;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.PositionFlag;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -129,31 +131,28 @@ public class EnderRelayBlockEntity extends BlockEntity {
 
             Vec3d teleportPosition = this.pos.up().toBottomCenterPos();
 
+            entity.resetPortalCooldown();
+
+            Entity teleportedEntity;
+
             if (entity instanceof ServerPlayerEntity serverPlayer) {
-                if (serverPlayer.networkHandler.isConnectionOpen()) {
-                    entity.resetPortalCooldown();
-
-                    ServerPlayerEntity teleportedPlayer = serverPlayer.teleportTo(
-                            new TeleportTarget(
-                                    serverWorld,
-                                    teleportPosition,
-                                    Vec3d.ZERO,
-                                    0,
-                                    0,
-                                    PositionFlag.combine(PositionFlag.ROT, PositionFlag.DELTA),
-                                    TeleportTarget.NO_OP
-                            )
-                    );
-
-                    if (teleportedPlayer != null) {
-                        teleportedPlayer.onLanding();
-                        teleportedPlayer.clearCurrentExplosion();
-                    }
-
-                    playTeleportSound(serverWorld, teleportPosition);
+                if (!serverPlayer.networkHandler.isConnectionOpen()) {
+                    return;
                 }
+
+                teleportedEntity = serverPlayer.teleportTo(
+                        new TeleportTarget(
+                                serverWorld,
+                                teleportPosition,
+                                Vec3d.ZERO,
+                                0,
+                                0,
+                                PositionFlag.combine(PositionFlag.ROT, PositionFlag.DELTA),
+                                TeleportTarget.NO_OP
+                        )
+                );
             } else {
-                Entity teleportedEntity = entity.teleportTo(
+                teleportedEntity = entity.teleportTo(
                         new TeleportTarget(
                                 serverWorld,
                                 teleportPosition,
@@ -163,13 +162,20 @@ public class EnderRelayBlockEntity extends BlockEntity {
                                 TeleportTarget.NO_OP
                         )
                 );
-
-                if (teleportedEntity != null) {
-                    teleportedEntity.onLanding();
-                }
-
-                playTeleportSound(serverWorld, teleportPosition);
             }
+
+            if (teleportedEntity == null) {
+                return;
+            }
+
+            teleportedEntity.onLanding();
+
+            if (teleportedEntity instanceof PlayerEntity player) {
+                player.clearCurrentExplosion();
+                player.incrementStat(CWStats.RELAY_TELEPORTS);
+            }
+
+            playTeleportSound(serverWorld, teleportPosition);
         }
     }
 
