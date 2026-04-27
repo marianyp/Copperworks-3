@@ -34,6 +34,8 @@
   "item.radio.unavailable": "Relay is unavailable",
   "stat.copperworks.interact_with_copper_clock": "Interactions with Copper Clock",
   "stat.copperworks.open_copper_barrel": "Copper Barrels Opened",
+  "stat.copperworks.interact_with_sensor": "Interactions with Sensor",
+  "stat.copperworks.relay_teleports": "Teleports to Relay",
   "subtitles.block.copperworks.bound_relay.disconnect": "Relay disconnected",
   "subtitles.block.copperworks.bound_relay.insert": "Amethyst Piece inserted into Relay",
   "subtitles.block.copperworks.clock.interact": "Clock modified",
