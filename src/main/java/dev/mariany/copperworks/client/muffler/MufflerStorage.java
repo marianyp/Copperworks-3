@@ -9,27 +9,27 @@ import java.util.*;
 
 @Environment(EnvType.CLIENT)
 public final class MufflerStorage {
-    private final static Map<Long, Set<MuffledArea>> LOADED = new HashMap<>();
+    private static final Map<Long, Set<MuffledArea>> LOADED = new HashMap<>();
 
     private MufflerStorage() {
     }
 
-    public static List<MuffledArea> getMuffledAreas() {
+    public static synchronized List<MuffledArea> getMuffledAreas() {
         return new ArrayList<>(LOADED.values())
                 .stream()
                 .flatMap(Collection::stream)
                 .toList();
     }
 
-    public static void put(ChunkPos chunkPos, Collection<MuffledArea> muffledAreas) {
+    public static synchronized void put(ChunkPos chunkPos, Collection<MuffledArea> muffledAreas) {
         LOADED.put(chunkPos.toLong(), new HashSet<>(muffledAreas));
     }
 
-    public static void remove(ChunkPos chunkPos) {
+    public static synchronized void remove(ChunkPos chunkPos) {
         LOADED.remove(chunkPos.toLong());
     }
 
-    public static void update(ChunkPos chunkPos, MuffledArea muffledArea) {
+    public static synchronized void update(ChunkPos chunkPos, MuffledArea muffledArea) {
         Set<MuffledArea> muffledAreas = LOADED.get(chunkPos.toLong());
 
         if (muffledAreas == null) {
@@ -43,7 +43,7 @@ public final class MufflerStorage {
         }
     }
 
-    public static void clear() {
+    public static synchronized void clear() {
         LOADED.clear();
     }
 }
